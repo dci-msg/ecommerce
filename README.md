@@ -36,10 +36,72 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
 
 
 ----------
-@Gizem
 
-Move the tables here. Libreoffice
 
+1. **User**
+
+   | id        | Long          | @Id                |
+   |-----------|---------------|--------------------|
+   | username  | String        |                    |
+   | password  | String        |                    |
+   | email     | String        |                    |
+   | role      | String        |                    |
+
+   
+2. **Book**
+
+   | id          | Long          | @Id                |
+   |-------------|---------------|--------------------|
+   | title       | String        |                    |
+   | author      | String        |                    |
+   | isbn        | String        |                    | 
+   | description | String        |                    |
+   | price       | Double        |                    |
+   | category    | String        |                    |
+   | inventory   | Int           |                    |
+
+      
+
+3. **UserProfile**
+
+   | id          | Long          | @Id                |
+   |-------------|---------------|--------------------|
+   | firstName   | String        |                    |
+   | lastName    | String        |                    |
+   | dateOfBirth | LocalDate     |                    |
+   | addresses   | List<Address> | @OneToMany         |
+   | user        | User          | @OneToOne          |
+   
+
+4. **Address**
+
+   | id           | Long           | @Id                |
+   |--------------|----------------|--------------------|
+   | streetName   | String         |                    |
+   | streetNumber | String         |                    |
+   | cityCode     | String         |                    |
+   | country      | String         |                    |
+   | postNumber   | String         |                    |
+
+5. **CartItem**
+
+   | id           | Long           | @Id                |
+   |--------------|----------------|--------------------|
+   | book         | Book           | @ManyToOne         |
+   | quantity     | Int            |                    |
+   | user         | User           | @ManyToOne         |
+   
+   
+
+6. **Order**
+
+   | id           | Long           | @Id                |
+   |--------------|----------------|--------------------|
+   | user         | User           | @ManyToOne         |
+   | cartItems    | List<CartItem> | @OneToMany         |
+   | orderDate    | LocalDateTime  |                    |
+   | status       | String         |                    |
+   | totalPrice   | Double         |                    |
 
 
 
