@@ -17,12 +17,13 @@ public class Category {
         private Long id;
 
         @NonNull
-        @Column(unique = true)
+        @Column(unique = true, nullable = false)
         private String name;
 
         @NonNull
+        @Column(nullable = false)
         private String description;
 
-        @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
         private List<Book> books;
 }

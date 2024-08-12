@@ -18,30 +18,38 @@ public class Book {
     private Long id;
 
     @NonNull
-    private Long authorId;
+    @Column(nullable = false)
+    private String author;
 
     @NonNull
+    @Column(nullable = false)
     private String title;
 
     @NonNull
+    @Column(nullable = false)
     private BigDecimal price;
 
     @NonNull
+    @Column(nullable = false, unique = true)
     private String isbn;
 
     @NonNull
+    @Column(nullable = false)
     private LocalDate publicationDate;
 
     @NonNull
+    @Column(nullable = false)
     private Integer pages;
 
     @NonNull
+    @Column(nullable = false)
     private String language; // TODO change to enum
 
     @NonNull
+    @Column(nullable = false)
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 }
