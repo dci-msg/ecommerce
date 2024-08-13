@@ -1,4 +1,4 @@
-package org.dci.bookhaven.model.controller;
+package org.dci.bookhaven.controller;
 
 import org.dci.bookhaven.model.UserProfile;
 import org.dci.bookhaven.service.UserProfileService;
