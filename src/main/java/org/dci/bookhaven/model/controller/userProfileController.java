@@ -1,6 +1,6 @@
-package org.dci.bookhaven.models.controller;
+package org.dci.bookhaven.model.controller;
 
-import org.dci.bookhaven.models.UserProfile;
+import org.dci.bookhaven.model.UserProfile;
 import org.dci.bookhaven.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

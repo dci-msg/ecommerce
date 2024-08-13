@@ -1,7 +1,7 @@
 package org.dci.bookhaven.service;
 
 import jakarta.transaction.Transactional;
-import org.dci.bookhaven.models.UserProfile;
+import org.dci.bookhaven.model.UserProfile;
 import org.dci.bookhaven.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

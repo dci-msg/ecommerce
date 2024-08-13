@@ -1,6 +1,6 @@
 package org.dci.bookhaven.repository;
 
-import org.dci.bookhaven.models.UserProfile;
+import org.dci.bookhaven.model.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
