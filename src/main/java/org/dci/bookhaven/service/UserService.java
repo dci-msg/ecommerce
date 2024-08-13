@@ -1,13 +1,13 @@
-package org.muyangj.bookhaven.service;
+package org.dci.bookhaven.service;
 
 
 import jakarta.transaction.Transactional;
-import org.muyangj.bookhaven.model.PasswordResetToken;
-import org.muyangj.bookhaven.model.User;
-import org.muyangj.bookhaven.model.VerificationToken;
-import org.muyangj.bookhaven.repository.PasswordResetRepository;
-import org.muyangj.bookhaven.repository.UserRepository;
-import org.muyangj.bookhaven.repository.VerificationRepository;
+import org.dci.bookhaven.model.PasswordResetToken;
+import org.dci.bookhaven.model.User;
+import org.dci.bookhaven.model.VerificationToken;
+import org.dci.bookhaven.repository.PasswordResetRepository;
+import org.dci.bookhaven.repository.UserRepository;
+import org.dci.bookhaven.repository.VerificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
