@@ -1,4 +1,4 @@
-package org.muyangj.bookhaven.config;
+package org.dci.bookhaven.config;
 
 
 import org.muyangj.bookhaven.service.CustomUserDetailsService;

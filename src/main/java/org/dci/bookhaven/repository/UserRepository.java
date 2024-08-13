@@ -1,6 +1,8 @@
-package org.muyangj.bookhaven.repository;
+package org.dci.bookhaven.repository;
 
-import org.muyangj.bookhaven.model.User;
+
+
+import org.dci.bookhaven.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

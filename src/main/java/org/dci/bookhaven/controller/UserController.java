@@ -1,4 +1,4 @@
-package org.muyangj.bookhaven.controller;
+package org.dci.bookhaven.controller;
 
 import org.muyangj.bookhaven.model.User;
 import org.muyangj.bookhaven.service.UserService;
