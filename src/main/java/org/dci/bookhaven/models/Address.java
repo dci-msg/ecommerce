@@ -1,9 +1,10 @@
 package org.dci.bookhaven.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
+@Table(name = "Addresses")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

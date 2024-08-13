@@ -5,13 +5,17 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "user_profiles")
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long ProfileID;
 
-/*    @OneToOne
-    @JoinColumn(name = "UserID", nullable = false)
+    @OneToMany(mappedBy = "userProfile")
+    private List<Address> addresses;
+
+/*  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "User_id", nullable = false)
     private User user;*/
 
     @Column(nullable = false)
@@ -26,8 +30,6 @@ public class UserProfile {
     @Column(nullable = true)
     private String Gender;
 
-    @OneToMany(mappedBy = "userProfile")
-    private List<Address> addresses;
 
     //Constructors
     public UserProfile() {
