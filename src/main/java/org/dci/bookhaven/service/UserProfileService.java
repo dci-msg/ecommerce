@@ -59,4 +59,7 @@ public class UserProfileService {
         userProfileRepository.save(userProfile);
     }
 
+    public UserProfile getUserProfileByUserId(Long userId) {
+        return userProfileRepository.findUserProfileByUserId(userId);
+    }
 }
