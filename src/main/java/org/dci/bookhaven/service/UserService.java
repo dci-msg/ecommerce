@@ -2,9 +2,9 @@ package org.dci.bookhaven.service;
 
 
 import jakarta.transaction.Transactional;
-import org.dci.bookhaven.model.PasswordResetToken;
-import org.dci.bookhaven.model.User;
-import org.dci.bookhaven.model.VerificationToken;
+import org.dci.bookhaven.models.PasswordResetToken;
+import org.dci.bookhaven.models.User;
+import org.dci.bookhaven.models.VerificationToken;
 import org.dci.bookhaven.repository.PasswordResetRepository;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.VerificationRepository;

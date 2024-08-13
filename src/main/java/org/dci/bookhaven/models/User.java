@@ -1,8 +1,8 @@
-package org.dci.bookhaven.model;
+package org.dci.bookhaven.models;
 
 import jakarta.persistence.*;
+import org.dci.bookhaven.models.Address;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

@@ -1,7 +1,8 @@
-package org.muyangj.bookhaven.service;
+package org.dci.bookhaven.service;
 
-import org.muyangj.bookhaven.model.User;
-import org.muyangj.bookhaven.repository.UserRepository;
+
+import org.dci.bookhaven.models.User;
+import org.dci.bookhaven.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

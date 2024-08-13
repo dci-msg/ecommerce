@@ -1,12 +1,13 @@
-package org.dci.bookhaven.model;
+package org.dci.bookhaven.models;
 
 import jakarta.persistence.*;
+import org.dci.bookhaven.models.User;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "password_reset_tokens")
-public class PasswordResetToken {
+@Table(name = "verification_tokens")
+public class VerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -20,23 +21,23 @@ public class PasswordResetToken {
     private LocalDateTime expiryDate;
 
     //constructors
-    public PasswordResetToken(){
+    public VerificationToken() {
     }
 
-    public PasswordResetToken(String token, User user, LocalDateTime expiryDate) {
+    public VerificationToken(String token, User user, LocalDateTime expiryDate) {
         this.token = token;
         this.user = user;
         this.expiryDate = expiryDate;
     }
 
-    public PasswordResetToken(Long id, String token, User user, LocalDateTime expiryDate) {
+    public VerificationToken(Long id, String token, User user, LocalDateTime expiryDate) {
         this.id = id;
         this.token = token;
         this.user = user;
         this.expiryDate = expiryDate;
     }
 
-    // getters setters
+    //getters setters
 
     public Long getId() {
         return id;
