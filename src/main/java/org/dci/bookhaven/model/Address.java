@@ -1,4 +1,4 @@
-package org.dci.bookhaven.models;
+package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 

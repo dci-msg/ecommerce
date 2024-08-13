@@ -2,7 +2,7 @@ package org.dci.bookhaven.controller;
 
 
 
-import org.dci.bookhaven.models.User;
+import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

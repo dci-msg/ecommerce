@@ -1,7 +1,7 @@
 package org.dci.bookhaven.service;
 
 
-import org.dci.bookhaven.models.User;
+import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

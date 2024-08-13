@@ -1,7 +1,6 @@
-package org.dci.bookhaven.models;
+package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
-import org.dci.bookhaven.models.Address;
 
 import java.util.Date;
 import java.util.List;
@@ -135,5 +134,21 @@ public class User {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    // toString
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", verified=" + verified +
+                ", addresses=" + addresses +
+                '}';
     }
 }
