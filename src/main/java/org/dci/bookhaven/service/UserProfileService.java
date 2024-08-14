@@ -1,24 +1,33 @@
 package org.dci.bookhaven.service;
 
 import jakarta.transaction.Transactional;
+import org.dci.bookhaven.model.Address;
 import org.dci.bookhaven.model.UserProfile;
+import org.dci.bookhaven.repository.AddressRepository;
 import org.dci.bookhaven.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
 public class UserProfileService {
 
+    @Autowired
     private final UserProfileRepository userProfileRepository;
+
+    @Autowired
     private final UserRepository userRepository;
 
     @Autowired
-    public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository) {
+    private final AddressRepository addressRepository;
+
+    public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository, AddressRepository addressRepository) {
         this.userProfileRepository = userProfileRepository;
         this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
     }
 
     //Method to get User logged in at that point in time
@@ -62,4 +71,31 @@ public class UserProfileService {
     public UserProfile getUserProfileByUserId(Long userId) {
         return userProfileRepository.findUserProfileByUserId(userId);
     }
+
+    //Managing addresses
+    public List<Address> getAddresses(Long userId) {
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
+        return userProfile.getAddresses();
+    }
+
+    public void addAddress(Long userId, Address address) {
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
+        address.setUserProfile(userProfile);
+        addressRepository.save(address);
+    }
+
+    public void deleteAddress(Long addressId) {
+        addressRepository.deleteById(addressId);
+    }
+
+    public void updateAddress(Long addressId, Address updatedAddress) {
+        Address address = addressRepository.findById(addressId).orElseThrow(() -> new IllegalArgumentException("Address not found"));
+        address.setStreet(updatedAddress.getStreet());
+        address.setCity(updatedAddress.getCity());
+        address.setZipCode(updatedAddress.getZipCode());
+        address.setCountry(updatedAddress.getCountry());
+        addressRepository.save(address);
+    }
 }
+
+

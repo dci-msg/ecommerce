@@ -14,81 +14,81 @@ public class UserProfile {
     @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long ProfileID;
+    private Long profileId;
 
     @Getter
     @OneToMany(mappedBy = "userProfile")
     private List<Address> addresses;
 
-/*  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+/*  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "User_id", nullable = false)
     private User user;*/
 
     @Getter
     @Column(nullable = false)
-    private String FirstName;
+    private String firstName;
 
     @Getter
     @Column(nullable = false)
-    private String LastName;
+    private String lastName;
 
     @Column(nullable = true)
-    private LocalDate DateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Getter
     @Column(nullable = true)
-    private String Gender;
+    private String gender;
 
 
     //Constructors
     public UserProfile() {
     }
 
-    public UserProfile(Long profileID, String firstName, String lastName, LocalDate dateOfBirth, String gender, List<Address> addresses) {
-        ProfileID = profileID;
-        FirstName = firstName;
-        LastName = lastName;
-        DateOfBirth = dateOfBirth;
-        Gender = gender;
+    public UserProfile(Long profileId, String firstName, String lastName, LocalDate dateOfBirth, String gender, List<Address> addresses) {
+        this.profileId = profileId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
         this.addresses = addresses;
     }
 
     public UserProfile(String firstName, String lastName, LocalDate dateOfBirth) {
-        FirstName = firstName;
-        LastName = lastName;
-        DateOfBirth = dateOfBirth;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public UserProfile(String firstName, String lastName, LocalDate dateOfBirth, String gender, List<Address> addresses) {
-        FirstName = firstName;
-        LastName = lastName;
-        DateOfBirth = dateOfBirth;
-        Gender = gender;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
         this.addresses = addresses;
     }
 
-    public void setProfileID(Long profileID) {
-        ProfileID = profileID;
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        this.firstName = firstName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public LocalDate getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public void setGender(String gender) {
-        Gender = gender;
+        this.gender = gender;
     }
 
     public void setAddresses(List<Address> addresses) {

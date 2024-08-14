@@ -8,10 +8,11 @@ import lombok.*;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long AddressID;
+    private Long addressId;
 
+    @Getter
     @ManyToOne
-    @JoinColumn(name = "ProfileID", nullable = false)
+    @JoinColumn(name = "profileId", nullable = false)
     private UserProfile userProfile;
 
     @Getter
@@ -39,8 +40,8 @@ public class Address {
         this.country = country;
     }
 
-    public Address(Long addressID, UserProfile userProfile, String street, String city, String zipCode, String country) {
-        AddressID = addressID;
+    public Address(Long addressId, UserProfile userProfile, String street, String city, String zipCode, String country) {
+        this.addressId = addressId;
         this.userProfile = userProfile;
         this.street = street;
         this.city = city;
@@ -64,5 +65,7 @@ public class Address {
         this.country = country;
 
     }
-
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
 }
