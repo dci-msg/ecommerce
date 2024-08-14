@@ -49,6 +49,36 @@ public class Address {
         this.country = country;
     }
 
+    // Getters and setters
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+
     public void setStreet(String street) {
         this.street = street;
     }
