@@ -103,7 +103,12 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
    | status       | String         |                    |
    | totalPrice   | Double         |                    |
 
+7. **ShoppingCart**
 
+   | id           | Long           | @Id                |
+   |--------------|----------------|--------------------|
+   | cartItems    | List<CartItem> | @OneToMany         |
+   | user         | User           | @OneToOne          |
 
 
 
