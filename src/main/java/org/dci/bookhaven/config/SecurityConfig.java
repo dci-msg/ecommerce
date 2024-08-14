@@ -25,17 +25,19 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // to use custom html forms - login/register..:
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/register", "/verify", "forgot-password", "/reset-password", "/login").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()  // any request to the app must be authenticated
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .defaultSuccessUrl("/",true)
-                        .permitAll()
+                        //.loginProcessingUrl("/authenticateTheUser")
+                        .permitAll() // anyone can see the login page
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
