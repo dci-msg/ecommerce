@@ -2,50 +2,71 @@ package org.muyangj.bookhaven.controllers;
 
 import org.muyangj.bookhaven.models.Category;
 import org.muyangj.bookhaven.services.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Controller
-@RequestMapping("/categories")
+@RequestMapping("/bookhaven")
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     // Show list of categories
-    @GetMapping
-    public String listCategories(Model model) {
+    @GetMapping("/categories")
+    public String categories(Model model) {
         List<Category> categories = categoryService.getCategoriesAsc();
         model.addAttribute("categories", categories);
-        return "categories/list";  // Refers to src/main/resources/templates/categories/list.html
+        return "category/categories";  // Refers to src/main/resources/templates/categories/list.html
     }
 
     // Show category form for creating or editing
-    @GetMapping("/form")
-    public String showCategoryForm(@RequestParam(value = "id", required = false) Long id, Model model) {
-        Optional<Category> category = categoryService.findCategoryById(id);
-        if(category.isEmpty()) {
-        }
+    @GetMapping("/add-category")
+    public String addCategoryForm(Model model) {
+        Category category = new Category();
         model.addAttribute("category", category);
-        return "categories/form";  // Refers to src/main/resources/templates/categories/form.html
+        return "category/add-category";  // Refers to src/main/resources/templates/categories/form.html
     }
 
     // Save category (create or update)
-    @PostMapping("/save")
-    public String saveCategory(@ModelAttribute("category") Category category) {
+    @PostMapping("/add-category")
+    public String addCategory(@ModelAttribute("category") Category category) {
         categoryService.addCategory(category);
-        return "redirect:/categories";
+        return "redirect:/bookhaven/categories";
+    }
+
+    // Edit books by id (all filed together) and only admin can do- GET request
+    @GetMapping("/edit-category/{id}")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String editCategoryForm(@PathVariable Long id, Model model) {
+        Category category = categoryService.getCategoryById(id);
+        model.addAttribute("category", category);
+        return "category/edit-category";
+    }
+
+    @PostMapping("/edit-category/{id}")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String editCategory(@PathVariable Long id,
+                           @RequestParam("name") String name,
+                           @RequestParam("description") String description
+    ) {
+        Category category = new Category(id, name, description);
+        categoryService.updateCategory(category );
+        return  "redirect:/bookhaven/categories";
     }
 
     // Delete category
-    @GetMapping("/delete")
-    public String deleteCategory(@RequestParam("name") String name) {
-        categoryService.removeCategory(name);
-        return "redirect:/categories";
+    @GetMapping("/delete-category/{id}")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteCategory(@PathVariable Long id) {
+        categoryService.removeCategory(id);
+        return "redirect:/bookhaven/categories";
     }
 }

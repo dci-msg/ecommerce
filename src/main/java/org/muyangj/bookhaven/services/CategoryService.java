@@ -1,7 +1,9 @@
 package org.muyangj.bookhaven.services;
 
 import jakarta.transaction.Transactional;
+import org.muyangj.bookhaven.models.Book;
 import org.muyangj.bookhaven.models.Category;
+import org.muyangj.bookhaven.repositories.BookRepository;
 import org.muyangj.bookhaven.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,50 +14,54 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    public CategoryService(CategoryRepository categoryRepository) {
+
+    private final BookRepository bookRepository;
+
+    public CategoryService(CategoryRepository categoryRepository, BookRepository bookRepository) {
         this.categoryRepository = categoryRepository;
+        this.bookRepository = bookRepository;
     }
 
     @Transactional
-    public Category addCategory(Category category) {
+    public void addCategory(Category category) {
         String name = category.getName();
 
         if (isExistCategoryByName(name)) {
             throw new RuntimeException("Already exist name = " + name);
         }
 
-        return categoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
     @Transactional
-    public Category editCategory(Category category) {
-        String name = category.getName();
+    public void updateCategory(Category category) {
+        Long id = category.getId();
 
-        if (!isExistCategoryByName(name)) {
-            throw new RuntimeException("Not found name = " + name);
-        }
-        return categoryRepository.save(category);
+        findCategoryById(id).orElseThrow(() -> new RuntimeException("Not found id = " + id));
+        categoryRepository.save(category);
     }
-
 
     @Transactional
-    public void removeCategory(String name) {
-        if (!isExistCategoryByName(name)) {
-            throw new RuntimeException("Not found name = " + name);
+    public void removeCategory(Long id) {
+        Category category = findCategoryById(id).orElseThrow(() -> new RuntimeException("Not found id = " + id));
+        Category defaultCategory = findCategoryByName("Uncategorized").orElseThrow(() -> new RuntimeException("Not found id = " + id));
+        List<Book> books = category.getBooks();
+        for (Book book : books) {
+            bookRepository.updateCategoryIdById(book.getId(), defaultCategory.getId());
         }
-        categoryRepository.deleteByName(name);
+        categoryRepository.deleteById(id);
     }
 
-    public Category findCategoryByName(String name) {
-        return categoryRepository.findByName(name).orElseThrow(() -> new RuntimeException("Not found name = " + name));
+    public Optional<Category> findCategoryByName(String name) {
+        return categoryRepository.findByName(name);
     }
 
     public Optional<Category> findCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
 
-    public Optional<Category> getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found id = " + id));
     }
 
     private Boolean isExistCategoryByName(String name) {

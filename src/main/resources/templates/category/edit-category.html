@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mt-5">Edit Category</h2>
+            <a th:href="@{/bookhaven/categories}" class="btn btn-primary">Back</a>
+            <form th:action="@{/bookhaven/edit-category/{id}(id=${category.id})}" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" th:value="${category.name}" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" th:value="${category.description}" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Edit Category</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

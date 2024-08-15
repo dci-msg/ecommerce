@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <nav>
+        <ul>
+            <li><a th:href="@{/bookhaven/books}">Manage Books</a></li>
+            <li><a th:href="@{/bookhaven/categories}">Manage Categories</a></li>
+            <li><a th:href="@{/bookhaven/inventories}">Manage Inventory</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <h2>Welcome to the Admin Dashboard</h2>
+        <p>Select an option from the menu to manage different aspects of the bookstore.</p>
+    </section>
+</div>
+</body>
+</html>

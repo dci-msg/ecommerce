@@ -59,6 +59,7 @@ public class BookService {
         if (!bookRepository.existsById(id)) {
             throw new RuntimeException("Not found id = " + id);
         }
+        System.out.println(book);
         bookRepository.save(book);
     }
 

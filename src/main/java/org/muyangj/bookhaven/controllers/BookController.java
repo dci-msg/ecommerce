@@ -3,6 +3,7 @@ package org.muyangj.bookhaven.controllers;
 import org.muyangj.bookhaven.models.Book;
 import org.muyangj.bookhaven.models.Category;
 import org.muyangj.bookhaven.services.BookService;
+import org.muyangj.bookhaven.services.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,72 +13,83 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/books")
+@RequestMapping("/bookhaven")
 public class BookController {
 
     private final BookService bookService;
 
-    public BookController(BookService bookService) {
+    private final CategoryService categoryService;
+
+    public BookController(BookService bookService, CategoryService categoryService) {
         this.bookService = bookService;
+        this.categoryService = categoryService;
     }
 
-    @GetMapping
-    public String getBooks(Model model) {
+    @GetMapping("/books")
+    public String books(Model model) {
         List<Book> books = bookService.getBooks();
 
-       // model.addAttribute("books", books);
-        return "index";
+        model.addAttribute("books", books);
+        return "book/books";
     }
 
     // Add books It can do only admin - GET request
-    @GetMapping("/add")
+    @GetMapping("/add-book")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addBookForm(Model model) {
         model.addAttribute("book", new Book());
-        return "books/form";
+        model.addAttribute("categories", categoryService.getCategoriesAsc());
+        return "book/add-book";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add-book")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String addBook(Book book) {
+    public String addBook(@ModelAttribute Book book) {
+        System.out.println(book);
         bookService.addBook(book);
-        return "redirect:/books";
+        System.out.println(book);
+        return  "redirect:/bookhaven/books";
     }
 
     // Edit books by id (all filed together) and only admin can do- GET request
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit-book/{id}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String editBookForm(@PathVariable Long id, Model model) {
         Book book = bookService.getBookById(id);
 
+        model.addAttribute("categories", categoryService.getCategoriesAsc());
         model.addAttribute("book", book);
-        return "books/form";
+        return "book/edit-book";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit-book/{id}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String editBook(@PathVariable Long id,
                            @RequestParam("author") String author,
                            @RequestParam("title") String title,
                            @RequestParam("price") BigDecimal price,
                            @RequestParam("isbn") String isbn,
-                           @RequestParam("publication-date") LocalDate publicationDate,
+                           @RequestParam("publicationDate") LocalDate publicationDate,
                            @RequestParam("pages") Integer pages,
                            @RequestParam("language") String language,
                            @RequestParam("description") String description,
                            @RequestParam("category") Category category,
-                              Model model
+                           @RequestParam("quantity") Integer quantity,
+                           @RequestParam("imagePath") String imagePath
     ) {
-        bookService.updateBook(new Book(id, author, title, price, isbn,
-                publicationDate, pages, language, description, category));
-        return "redirect:/books";
+        Book book = new  Book(id, author, title, price, isbn,
+                publicationDate, pages, language, description,imagePath, quantity,  category);
+
+        bookService.updateBook(book);
+
+        return "redirect:/bookhaven/books";
     }
 
     // Delete Book by id  and can do that only admin-Get request
-    @GetMapping("/delete/{id}")
+    @GetMapping("/delete-book/{id}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
-        return "redirect:/books";
+        return "redirect:/bookhaven/books";
     }
 }

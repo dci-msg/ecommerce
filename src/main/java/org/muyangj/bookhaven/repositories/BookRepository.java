@@ -2,6 +2,8 @@ package org.muyangj.bookhaven.repositories;
 
 import org.muyangj.bookhaven.models.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +25,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     // Find all books by category
     List<Book> findByCategoryId(Long categoryId);
+
+    @Modifying
+    @Query("UPDATE Book b SET b.category.id = :defaultCategoryId WHERE b.id = :id")
+    void updateCategoryIdById(Long id, Long defaultCategoryId);
 }
