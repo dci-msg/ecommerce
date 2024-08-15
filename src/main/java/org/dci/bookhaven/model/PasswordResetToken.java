@@ -29,12 +29,6 @@ public class PasswordResetToken {
         this.expiryDate = expiryDate;
     }
 
-    public PasswordResetToken(Long id, String token, User user, LocalDateTime expiryDate) {
-        this.id = id;
-        this.token = token;
-        this.user = user;
-        this.expiryDate = expiryDate;
-    }
 
     // getters setters
 

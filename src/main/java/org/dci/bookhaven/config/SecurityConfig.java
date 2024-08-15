@@ -17,20 +17,27 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Bean
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
+    /*@Autowired
+    private CustomUserDetailsService customUserDetailsService;*/
+
+    /*@Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
-    }
+    }*/
 
     // to use custom html forms - login/register..:
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register", "/verify", "forgot-password", "/reset-password", "/login").permitAll()
+                        .requestMatchers("/", "/register", "/verify", "forgot-password", "/reset-password", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()  // any request to the app must be authenticated
                 )
                 .formLogin(formLogin -> formLogin
@@ -44,6 +51,9 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .permitAll()
+                /*)
+                .exceptionHandling(configurer ->
+                        configurer.accessDeniedPage("/access-denied")*/
                 );
 
         return http.build();   //it returns securityFilterChain instance
@@ -53,7 +63,7 @@ public class SecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
         auth
                 .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 
 }

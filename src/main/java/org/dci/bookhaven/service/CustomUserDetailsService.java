@@ -27,12 +27,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         // find my user in the db:
         User user = userRepository.findByUsername(username);
 
-        if (user == null){
+        // if no such a user in the db:
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                new ArrayList<>());
+                user.isVerified(),
+                true, true, true,
+                new ArrayList<>(user.getRoles()) // convert Set to Collection here
+        );
     }
 }

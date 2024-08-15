@@ -3,7 +3,8 @@ package org.dci.bookhaven.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.List;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -31,26 +32,34 @@ public class User {
     @Column
     private boolean verified = false;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Address> addresses;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+                name = "user_roles",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+
+    /*@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Address> addresses;*/
 
     // constructors
     public User() {
 
     }
 
-    public User(String username, String password, String email, String firstName, String lastName, Date dateOfBirth, List<Address> addresses, boolean verified) {
+    public User(String username, String password, String email, String firstName, String lastName, Date dateOfBirth, boolean verified, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
-        this.addresses = addresses;
         this.verified = verified;
+        this.roles = roles;
     }
 
-    public User(Long id, String username, String password, String email, String firstName, String lastName, Date dateOfBirth, List<Address> addresses, boolean verified) {
+    public User(Long id, String username, String password, String email, String firstName, String lastName, Date dateOfBirth, boolean verified, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -58,11 +67,11 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
-        this.addresses = addresses;
         this.verified = verified;
+        this.roles = roles;
     }
-
     // getter setter
+
 
     public Long getId() {
         return id;
@@ -120,14 +129,6 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
     public boolean isVerified() {
         return verified;
     }
@@ -136,7 +137,16 @@ public class User {
         this.verified = verified;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     // toString
+
     @Override
     public String toString() {
         return "User{" +
@@ -148,7 +158,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", verified=" + verified +
-                ", addresses=" + addresses +
+                ", roles=" + roles +
                 '}';
     }
 }
