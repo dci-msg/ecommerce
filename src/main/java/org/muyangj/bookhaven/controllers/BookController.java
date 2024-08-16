@@ -74,11 +74,10 @@ public class BookController {
                            @RequestParam("language") String language,
                            @RequestParam("description") String description,
                            @RequestParam("category") Category category,
-                           @RequestParam("quantity") Integer quantity,
                            @RequestParam("imagePath") String imagePath
     ) {
         Book book = new  Book(id, author, title, price, isbn,
-                publicationDate, pages, language, description,imagePath, quantity,  category);
+                publicationDate, pages, language, description, imagePath, category);
 
         bookService.updateBook(book);
 

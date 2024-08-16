@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "inventories")
 @AllArgsConstructor
@@ -23,6 +25,11 @@ public class Inventory {
     @Column(nullable = false)
     @Min(value = 0, message = "Stock must be non-negative")
     private Integer stock;
+
+    @ElementCollection
+    @CollectionTable(name = "inventory_notifications", joinColumns = @JoinColumn(name = "inventory_id"))
+    @Column(name = "email")
+    private List<String> customerEmailsForNotification;
 
     public Inventory(Book book, @NonNull Integer stock) {
         this.book = book;

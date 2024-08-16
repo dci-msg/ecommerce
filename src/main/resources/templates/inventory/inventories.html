@@ -10,8 +10,6 @@
     <div class="row">
         <div class="col-md-12">
             <h2 class="text-center mt-5">Manage Inventory</h2>
-            <a th:href="@{/bookhaven/add-inventory}" class="btn btn-primary">Add Inventory</a>
-            <a th:action="@{/bookhaven/notify}" class="btn btn-primary">Notify Admin and Customers</a>
             <a th:href="@{/bookhaven/dashboard}" class="btn btn-primary">Back</a>
             <table class="table table-striped">
                 <thead>
@@ -22,7 +20,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="book : ${books}">
+                <tr th:each="inventory : ${inventories}">
                     <td th:text="${inventory.book.title}">Book Title</td>
                     <td th:text="${inventory.stock}">Stock</td>
                     <td>

@@ -61,18 +61,13 @@ public class Book {
     @Column(nullable = false)
     private String imagePath;
 
-    @NonNull
-    @Column(nullable = false)
-    @Min(value = 0, message = "The number of pages must be positive")
-    private Integer quantity;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
     public Book(@NonNull String author, @NonNull String title, @NonNull BigDecimal price, @NonNull String isbn,
                 @NonNull LocalDate publicationDate, @NonNull Integer pages, @NonNull String language,
-                @NonNull Integer quantity, @NonNull String imagePath, @NonNull String description, Category category) {
+                @NonNull String imagePath, @NonNull String description, Category category) {
         this.author = author;
         this.title = title;
         this.price = price;
@@ -82,7 +77,6 @@ public class Book {
         this.language = language;
         this.description = description;
         this.category = category;
-        this.quantity = quantity;
         this.imagePath = imagePath;
     }
 

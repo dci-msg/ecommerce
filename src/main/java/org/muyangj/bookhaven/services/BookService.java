@@ -2,7 +2,9 @@ package org.muyangj.bookhaven.services;
 
 import jakarta.transaction.Transactional;
 import org.muyangj.bookhaven.models.Book;
+import org.muyangj.bookhaven.models.Inventory;
 import org.muyangj.bookhaven.repositories.BookRepository;
+import org.muyangj.bookhaven.repositories.InventoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +14,11 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
+    private final InventoryRepository inventoryRepository;
+
+    public BookService(BookRepository bookRepository, InventoryRepository inventoryRepository) {
         this.bookRepository = bookRepository;
+        this.inventoryRepository = inventoryRepository;
     }
 
     public List<Book> getBooks() {
@@ -51,6 +56,8 @@ public class BookService {
         }
 
         bookRepository.save(book);
+        Inventory inventory = new Inventory(book, 0);
+        inventoryRepository.save(inventory);
     }
 
     @Transactional
@@ -59,7 +66,7 @@ public class BookService {
         if (!bookRepository.existsById(id)) {
             throw new RuntimeException("Not found id = " + id);
         }
-        System.out.println(book);
+
         bookRepository.save(book);
     }
 
@@ -68,6 +75,7 @@ public class BookService {
         if (!bookRepository.existsById(id)) {
             throw new RuntimeException("Not found id = " + id);
         }
+        inventoryRepository.deleteById(inventoryRepository.findByBookId(id).getId());
         bookRepository.deleteById(id);
     }
 }

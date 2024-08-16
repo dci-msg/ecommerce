@@ -38,8 +38,9 @@ public class InventoryController {
         Inventory existingInventory = inventoryService.findById(id);
         if (existingInventory != null) {
             existingInventory.setStock(inventory.getStock());
-            inventoryService.saveOrUpdateInventory(existingInventory);
+            inventoryService.addInventory(existingInventory);
         }
+        notifyAdminAndCustomers();
         return "redirect:/bookhaven/inventories";
     }
 
@@ -51,8 +52,9 @@ public class InventoryController {
 
     @PostMapping("/add-inventory")
     public String saveNewInventory(@ModelAttribute Inventory inventory) {
-        inventoryService.saveOrUpdateInventory(inventory);
-        return "redirect:/bookhaven/inventories";
+        inventoryService.addInventory(inventory);
+       // return "redirect:/bookhaven/inventories";
+        return "redirect:/bookhaven/notify";
     }
 
     @GetMapping("/delete-inventory/{id}")
@@ -61,19 +63,27 @@ public class InventoryController {
         return "redirect:/bookhaven/inventories";
     }
 
-    @PostMapping("/notify-inventory")
+    @PostMapping("/notify")
     public String notifyAdminAndCustomers() {
         List<Inventory> lowStockInventories = inventoryService.findByStockLessThan(10);
         for (Inventory inventory : lowStockInventories) {
+            System.out.println(" Notify admin order more books.");
+            emailService.sendAdminNotification(inventory.getBook());
             if (inventory.getStock() < 3) {
-                // Notify customers to buy the book
+                System.out.println("Notify customers to buy the book");
                 emailService.sendCustomerNotification(inventory.getBook());
             } else if (inventory.getStock() == 0) {
-                // Notify customers for pre-order and notify admin about out of stock
+                System.out.println(" Notify customers for pre-order and notify admin about out of stock");
                 emailService.sendAdminNotification(inventory.getBook());
                 emailService.sendCustomerOutOfStockNotification(inventory.getBook());
             }
         }
+        return "redirect:/bookhaven/inventories";
+    }
+
+    @PostMapping("/signup-for-notification/{bookId}")
+    public String signUpForNotification(@PathVariable Long bookId, @RequestParam String email) {
+        inventoryService.signUpForNotification(bookId, email);
         return "redirect:/bookhaven/inventories";
     }
 }

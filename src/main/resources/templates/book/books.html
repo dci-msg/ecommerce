@@ -24,7 +24,6 @@
                     <th>Publication Date</th>
                     <th>Pages</th>
                     <th>Language</th>
-                    <th>Quantity</th>
                     <th>ImagePath</th>
                     <th>Category</th>
                 </tr>
@@ -40,7 +39,6 @@
                     <td th:text="${book.publicationDate}"></td>
                     <td th:text="${book.pages}"></td>
                     <td th:text="${book.language}"></td>
-                    <td th:text="${book.quantity}"></td>
                     <td>
                         <img th:src="@{'/images/' + ${book.imagePath}}" alt="Book Image" class="img-thumbnail mt-2" style="max-width: 50px; height: auto;">
                     </td>
