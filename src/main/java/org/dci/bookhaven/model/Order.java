@@ -12,29 +12,20 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "shopping_carts")
-public class ShoppingCart {
+@Table(name = "orders")
+public class Order {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
     private long id;
 
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
-    private List<LineItem> lineItems;
-
     @OneToOne(cascade = CascadeType.ALL)
-    private Coupon coupon;
+    private ShoppingCart shoppingCart;
 
     @Column(name = "total", nullable = false, precision = 2, columnDefinition = "double precision")
-    private double total;
+    private Double total;
 
-    @ManyToOne
-    private User user;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Shipping shipping;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Price price;
+    @Column(name = "status", nullable = false)
+    private String status;
 }
