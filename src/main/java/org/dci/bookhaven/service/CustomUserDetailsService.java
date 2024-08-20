@@ -1,42 +1,39 @@
 package org.dci.bookhaven.service;
 
-
-import org.dci.bookhaven.model.User;
-import org.dci.bookhaven.repository.UserRepository;
+import org.dci.bookhaven.model.Users;
+import org.dci.bookhaven.repository.UsersRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
-
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Loading user by email " + email);  //log
 
-        // find my user in the db:
-        User user = userRepository.findByUsername(username);
-
-        // if no such a user in the db:
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+        Users user = usersRepository.findByEmail(email);
+        if (user == null){
+            System.out.println("User not found: " + email);   //log
+            throw new UsernameNotFoundException("User not found with email " + email);
         }
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.isVerified(),
-                true, true, true,
-                new ArrayList<>(user.getRoles()) // convert Set to Collection here
-        );
+        System.out.println("User found: " + user.getEmail()); //log
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getUsersType().getUserTypeName())
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(!user.isActive())
+                .build();
     }
 }

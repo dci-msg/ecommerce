@@ -5,33 +5,18 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "password_reset_tokens")
 public class PasswordResetToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true)
     private String token;
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private Users users;
     private LocalDateTime expiryDate;
 
-    //constructors
-    public PasswordResetToken(){
-    }
-
-    public PasswordResetToken(String token, User user, LocalDateTime expiryDate) {
-        this.token = token;
-        this.user = user;
-        this.expiryDate = expiryDate;
-    }
-
-
     // getters setters
-
     public Long getId() {
         return id;
     }
@@ -48,12 +33,12 @@ public class PasswordResetToken {
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUsers() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
     public LocalDateTime getExpiryDate() {
