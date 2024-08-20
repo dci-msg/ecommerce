@@ -92,5 +92,11 @@ public class UserProfile {
         this.addresses = addresses;
     }
 
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
 
