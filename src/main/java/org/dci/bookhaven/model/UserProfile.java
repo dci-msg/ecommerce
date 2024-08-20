@@ -20,9 +20,9 @@ public class UserProfile {
     @OneToMany(mappedBy = "userProfile")
     private List<Address> addresses;
 
-/*  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "User_id", nullable = false)
-    private User user;*/
+    private User user;
 
     @Getter
     @Column(nullable = false)
@@ -32,6 +32,7 @@ public class UserProfile {
     @Column(nullable = false)
     private String lastName;
 
+    @Getter
     @Column(nullable = true)
     private LocalDate dateOfBirth;
 
@@ -77,10 +78,6 @@ public class UserProfile {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
