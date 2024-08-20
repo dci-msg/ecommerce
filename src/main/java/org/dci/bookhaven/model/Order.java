@@ -2,7 +2,9 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -28,4 +30,7 @@ public class Order {
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

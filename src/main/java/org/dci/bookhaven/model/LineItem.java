@@ -28,4 +28,6 @@ public class LineItem {
     @Column(name = "line_total", nullable = false, precision = 2, columnDefinition = "double precision")
     private double lineTotal;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private ShoppingCart shoppingCart;
 }

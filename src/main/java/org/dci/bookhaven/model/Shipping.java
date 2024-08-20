@@ -18,9 +18,6 @@ public class Shipping {
     )
     private long id;
 
-    @OneToOne(mappedBy = "shipping", cascade = CascadeType.ALL)
-    private Order order;
-
     @ManyToOne
     private Address address;
 
@@ -29,4 +26,7 @@ public class Shipping {
 
     @Column(name = "shipping_cost", nullable = false, precision = 2, columnDefinition = "double precision")
     private double shippingCost;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private ShoppingCart shoppingCart;
 }

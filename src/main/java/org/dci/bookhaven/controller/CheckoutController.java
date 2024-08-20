@@ -4,8 +4,10 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
-import org.dci.bookhaven.model.ShoppingCart;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,31 +16,27 @@ import java.util.Map;
 @RequestMapping("/api/checkout")
 public class CheckoutController {
 
-    String YOUR_DOMAIN = "http://localhost:8080";
+    String YOUR_DOMAIN = "http://localhost:4242";
 
     public CheckoutController() {
-        Stripe.apiKey = "your-secret-key";
+        Stripe.apiKey = "sk_test_51PniUQL6UNiuiJrz3evmG6jsYeX2t6cX9jamtzA2abCihZuCBqO73uSNeeuzaWyuPfWVnTZSmWgIsksDcAWprwuH00XcXZqkZ0";
     }
 
-    @PostMapping("/create-checkout-session")
-    public Map<String, String> createCheckoutSession(@RequestBody Map<String, Object> requestData) throws StripeException {
-        // Extract product details from requestData or define them directly
-        SessionCreateParams params =
-                SessionCreateParams.builder()
-                        // Add an endpoint on your server that creates a Checkout Session, setting the ui_mode to embedded.
-                        // The Checkout Session response includes a client secret, which the client uses to mount Checkout.
-                        // Return the client_secret in your response.
-                        .setUiMode(SessionCreateParams.UiMode.EMBEDDED)
-                        // To handle different transaction types, adjust the mode parameter. One-off payments, use payment. Subscriptions, use subscription.
-                        .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setReturnUrl(YOUR_DOMAIN + "/return.html?session_id={CHECKOUT_SESSION_ID}")
-                        .addLineItem(
-                                SessionCreateParams.LineItem.builder()
-                                        .setQuantity(1L)
-                                        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                                        .setPrice("{{PRICE_ID}}")
-                                        .build())
-                        .build();
+   @PostMapping("/create-checkout-session")
+   public Map<String, String> createCheckoutSession(
+                   @RequestBody Map<String, Object> requestData) throws StripeException {
+        SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem.builder()
+                .setPrice("{{PRICE_ID}}")
+                .setQuantity(1L)
+                .build();
+
+        SessionCreateParams params = SessionCreateParams.builder()
+                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl(YOUR_DOMAIN+"/success.html")
+                .setCancelUrl(YOUR_DOMAIN+"/cancel.html")
+                .addLineItem(lineItem)
+                .build();
 
         Session session = Session.create(params);
 
@@ -47,3 +45,4 @@ public class CheckoutController {
         return responseData;
     }
 }
+

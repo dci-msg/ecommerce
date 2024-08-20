@@ -35,6 +35,6 @@ public class ShoppingCart {
     @OneToOne(cascade = CascadeType.ALL)
     private Shipping shipping;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Price price;
+    @Column(name = "status", nullable = false)
+    private String status;
 }
