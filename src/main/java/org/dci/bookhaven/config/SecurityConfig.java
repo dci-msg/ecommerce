@@ -46,14 +46,16 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(PUBLIC_URLS).permitAll(); // open to everyone
             auth.requestMatchers("/admin/**").hasAuthority("Admin");
+            auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
             auth.anyRequest().authenticated(); // other requests required authentication
         });
 
         //LOGIN Page structure - with usage of customAuthentication..
         http.formLogin(form -> form
-                .loginPage("/login")    //custom login page
-                .permitAll()            //can anyone access
-                .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
+                    .loginPage("/login")        // custom login page
+                    .usernameParameter("email") // login.html-->name="email", but should accept email as a username
+                    .permitAll()                // can anyone access
+                    .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
                 .logout(logout -> {
                     logout.logoutUrl("/logout");  // logout URL
                     logout.logoutSuccessUrl("/login?logout");  // after success logout direction

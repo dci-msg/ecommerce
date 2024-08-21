@@ -28,6 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // Admin type
         UsersType adminType = usersTypeRepository.findByUserTypeName("Admin");
         if (adminType == null){
             adminType = new UsersType();
@@ -42,6 +43,14 @@ public class DataInitializer implements CommandLineRunner {
             admin.setActive(true);
             admin.setUsersType(adminType);
             usersRepository.save(admin);
+        }
+
+        // Customer type
+        UsersType customerType = usersTypeRepository.findByUserTypeName("Customer");
+        if (customerType == null){
+            customerType = new UsersType();
+            customerType.setUserTypeName("Customer");
+            usersTypeRepository.save(customerType);
         }
 
     }

@@ -1,8 +1,10 @@
 package org.dci.bookhaven.service;
 
 import org.dci.bookhaven.model.Users;
+import org.dci.bookhaven.model.UsersType;
 import org.dci.bookhaven.model.VerificationToken;
 import org.dci.bookhaven.repository.UsersRepository;
+import org.dci.bookhaven.repository.UsersTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,18 +21,29 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final VerificationTokenRepository tokenRepository;
     private final JavaMailSender mailSender;
+    private final UsersTypeRepository usersTypeRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, VerificationTokenRepository tokenRepository, JavaMailSender mailSender) {
+    public UsersService(UsersRepository usersRepository, VerificationTokenRepository tokenRepository, JavaMailSender mailSender, UsersTypeRepository usersTypeRepository, BCryptPasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.tokenRepository = tokenRepository;
         this.mailSender = mailSender;
+        this.usersTypeRepository = usersTypeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // REGISTER new user
     public Users registerNewUserAccount(Users user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);    // until email verification provided it should be inactive
+
+        // assign "Customer" user type
+        UsersType customerType = usersTypeRepository.findByUserTypeName("Customer");
+        if (customerType == null){
+            throw new IllegalArgumentException(("Customer user type not found"));
+        }
+        user.setUsersType(customerType);
 
         Users savedUser = usersRepository.save(user);
 
@@ -65,9 +78,9 @@ public class UsersService {
         VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
 
         if (verificationToken != null && verificationToken.getExpiryDate().after(new Date())) {
-            Users user = verificationToken.getUser();
-            user.setActive(true);   // -----> now new user is active
-            usersRepository.save(user);
+            Users verifiedUser = verificationToken.getUser();
+            verifiedUser.setActive(true);   // -----> now new user is active
+            usersRepository.save(verifiedUser);
         }
     }
 

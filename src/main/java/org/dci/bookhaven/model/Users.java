@@ -23,7 +23,7 @@ public class Users {
     private Date registrationDate;
 
     @ManyToOne
-    @JoinColumn(name = "usersTypeId", referencedColumnName = "userTypeId")
+    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
     private UsersType usersType;
 
     //constructors

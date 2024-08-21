@@ -2,6 +2,7 @@ package org.dci.bookhaven.service;
 
 import org.dci.bookhaven.model.Users;
 import org.dci.bookhaven.repository.UsersRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,14 +20,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("Loading user by email " + email);  //log
+        System.out.println("Loading user by email " + email);  //--->log
 
         Users user = usersRepository.findByEmail(email);
         if (user == null){
-            System.out.println("User not found: " + email);   //log
+            System.out.println("User not found: " + email);   //--->log
             throw new UsernameNotFoundException("User not found with email " + email);
         }
-        System.out.println("User found: " + user.getEmail()); //log
+        if (user.getUsersType() == null){
+            System.out.println("User type is null for email: " + email); //--->log
+        }
+        System.out.println("User found: " + user.getEmail()); //--->log
+
         return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(user.getUsersType().getUserTypeName())

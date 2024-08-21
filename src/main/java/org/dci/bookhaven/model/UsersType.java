@@ -12,7 +12,7 @@ public class UsersType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userTypeId;
     private String userTypeName;
-    @OneToMany(mappedBy = "usersType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usersType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Users> users;
 
     //constructors
