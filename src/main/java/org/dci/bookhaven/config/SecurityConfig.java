@@ -27,6 +27,7 @@ public class SecurityConfig {
     private static final String[] PUBLIC_URLS = {   //open url's for everyone
             "/",
             "/register",
+            "/register/new",
             "/verify-email",
             "/forgot-password",
             "/reset-password",

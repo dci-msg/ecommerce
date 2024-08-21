@@ -27,43 +27,46 @@ public class UsersService {
         this.mailSender = mailSender;
     }
 
+    // REGISTER new user
     public Users registerNewUserAccount(Users user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setActive(false);    // until email verification provided it should be inactive
 
         Users savedUser = usersRepository.save(user);
+
         sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
+    // VERIFICATION EMAIL
     private void sendVerificationEmail(Users savedUser) {
         String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
+        VerificationToken verificationToken = new VerificationToken();   // create token
         verificationToken.setToken(token);
         verificationToken.setUser(savedUser);
         verificationToken.setExpiryDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 
-        tokenRepository.save(verificationToken);
+        tokenRepository.save(verificationToken);   // save token
 
         String recipientAddress = savedUser.getEmail();
         String subject = "Email Confirmation";
         String confirmationUrl = "/verify-email?token=" + token;
-        String message = "Please confirm your email bt clicking the link below:\n";
+        String message = "Please confirm your email by clicking the link below:\n";
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
         email.setText(message + "http://localhost:3636" + confirmationUrl);
 
-        mailSender.send(email);
+        mailSender.send(email); // send token
     }
 
     public void verifyUser(String token) {
-        VerificationToken verificationToken = tokenRepository.findByToken(token);
+        VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
 
         if (verificationToken != null && verificationToken.getExpiryDate().after(new Date())) {
             Users user = verificationToken.getUser();
-            user.setActive(true);
+            user.setActive(true);   // -----> now new user is active
             usersRepository.save(user);
         }
     }
