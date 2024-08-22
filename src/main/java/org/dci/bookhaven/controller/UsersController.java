@@ -25,21 +25,8 @@ public class UsersController {
     }
 
     // GET method to show the login page
-   /* @GetMapping("/login")
-    public String login(){
-        return "login";
-    }*/
-
     @GetMapping("/login")
-    public String login(@RequestParam(value = "registered", required = false) boolean registered,
-                        @RequestParam(value = "verified", required = false) boolean verified,
-                        Model model) {
-        if (registered) {
-            model.addAttribute("successMessage", "Registration successful! Please check your email to confirm your account.");
-        } else if (verified) {
-            model.addAttribute("successMessage", "Email verified successfully! You can now log in.");
-
-        }
+    public String login(){
         return "login";
     }
 
