@@ -4,10 +4,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +20,7 @@ public class CheckoutController {
     }
 
    @PostMapping("/create-checkout-session")
+   @ExceptionHandler(Exception.class)
    public Map<String, String> createCheckoutSession(
                    @RequestBody Map<String, Object> requestData) throws StripeException {
         SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem.builder()
