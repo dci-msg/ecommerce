@@ -22,7 +22,7 @@ public class User {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date registrationDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
     private UserType userType;
 

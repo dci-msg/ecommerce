@@ -1,5 +1,6 @@
 package org.dci.bookhaven.service;
 
+import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.model.VerificationToken;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,10 +24,12 @@ public class UserService {
     private final VerificationTokenRepository tokenRepository;
     private final JavaMailSender mailSender;
     private final UserTypeRepository userTypeRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository, JavaMailSender mailSender, UserTypeRepository userTypeRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
+                       JavaMailSender mailSender, UserTypeRepository userTypeRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.mailSender = mailSender;
@@ -35,12 +39,32 @@ public class UserService {
 
     // REGISTER new user
     public User registerNewUserAccount(User user) {
+        // existed user registration
+        // check if user in db
+        User existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser != null) {
+            if (existingUser.isActive()) {
+                throw new IllegalArgumentException("Email address already exists.");
+            } else {
+                // if user is not active, update it
+                existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                existingUser.setRegistrationDate(new Date());
+                existingUser.setUserType(user.getUserType());
+                existingUser.setActive(false);
+
+                User updatedUser = userRepository.save(existingUser);
+                sendVerificationEmail(updatedUser);
+                return updatedUser;
+            }
+        }
+        // new user registration
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);    // until email verification provided it should be inactive
+        user.setRegistrationDate(new Date());
 
         // assign "Customer" user type
         UserType customerType = userTypeRepository.findByUserTypeName("Customer");
-        if (customerType == null){
+        if (customerType == null) {
             throw new IllegalArgumentException(("Customer user type not found"));
         }
         user.setUserType(customerType);
@@ -51,8 +75,16 @@ public class UserService {
         return savedUser;
     }
 
+
     // VERIFICATION EMAIL
-    private void sendVerificationEmail(User savedUser) {
+    @Transactional
+    public void sendVerificationEmail(User savedUser) {
+        // check and delete if token already in the db
+        VerificationToken existingToken = tokenRepository.findByUser(savedUser);
+        if (existingToken != null) {
+            tokenRepository.delete(existingToken);
+        }
+        // create a new token
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();   // create token
         verificationToken.setToken(token);
@@ -80,6 +112,7 @@ public class UserService {
         if (verificationToken != null && verificationToken.getExpiryDate().after(new Date())) {
             User verifiedUser = verificationToken.getUser();
             verifiedUser.setActive(true);   // -----> now new user is active
+
             userRepository.save(verifiedUser);
         }
     }
