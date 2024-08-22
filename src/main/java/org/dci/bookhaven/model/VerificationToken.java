@@ -15,7 +15,7 @@ public class VerificationToken {
     private String token;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private Users user;
+    private User user;
     @Column(nullable = false)
     private Date expiryDate;
 
@@ -37,11 +37,11 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public Users getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

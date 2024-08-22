@@ -24,7 +24,8 @@ public class SecurityConfig {
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
     }
 
-    private static final String[] PUBLIC_URLS = {   //open url's for everyone
+    //OPEN URLs for everyone
+    private static final String[] PUBLIC_URLS = {
             "/",
             "/register",
             "/register/new",
@@ -44,21 +45,21 @@ public class SecurityConfig {
 
         // HTTP Security structure
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers(PUBLIC_URLS).permitAll(); // open to everyone
+            auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
             auth.requestMatchers("/admin/**").hasAuthority("Admin");
             auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
-            auth.anyRequest().authenticated(); // other requests required authentication
+            auth.anyRequest().authenticated();                  // all other requests required authentication
         });
 
-        //LOGIN Page structure - with usage of customAuthentication..
+        //LOGIN Page structure - with usage of customAuthentication
         http.formLogin(form -> form
                     .loginPage("/login")        // custom login page
                     .usernameParameter("email") // login.html-->name="email", but should accept email as a username
                     .permitAll()                // can anyone access
                     .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
                 .logout(logout -> {
-                    logout.logoutUrl("/logout");  // logout URL
-                    logout.logoutSuccessUrl("/login?logout");  // after success logout direction
+                    logout.logoutUrl("/logout");                // logout URL
+                    logout.logoutSuccessUrl("/login?logout");   // after success logout direction
 
                 }).csrf(csrf -> csrf.disable());  //csrf protection disabled
 

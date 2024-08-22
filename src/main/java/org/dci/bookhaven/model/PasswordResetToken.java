@@ -13,10 +13,11 @@ public class PasswordResetToken {
     private String token;
     @OneToOne
     @JoinColumn(name = "user_id")
-    private Users users;
+    private User user;
     private LocalDateTime expiryDate;
 
     // getters setters
+
     public Long getId() {
         return id;
     }
@@ -33,12 +34,12 @@ public class PasswordResetToken {
         this.token = token;
     }
 
-    public Users getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(Users users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getExpiryDate() {

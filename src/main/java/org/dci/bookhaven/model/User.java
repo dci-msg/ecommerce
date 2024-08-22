@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,19 +24,19 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
-    private UsersType usersType;
+    private UserType userType;
 
     //constructors
-    public Users() {
+    public User() {
     }
 
-    public Users(Long userId, String email, String password, boolean isActive, Date registrationDate, UsersType usersType) {
+    public User(Long userId, String email, String password, boolean isActive, Date registrationDate, UserType userType) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.isActive = isActive;
         this.registrationDate = registrationDate;
-        this.usersType = usersType;
+        this.userType = userType;
     }
     //getters setters
 
@@ -80,27 +80,25 @@ public class Users {
         this.registrationDate = registrationDate;
     }
 
-    public UsersType getUsersType() {
-        return usersType;
+    public UserType getUserType() {
+        return userType;
     }
 
-    public void setUsersType(UsersType usersType) {
-        this.usersType = usersType;
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
 
     //toString
-
-
     @Override
     public String toString() {
-        return "Users{" +
+        return "User{" +
                 "userId=" + userId +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", isActive=" + isActive +
                 ", registrationDate=" + registrationDate +
-                ", usersType=" + usersType +
+                ", userType=" + userType +
                 '}';
     }
 }

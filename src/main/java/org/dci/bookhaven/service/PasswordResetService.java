@@ -1,9 +1,9 @@
 package org.dci.bookhaven.service;
 
 import org.dci.bookhaven.model.PasswordResetToken;
-import org.dci.bookhaven.model.Users;
+import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.repository.PasswordResetTokenRepository;
-import org.dci.bookhaven.repository.UsersRepository;
+import org.dci.bookhaven.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,30 +16,30 @@ import java.util.UUID;
 
 @Service
 public class PasswordResetService {
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final JavaMailSender mailSender;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PasswordResetService(UsersRepository usersRepository, PasswordResetTokenRepository passwordResetTokenRepository, JavaMailSender mailSender, PasswordEncoder passwordEncoder) {
-        this.usersRepository = usersRepository;
+    public PasswordResetService(UserRepository userRepository, PasswordResetTokenRepository passwordResetTokenRepository, JavaMailSender mailSender, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;
     }
 
     public void sendPasswordResetEmail(String email){
-        Users user = usersRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
         if (user == null){
-            //todo
+
             return;
         }
 
         String token = UUID.randomUUID().toString();
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setToken(token);
-        resetToken.setUsers(user);
+        resetToken.setUser(user);
         resetToken.setExpiryDate(LocalDateTime.now().plusHours(1));  // 1 hour valid
 
         passwordResetTokenRepository.save(resetToken);
@@ -66,9 +66,9 @@ public class PasswordResetService {
         if (resetTokenOpt.isPresent() && validatePasswordResetToken(token)){
 
             PasswordResetToken resetToken = resetTokenOpt.get();
-            Users user = resetToken.getUsers();
+            User user = resetToken.getUser();
             user.setPassword(passwordEncoder.encode(newPassword));
-            usersRepository.save(user);
+            userRepository.save(user);
             // then delete token which used
             passwordResetTokenRepository.delete(resetToken);
             return true;

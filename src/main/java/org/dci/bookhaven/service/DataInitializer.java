@@ -1,9 +1,9 @@
 package org.dci.bookhaven.service;
 
-import org.dci.bookhaven.model.Users;
-import org.dci.bookhaven.model.UsersType;
-import org.dci.bookhaven.repository.UsersRepository;
-import org.dci.bookhaven.repository.UsersTypeRepository;
+import org.dci.bookhaven.model.User;
+import org.dci.bookhaven.model.UserType;
+import org.dci.bookhaven.repository.UserRepository;
+import org.dci.bookhaven.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-    private final UsersRepository usersRepository;
-    private final UsersTypeRepository usersTypeRepository;
+    private final UserRepository userRepository;
+    private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataInitializer(UsersRepository usersRepository, UsersTypeRepository usersTypeRepository, PasswordEncoder passwordEncoder) {
-        this.usersRepository = usersRepository;
-        this.usersTypeRepository = usersTypeRepository;
+    public DataInitializer(UserRepository userRepository, UserTypeRepository userTypeRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -29,28 +29,28 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Admin type
-        UsersType adminType = usersTypeRepository.findByUserTypeName("Admin");
+        UserType adminType = userTypeRepository.findByUserTypeName("Admin");
         if (adminType == null){
-            adminType = new UsersType();
+            adminType = new UserType();
             adminType.setUserTypeName("Admin");
-            usersTypeRepository.save(adminType);
+            userTypeRepository.save(adminType);
         }
 
-        if (usersRepository.findByEmail("admin@example.com") == null){
-            Users admin = new Users();
+        if (userRepository.findByEmail("admin@example.com") == null){
+            User admin = new User();
             admin.setEmail("admin@example.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setActive(true);
-            admin.setUsersType(adminType);
-            usersRepository.save(admin);
+            admin.setUserType(adminType);
+            userRepository.save(admin);
         }
 
         // Customer type
-        UsersType customerType = usersTypeRepository.findByUserTypeName("Customer");
+        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
         if (customerType == null){
-            customerType = new UsersType();
+            customerType = new UserType();
             customerType.setUserTypeName("Customer");
-            usersTypeRepository.save(customerType);
+            userTypeRepository.save(customerType);
         }
 
     }

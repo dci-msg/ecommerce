@@ -1,10 +1,10 @@
 package org.dci.bookhaven.service;
 
-import org.dci.bookhaven.model.Users;
-import org.dci.bookhaven.model.UsersType;
+import org.dci.bookhaven.model.User;
+import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.model.VerificationToken;
-import org.dci.bookhaven.repository.UsersRepository;
-import org.dci.bookhaven.repository.UsersTypeRepository;
+import org.dci.bookhaven.repository.UserRepository;
+import org.dci.bookhaven.repository.UserTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,43 +16,43 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
-public class UsersService {
+public class UserService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
     private final JavaMailSender mailSender;
-    private final UsersTypeRepository usersTypeRepository;
+    private final UserTypeRepository userTypeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, VerificationTokenRepository tokenRepository, JavaMailSender mailSender, UsersTypeRepository usersTypeRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.usersRepository = usersRepository;
+    public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository, JavaMailSender mailSender, UserTypeRepository userTypeRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.mailSender = mailSender;
-        this.usersTypeRepository = usersTypeRepository;
+        this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     // REGISTER new user
-    public Users registerNewUserAccount(Users user) {
+    public User registerNewUserAccount(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);    // until email verification provided it should be inactive
 
         // assign "Customer" user type
-        UsersType customerType = usersTypeRepository.findByUserTypeName("Customer");
+        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
         if (customerType == null){
             throw new IllegalArgumentException(("Customer user type not found"));
         }
-        user.setUsersType(customerType);
+        user.setUserType(customerType);
 
-        Users savedUser = usersRepository.save(user);
+        User savedUser = userRepository.save(user);
 
         sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
     // VERIFICATION EMAIL
-    private void sendVerificationEmail(Users savedUser) {
+    private void sendVerificationEmail(User savedUser) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();   // create token
         verificationToken.setToken(token);
@@ -78,9 +78,9 @@ public class UsersService {
         VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
 
         if (verificationToken != null && verificationToken.getExpiryDate().after(new Date())) {
-            Users verifiedUser = verificationToken.getUser();
+            User verifiedUser = verificationToken.getUser();
             verifiedUser.setActive(true);   // -----> now new user is active
-            usersRepository.save(verifiedUser);
+            userRepository.save(verifiedUser);
         }
     }
 

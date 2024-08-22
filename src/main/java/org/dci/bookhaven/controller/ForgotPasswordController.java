@@ -1,6 +1,6 @@
 package org.dci.bookhaven.controller;
 
-import org.dci.bookhaven.model.Users;
+
 import org.dci.bookhaven.service.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
