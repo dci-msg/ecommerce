@@ -8,11 +8,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="online-shop" />
+        <module name="bookhaven" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="bookhaven" target="21" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
