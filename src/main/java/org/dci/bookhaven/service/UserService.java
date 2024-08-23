@@ -8,6 +8,7 @@ import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +26,9 @@ public class UserService {
     private final JavaMailSender mailSender;
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${your.domain}")
+    private String YOUR_DOMAIN;
 
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
@@ -99,7 +103,7 @@ public class UserService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "http://localhost:3636" + confirmationUrl);
+        email.setText(message + YOUR_DOMAIN + confirmationUrl);
 
         mailSender.send(email); // send token
     }

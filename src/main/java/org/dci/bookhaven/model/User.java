@@ -1,6 +1,12 @@
 package org.dci.bookhaven.model;
 
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
 public class User {
