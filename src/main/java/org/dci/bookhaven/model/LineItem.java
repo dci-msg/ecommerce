@@ -2,6 +2,7 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.dci.bookhaven.dto.ShoppingCart;
 
 @Builder
 @Data
@@ -29,5 +30,5 @@ public class LineItem {
     private double lineTotal;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private ShoppingCart shoppingCart;
+    private Order order;
 }

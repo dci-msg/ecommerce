@@ -5,6 +5,7 @@ import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.repository.PasswordResetTokenRepository;
 import org.dci.bookhaven.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,9 @@ import java.util.UUID;
 
 @Service
 public class PasswordResetService {
+    @Value("${app.domain}")
+    private String DOMAIN;
+
     private final UserRepository userRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final JavaMailSender mailSender;
@@ -44,7 +48,7 @@ public class PasswordResetService {
 
         passwordResetTokenRepository.save(resetToken);
 
-        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
+        String resetUrl = DOMAIN + "/reset-password?token=" + token;
         String subject = "Password Reset Request";
         String message = "To reset your password, please click the following link: " + resetUrl;
 

@@ -2,6 +2,10 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.dci.bookhaven.dto.ShoppingCart;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -27,6 +31,15 @@ public class Shipping {
     @Column(name = "shipping_cost", nullable = false, precision = 2, columnDefinition = "double precision")
     private double shippingCost;
 
+    @Column(name = "tracking_number", nullable = false)
+    private String trackingNumber;
+
     @OneToOne(cascade = CascadeType.ALL)
-    private ShoppingCart shoppingCart;
+    private Order order;
+
+    @Column(name = "status", nullable = false)
+    private String status; // TODO: Receiving webhooks from the shipping company
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

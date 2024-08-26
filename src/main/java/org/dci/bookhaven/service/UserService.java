@@ -27,8 +27,8 @@ public class UserService {
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${your.domain}")
-    private String YOUR_DOMAIN;
+    @Value("${app.domain}")
+    private String DOMAIN;
 
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
@@ -101,7 +101,7 @@ public class UserService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + YOUR_DOMAIN + confirmationUrl);
+        email.setText(message + DOMAIN + confirmationUrl);
 
         mailSender.send(email); // send token
     }
