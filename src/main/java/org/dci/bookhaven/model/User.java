@@ -2,8 +2,10 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -19,8 +21,9 @@ public class User {
     private String password;
     private boolean isActive;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date registrationDate;
+    @CreationTimestamp
+    private LocalDateTime registrationDate;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
@@ -30,7 +33,7 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String email, String password, boolean isActive, Date registrationDate, UserType userType) {
+    public User(Long userId, String email, String password, boolean isActive, LocalDateTime registrationDate, UserType userType) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -38,8 +41,8 @@ public class User {
         this.registrationDate = registrationDate;
         this.userType = userType;
     }
-    //getters setters
 
+    //getters setters
     public Long getUserId() {
         return userId;
     }
@@ -72,11 +75,11 @@ public class User {
         isActive = active;
     }
 
-    public Date getRegistrationDate() {
+    public LocalDateTime getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
     }
 
@@ -88,8 +91,8 @@ public class User {
         this.userType = userType;
     }
 
-
     //toString
+
     @Override
     public String toString() {
         return "User{" +
