@@ -51,7 +51,6 @@ public class UserService {
                 throw new IllegalArgumentException("Email address already exists.");
             } else {
                 // if user is not active, update it
-                existingUser.setRegistrationDate(new Date());
                 existingUser.setActive(false);
 
                 User updatedUser = userRepository.save(existingUser);
@@ -62,7 +61,6 @@ public class UserService {
         // new user registration
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);    // until email verification provided it should be inactive
-        user.setRegistrationDate(new Date());
 
         // assign "Customer" user type
         UserType customerType = userTypeRepository.findByUserTypeName("Customer");
