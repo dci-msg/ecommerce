@@ -47,7 +47,6 @@ public class UserService {
                 throw new IllegalArgumentException("Email address already exists.");
             } else {
                 // if user is not active, update it
-                //existingUser.setRegistrationDate(new Date()); ----------------delete
                 existingUser.setActive(false);
 
                 User updatedUser = userRepository.save(existingUser);
@@ -58,7 +57,6 @@ public class UserService {
         // new user registration
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);    // until email verification provided it should be inactive
-        //user.setRegistrationDate(new Date()); ----------------delete
 
         // assign "Customer" user type
         UserType customerType = userTypeRepository.findByUserTypeName("Customer");
@@ -99,7 +97,7 @@ public class UserService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "http://localhost:3636" + confirmationUrl);
+        email.setText(message + "http://localhost:8080" + confirmationUrl);
 
         mailSender.send(email); // send token
     }
