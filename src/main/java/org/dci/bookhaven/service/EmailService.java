@@ -1,7 +1,6 @@
 package org.dci.bookhaven.service;
 
 import org.dci.bookhaven.model.Book;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -9,12 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public void sendAdminNotification(Book book) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("admin@example.com");
+        message.setTo("khachatryan.shoghik@gmail.com");
         message.setSubject("Book Out of Stock: " + book.getTitle());
         message.setText("The book \"" + book.getTitle() + "\" is out of stock. Please restock it as soon as possible.");
         mailSender.send(message);
