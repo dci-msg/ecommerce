@@ -5,6 +5,7 @@ import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class DataInitializer implements CommandLineRunner {
         this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
 
     // ADMIN defined as "active" (default) no validation required
@@ -52,6 +54,26 @@ public class DataInitializer implements CommandLineRunner {
             customerType.setName("CUSTOMER");
             userTypeRepository.save(customerType);
         }
+
+        // Adding default users
+        if (userRepository.findByEmail("customer1@example.com") == null) {
+            User customer1 = new User();
+            customer1.setEmail("customer1@example.com");
+            customer1.setPassword(passwordEncoder.encode("customer123"));
+            customer1.setActive(true);
+            customer1.setUserType(customerType);
+            userRepository.save(customer1);
+        }
+
+        if (userRepository.findByEmail("customer2@example.com") == null) {
+            User customer2 = new User();
+            customer2.setEmail("customer2@example.com");
+            customer2.setPassword(passwordEncoder.encode("customer456"));
+            customer2.setActive(true);
+            customer2.setUserType(customerType);
+            userRepository.save(customer2);
+        }
+
 
     }
 }

@@ -1,51 +1,29 @@
 package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users_type")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class UserType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userTypeId")
     private Long id;
 
-    @Column(unique = true)
-    private String name;
+    private String userTypeName;
 
-    //constructors
-    public UserType() {
-    }
-
-    public UserType(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    //getters setters
-    public Long getUserTypeId() {
-        return id;
-    }
-
-    public void setUserTypeId(Long userTypeId) {
-        this.id = userTypeId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String userTypeName) {
-        this.name = userTypeName;
-    }
+    @OneToMany(mappedBy = "userType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude // to break circular reference mistake = without List<User> users toString method
+    private List<User> users;
 
 
-    //toString
-    @Override
-    public String toString() {
-        return "UserType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
