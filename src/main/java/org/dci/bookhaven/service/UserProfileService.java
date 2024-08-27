@@ -33,22 +33,22 @@ public class UserProfileService {
     }
 
     //Method to get User logged in at that point in time
-    public UserProfile getLoggedInUserProfile(Long userId) {
-        return userProfileRepository.findUserProfileByUserId(userId);
+    public UserProfile getLoggedInUserProfile(Long id) {
+        return userProfileRepository.findUserProfileByUserId(id);
     }
 
     // Method to update the profile of a user with specified details
-    public void updateProfile(Long userId, String firstName, String lastName, LocalDate dateOfBirth, String gender) {
+    public void updateProfile(Long id, String firstName, String lastName, LocalDate dateOfBirth, String gender) {
         // Find the user by ID
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
 
         // Check if the user exists
         if (user == null) {
-            throw new IllegalArgumentException("User not found with ID: " + userId);
+            throw new IllegalArgumentException("User not found with ID: " + id);
         }
 
-        // Find the user's profile by user ID
-        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
+        // Find the user's profile by ID
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
 
         // If the userProfile exists, update the profile details
         if (userProfile != null) {
@@ -70,28 +70,28 @@ public class UserProfileService {
         userProfileRepository.save(userProfile);
     }
 
-    public UserProfile getUserProfileByUserId(Long userId) {
-        return userProfileRepository.findUserProfileByUserId(userId);
+    public UserProfile getUserProfileByUserId(Long id) {
+        return userProfileRepository.findUserProfileByUserId(id);
     }
 
     //Managing addresses
-    public List<Address> getAddresses(Long userId) {
-        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
+    public List<Address> getAddresses(Long id) {
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
         return userProfile.getAddresses();
     }
 
-    public void addAddress(Long userId, Address address) {
-        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
+    public void addAddress(Long id, Address address) {
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
         address.setUserProfile(userProfile);
         addressRepository.save(address);
     }
 
-    public void deleteAddress(Long addressId) {
-        addressRepository.deleteById(addressId);
+    public void deleteAddress(Long id) {
+        addressRepository.deleteById(id);
     }
 
-    public void updateAddress(Long addressId, Address updatedAddress) {
-        Address address = addressRepository.findById(addressId).orElseThrow(() -> new IllegalArgumentException("Address not found"));
+    public void updateAddress(Long id, Address updatedAddress) {
+        Address address = addressRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Address not found"));
         address.setStreet(updatedAddress.getStreet());
         address.setCity(updatedAddress.getCity());
         address.setZipCode(updatedAddress.getZipCode());

@@ -25,72 +25,72 @@ public class userProfileController {
 
     // GET method to display the user's profile
     @GetMapping("/view")
-    public String viewProfile(@RequestParam Long userId, Model model) {
-        UserProfile userProfile = userProfileService.getUserProfileByUserId(userId);
+    public String viewProfile(@RequestParam (name = "id") Long id, Model model) {
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
         model.addAttribute("userProfile", userProfile);
         return "viewProfile";
     }
 
     // GET method to show the update form
     @GetMapping("/edit")
-    public String showUpdateForm(@RequestParam Long userId, Model model) {
-        UserProfile userProfile = userProfileService.getUserProfileByUserId(userId);
+    public String showUpdateForm(@RequestParam Long id, Model model) {
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
         model.addAttribute("userProfile", userProfile);
-        return "editProfile"; // returns a form view (Thymeleaf, JSP, etc.)
+        return "editProfile";
     }
 
     // POST method to handle form submission and update the profile
     @PostMapping("/update")
-    public String updateProfile(@RequestParam Long userId,
+    public String updateProfile(@RequestParam Long id,
                                 @RequestParam String firstName,
                                 @RequestParam String lastName,
                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth,
                                 @RequestParam String gender,
                                 Model model) {
-        userProfileService.updateProfile(userId, firstName, lastName, dateOfBirth, gender);
+        userProfileService.updateProfile(id, firstName, lastName, dateOfBirth, gender);
         model.addAttribute("message", "Profile updated successfully!");
-        return "redirect:/profile/view?userId=" + userId;
+        return "redirect:/profile/view?id=" + id;
     }
 
     // Managing Addresses
     @GetMapping("/addresses")
-    public String viewAddresses(@RequestParam Long userId, Model model) {
-        List<Address> addresses = userProfileService.getAddresses(userId);
+    public String viewAddresses(@RequestParam Long id, Model model) {
+        List<Address> addresses = userProfileService.getAddresses(id);
         model.addAttribute("addresses", addresses);
-        model.addAttribute("userId", userId);
+        model.addAttribute("id", id);
         return "viewAddresses";
     }
 
     @GetMapping("/addresses/add")
-    public String showAddAddressForm(@RequestParam Long userId, Model model) {
+    public String showAddAddressForm(@RequestParam Long id, Model model) {
         model.addAttribute("address", new Address());
-        model.addAttribute("userId", userId);
+        model.addAttribute("id", id);
         return "addAddress";
     }
 
     @PostMapping("/addresses/add")
-    public String addAddress(@RequestParam Long userId, @ModelAttribute Address address) {
-        userProfileService.addAddress(userId, address);
-        return "redirect:/profile/addresses?userId=" + userId;
+    public String addAddress(@RequestParam Long id, @ModelAttribute Address address) {
+        userProfileService.addAddress(id, address);
+        return "redirect:/profile/addresses?id=" + id;
     }
 
     @GetMapping("/addresses/edit")
-    public String showEditAddressForm(@RequestParam Long addressId, Model model) {
-        Address address = addressRepository.findById(addressId).orElse(null);
+    public String showEditAddressForm(@RequestParam Long id, Model model) {
+        Address address = addressRepository.findById(id).orElse(null);
         model.addAttribute("address", address);
         return "editAddress";
     }
 
     @PostMapping("/addresses/edit")
-    public String updateAddress(@RequestParam Long addressId, @ModelAttribute Address address) {
-        userProfileService.updateAddress(addressId, address);
-        return "redirect:/profile/addresses?userId=" + address.getUserProfile().getId();
+    public String updateAddress(@RequestParam Long id, @ModelAttribute Address address) {
+        userProfileService.updateAddress(id, address);
+        return "redirect:/profile/addresses?id=" + address.getUserProfile().getId();
     }
 
     @PostMapping("/addresses/delete")
-    public String deleteAddress(@RequestParam Long addressId, @RequestParam Long userId) {
-        userProfileService.deleteAddress(addressId);
-        return "redirect:/profile/addresses?userId=" + userId;
+    public String deleteAddress(@RequestParam Long id) {
+        userProfileService.deleteAddress(id);
+        return "redirect:/profile/addresses?id=" + id;
     }
 
 }

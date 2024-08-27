@@ -12,7 +12,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
     @Column(unique = true)
     private String email;
     @NotEmpty
@@ -33,8 +33,8 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String email, String password, boolean isActive, LocalDateTime registrationDate, UserType userType) {
-        this.userId = userId;
+    public User(Long id, String email, String password, boolean isActive, LocalDateTime registrationDate, UserType userType) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.isActive = isActive;
@@ -43,12 +43,12 @@ public class User {
     }
 
     //getters setters
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long userId) {
+        this.id = userId;
     }
 
     public String getEmail() {
@@ -96,7 +96,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userId=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", isActive=" + isActive +
