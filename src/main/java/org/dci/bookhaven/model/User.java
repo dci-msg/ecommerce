@@ -3,10 +3,8 @@ package org.dci.bookhaven.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -19,6 +17,8 @@ public class User {
     private String email;
     @NotEmpty
     private String password;
+
+    @Column(name = "is_active")
     private boolean isActive;
 
     @CreationTimestamp
