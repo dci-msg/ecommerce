@@ -39,14 +39,15 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
 
 
  1. **User**
+    
+    | userId           | Long          | @Id                |
+    |------------------|---------------|--------------------|
+    | email            | String        |                    |
+    | password         | String        | @NotEmpty          |
+    | isActive         | boolean       |                    |
+    | registrationDate | LocalDateTime | @CreationTimeStamp |
+    | userType         | UserType      | @ManyToOne         |
 
-   | userId           | Long          | @Id                |
-   |------------------|---------------|--------------------|
-   | email            | String        |                    |
-   | password         | String        | @NotEmpty          |
-   | isActive         | boolean       |                    |
-   | registrationDate | LocalDateTime | @CreationTimeStamp |
-   | userType         | UserType      | @ManyToOne         |
 
 2. **UserType**
 
@@ -57,7 +58,7 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
  
 
    
-3**Book**
+3. **Book**
 
    | id          | Long          | @Id                |
    |-------------|---------------|--------------------|
@@ -92,7 +93,7 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
    | country      | String         |                    |
    | postNumber   | String         |                    |
 
-6**CartItem**
+6. **CartItem**
 
    | id           | Long           | @Id                |
    |--------------|----------------|--------------------|
@@ -113,23 +114,23 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
    | totalPrice   | Double         |                    |
 
 
-# User Account Management Module
+# 1. User Account Management 
 
 This module focuses on the **User Account Management** functionality for the E-Commerce Platform. The primary features include:
 
-- User registration
-- Authentication
+- Registration
 - Login
 - Logout
 - Password recovery
+- User authentication
 
 This module differentiates between two types of users: **Admin** and **Customer**.
 
 ## Features and Capabilities
 
-### 1. Registration
+### 1.1. Registration
 
-#### 1.1 Admin Registration:
+**Admin Registration**:
 
 - **Admin** users are created by default using the `DataInitializer` class when the program is run.
 - The `DataInitializer` class is used to add new admins.
@@ -137,7 +138,7 @@ This module differentiates between two types of users: **Admin** and **Customer*
    - Email address: `admin@example.com`
    - Password: `admin123`
 
-#### 1.2 New User Registration:
+**New User Registration**:
 
 - Users can register by providing an email and password.
 - Upon successful registration, users are assigned the role of **Customer** by default.
@@ -147,12 +148,12 @@ This module differentiates between two types of users: **Admin** and **Customer*
    - If the user confirms the token by clicking the link, they will be directed to the login page.
    - If a user attempts to register again with the same email address without confirming the token, the old token is invalidated, and a new token is generated and sent to the email address.
 
-### 2. Login
+### 1.2. Login
 
-- **Admin Login**:
+**Admin Login**:
    - Admin users are assigned by the DataInitializer class when the project is run. Admins are logged in with their assigned credentials.
 
-- **User Login**:
+**User Login**:
    - Registered users can log in to their accounts using their credentials (email and password).
 
    - Both **Admin** and **Customer** roles have different landing pages post-login:
@@ -166,20 +167,20 @@ This module differentiates between two types of users: **Admin** and **Customer*
         - Manage Users
    - Login attempts are secured to prevent unauthorized access.
 
-### 3. Logout
+### 1.3. Logout
 
 - **User Logout**:
    - "Admin"s and "Customer"s can securely log out of their accounts, terminating their current session and ensuring their information is protected.
    - Upon logout, the user is redirected to the login page.
 
-### 4. Password Recovery
+### 1.4. Password Recovery
 
 - **Password Recovery and Reset**:
-   - Users can request a password reset link if they forget their password.
+   - Users can request a password reset link by using the "Forgot your password?" option on the login page if they forget their password.
    - A unique token is generated and sent to the user’s registered email address.
    - Users can use this token to securely set a new password.
 
-### 5. User Authentication
+### 1.5. User Authentication
 
 - **Authentication and Authorization**:
    - The system verifies user credentials during login and ensures secure access to user-specific pages.
@@ -187,24 +188,19 @@ This module differentiates between two types of users: **Admin** and **Customer*
    - Users who have not verified their email addresses can attempt to register again with the same email and receive a new verification token.
    - The module uses role-based access control to ensure that **Administrators** and **Customers** can only access their designated pages.
 
-### 6. Password Management
-
-- **Password Change**:
-   - Users can change their passwords by using the "Forgot your password?" option on the login page.
-
 ## Usage
 
 To use the User Account Management features:
 
-1. **Registration**:
+**Registration**:
    - Go to the registration page and fill in the required information.
    - Check your email for the verification link and click it to activate your account.
 
-2. **Login**:
+**Login**:
    - Enter your registered email and password on the login page.
    - You will be redirected to the appropriate dashboard based on your role.
 
-3. **Forgot Password**:
+**Forgot Password**:
    - Click on the "Forgot Password" link on the login page.
    - Enter your email address to receive a password reset link.
    - Follow the instructions in the email to reset your password.
@@ -213,5 +209,16 @@ To use the User Account Management features:
 
 This module provides a robust and secure user management system, enabling efficient registration, login, password management, and role-based access control. By distinguishing between **Administrator** and **Customer** roles, the system ensures that each user has the appropriate access and permissions.
 
+
+# 2. User Profile Management 
+
+
+# 3. Product Management 
+
+
+# 4. Shopping Cart and Checkout System 
+
+
+# 5. Order Management 
 
 
