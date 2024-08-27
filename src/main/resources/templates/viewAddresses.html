@@ -26,9 +26,9 @@
             <td th:text="${address.zipCode}">12345</td>
             <td th:text="${address.country}">Country Name</td>
             <td>
-                <a th:href="@{/profile/addresses/edit(addressId=${address.addressId})}" class="btn btn-warning btn-sm">Edit</a>
+                <a th:href="@{/profile/addresses/edit(addressId=${address.id})}" class="btn btn-warning btn-sm">Edit</a>
                 <form th:action="@{/profile/addresses/delete}" method="post" th:object="${address}" style="display:inline;">
-                    <input type="hidden" th:name="addressId" th:value="${address.addressId}" />
+                    <input type="hidden" th:name="addressId" th:value="${address.id}" />
                     <input type="hidden" th:name="userId" th:value="${userId}" />
                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>

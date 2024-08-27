@@ -14,7 +14,7 @@ public class UserProfile {
     @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long profileId;
+    private Long id;
 
     @Getter
     @OneToMany(mappedBy = "userProfile")
@@ -45,8 +45,8 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    public UserProfile(Long profileId, String firstName, String lastName, LocalDate dateOfBirth, String gender, List<Address> addresses) {
-        this.profileId = profileId;
+    public UserProfile(Long id, String firstName, String lastName, LocalDate dateOfBirth, String gender, List<Address> addresses) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -68,8 +68,8 @@ public class UserProfile {
         this.addresses = addresses;
     }
 
-    public void setProfileId(Long profileId) {
-        this.profileId = profileId;
+    public void setId(Long profileId) {
+        this.id = profileId;
     }
 
     public void setFirstName(String firstName) {

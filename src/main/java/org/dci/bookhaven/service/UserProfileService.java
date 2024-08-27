@@ -34,7 +34,7 @@ public class UserProfileService {
 
     //Method to get User logged in at that point in time
     public UserProfile getLoggedInUserProfile(Long userId) {
-        return userProfileRepository.findUserProfileByUser_UserId(userId);
+        return userProfileRepository.findUserProfileByUserId(userId);
     }
 
     // Method to update the profile of a user with specified details
@@ -48,7 +48,7 @@ public class UserProfileService {
         }
 
         // Find the user's profile by user ID
-        UserProfile userProfile = userProfileRepository.findUserProfileByUser_UserId(userId);
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
 
         // If the userProfile exists, update the profile details
         if (userProfile != null) {
@@ -71,17 +71,17 @@ public class UserProfileService {
     }
 
     public UserProfile getUserProfileByUserId(Long userId) {
-        return userProfileRepository.findUserProfileByUser_UserId(userId);
+        return userProfileRepository.findUserProfileByUserId(userId);
     }
 
     //Managing addresses
     public List<Address> getAddresses(Long userId) {
-        UserProfile userProfile = userProfileRepository.findUserProfileByUser_UserId(userId);
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
         return userProfile.getAddresses();
     }
 
     public void addAddress(Long userId, Address address) {
-        UserProfile userProfile = userProfileRepository.findUserProfileByUser_UserId(userId);
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(userId);
         address.setUserProfile(userProfile);
         addressRepository.save(address);
     }

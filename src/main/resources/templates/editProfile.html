@@ -9,7 +9,7 @@
 <div class="container">
     <h1 class="mt-4">Edit Profile</h1>
     <form th:action="@{/profile/update}" th:object="${userProfile}" method="post" class="mt-4">
-        <input type="hidden" th:value="${userProfile.profileId}" name="userId"/>
+        <input type="hidden" th:value="${userProfile.getId}" name="userId"/>
 
         <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>

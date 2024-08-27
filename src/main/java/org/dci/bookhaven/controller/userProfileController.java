@@ -28,7 +28,7 @@ public class userProfileController {
     public String viewProfile(@RequestParam Long userId, Model model) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(userId);
         model.addAttribute("userProfile", userProfile);
-        return "viewProfile"; // returns a view (Thymeleaf, JSP, etc.)
+        return "viewProfile";
     }
 
     // GET method to show the update form
@@ -84,7 +84,7 @@ public class userProfileController {
     @PostMapping("/addresses/edit")
     public String updateAddress(@RequestParam Long addressId, @ModelAttribute Address address) {
         userProfileService.updateAddress(addressId, address);
-        return "redirect:/profile/addresses?userId=" + address.getUserProfile().getProfileId();
+        return "redirect:/profile/addresses?userId=" + address.getUserProfile().getId();
     }
 
     @PostMapping("/addresses/delete")

@@ -8,7 +8,7 @@ import lombok.*;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long addressId;
+    private Long id;
 
     @Getter
     @ManyToOne
@@ -41,7 +41,7 @@ public class Address {
     }
 
     public Address(Long addressId, UserProfile userProfile, String street, String city, String zipCode, String country) {
-        this.addressId = addressId;
+        this.id = addressId;
         this.userProfile = userProfile;
         this.street = street;
         this.city = city;
@@ -50,8 +50,8 @@ public class Address {
     }
 
     // Getters and setters
-    public Long getAddressId() {
-        return addressId;
+    public Long getId() {
+        return id;
     }
 
     public UserProfile getUserProfile() {
@@ -74,8 +74,8 @@ public class Address {
         return country;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setId(Long addressId) {
+        this.id = addressId;
     }
 
 

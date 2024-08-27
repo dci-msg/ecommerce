@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
     // No need to define custom query methods for basic CRUD operations
 
-    UserProfile findUserProfileByUser_UserId(Long userId);
+    UserProfile findUserProfileByUserId(Long Id);
+
 }
