@@ -6,6 +6,17 @@
     <title>Book Haven</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between buttons */
+        }
+        .btn-smaller {
+            font-size: 0.875rem; /* Smaller font size */
+            padding: 0.375rem 0.75rem; /* Smaller padding */
+        }
+    </style>
 </head>
 <body>
 <!-- Navigation Bar -->
@@ -25,12 +36,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>
             </li>
-            <!-- Login & Registration Buttons -->
-            <li class="nav-item">
+            <!-- Login, Registration, and Logout Buttons -->
+            <li class="nav-item" th:if="${not isLoggedIn}">
                 <a class="nav-link btn btn-outline-primary ml-2" href="/login">Login</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" th:if="${not isLoggedIn}">
                 <a class="nav-link btn btn-primary ml-2" href="/register">Registration</a>
+            </li>
+            <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
             </li>
         </ul>
     </div>
@@ -43,7 +57,11 @@
         <p class="lead">Your one-stop shop for all kinds of books. Explore our extensive collection and find your next great read.</p>
         <hr class="my-4">
         <p>Browse our categories, discover bestsellers, and stay tuned for new arrivals.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Shop Now</a>
+        <div class="btn-container">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Shop Now</a>
+            <!-- New Button for Logged-in Users -->
+            <a class="btn btn-secondary btn-sm btn-smaller" href="/dashboard" th:if="${isLoggedIn}" role="button">Manage Your Bookhaven Account</a>
+        </div>
     </div>
 </div>
 
