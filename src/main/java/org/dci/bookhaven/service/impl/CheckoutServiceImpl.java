@@ -1,10 +1,12 @@
 package org.dci.bookhaven.service.impl;
 
+import com.google.gson.Gson;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.transaction.Transactional;
+import org.dci.bookhaven.dto.PaymentResponse;
 import org.dci.bookhaven.model.Order;
 import org.dci.bookhaven.service.CheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Value("${stripe.sk}")
     private String secretKey;
+
+    Gson gson = new Gson();
 
     @Autowired
     public CheckoutServiceImpl(@Value("${stripe.sk}") String secretKey) {
@@ -47,6 +51,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         return paymentIntent.getClientSecret();
     }
 
+    PaymentResponse paymentResponse = new PaymentResponse(getClientSecret(paymentIntent));
 
 }
 

@@ -1,6 +1,8 @@
 package org.dci.bookhaven.controller;
 
 
+import com.google.gson.Gson;
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.checkout.SessionCreateParams;
@@ -23,24 +25,18 @@ import java.util.Set;
 @RequestMapping("/checkout")
 public class CheckoutController {
 
-    private final CheckoutService checkoutService;
-    private final OrderService orderService;
-
     @Value("${app.domain}")
     private String DOMAIN;
 
-    @Autowired
-    public CheckoutController(
-            CheckoutService checkoutService,
-            OrderService orderService) {
-        this.checkoutService = checkoutService;
-        this.orderService = orderService;
-    }
+    @Value("${stripe.sk}")
+    private String secretKey;
 
     @GetMapping("/checkout")
-    public String checkout(@RequestParam("orderId") Long orderId, Model model) throws StripeException {
+    public String checkout(@RequestParam("orderId") Long orderId,
+                           Model model) throws StripeException {
+
         // Fetch the order by orderId
-        Order order = orderService.getOrderById(orderId);
+        Order order =
         Set<LineItem> lineItems = order.getLineItems();
         Coupon coupon = order.getCoupon();
         String currency = order.getCurrency();
