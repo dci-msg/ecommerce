@@ -1,17 +1,26 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-
-    <title>Buy cool new product</title>
+    <title>Checkout</title>
 </head>
 
 <body>
 <!-- Use action="/create-checkout-session.php" if your server is PHP based. -->
-<form action="/create-checkout-session" method="POST">
+<form id = "payment-form">
+    <div id = "payment-element">
+        <!-- Elements will create form elements here -->
+    </div>
+
+    <p> Client Secret: <span th:text="${client_secret}"></span></p>
 
 
 
 
     <button type="submit">Checkout</button>
 </form>
+
+<div id = "error-message"></div>
+
+<script src="https://js.stripe.com/v3/"></script>
 </body>
 </html>

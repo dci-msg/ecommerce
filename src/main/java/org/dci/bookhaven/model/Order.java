@@ -35,13 +35,10 @@ public class Order {
     @Column(name = "total", nullable = false, precision = 2, columnDefinition = "double precision")
     private Double total;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Shipping shipping;
+    @Column(name = "currency", nullable = false)
+    private String currency;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Payment payment;
-
-    @ManyToOne(cascade = CascadeType.ALL)
     private Address billingAddress;
 
     @Column(name = "status", nullable = false)

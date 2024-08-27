@@ -6,7 +6,9 @@ import org.dci.bookhaven.model.*;
 import org.dci.bookhaven.repository.OrderRepository;
 import org.dci.bookhaven.service.*;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
@@ -22,19 +24,14 @@ public class OrderServiceImpl implements OrderService {
     public void createOrder(
             ShoppingCart shoppingCart,
             User user,
-            Payment payment,
-            Shipping shipping,
             Address billingAddress) {
 
         Order order = new Order();
 
         order.setUser(user);
-        order.setPayment(payment);
         order.setLineItems(shoppingCart.getLineItems());
         order.setCoupon(shoppingCart.getCoupon());
         order.setTotal(shoppingCart.getTotal());
-        order.setShipping(shipping);
-        order.setPayment(payment);
         order.setBillingAddress(billingAddress);
         order.setStatus("OPEN");
 
@@ -50,4 +47,11 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("CLOSED");
         orderRepository.save(order);
     }
+
+    @Override
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findOrderById(orderId);
+    }
+
+
 }
