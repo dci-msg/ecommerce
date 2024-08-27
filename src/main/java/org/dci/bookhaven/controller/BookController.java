@@ -39,7 +39,7 @@ public class BookController {
         return "book/manage-books";
     }
 
-    @GetMapping
+    @GetMapping("/index")
     public String bookhaven(Model model) {
         List<Book> books = bookService.getBooks();
 

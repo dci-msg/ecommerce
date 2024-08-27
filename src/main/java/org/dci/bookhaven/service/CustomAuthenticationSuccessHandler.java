@@ -28,7 +28,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.sendRedirect("/dashboard");
         }else {
             response.sendRedirect("/login?error");
-      //      response.sendRedirect("/index");
         }
     }
 }
