@@ -59,16 +59,18 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
    
 3**Book**
 
-   | id          | Long          | @Id                |
-   |-------------|---------------|--------------------|
-   | title       | String        |                    |
-   | author      | String        |                    |
-   | isbn        | String        |                    | 
-   | description | String        |                    |
-   | price       | Double        |                    |
-   | category    | String        |                    |
-   | inventory   | Int           |                    |
-
+   | id          | Long        | @Id        |
+   |-------------|-------------|------------|
+   | title       | String      |            |
+   | author      | String      |            |
+   | isbn        | String      | uniq       | 
+   | description | String      |            |
+   | price       | BigDecimal  |            |
+   | category    | Category    | @ManyToOne |
+   | pages       | Int         |            |
+   | image       | String      |            |
+   | language    | String      |            |
+   | publishDate | LocalDate   |            |
       
 
 4. **UserProfile**
@@ -118,6 +120,22 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
    |--------------|----------------|--------------------|
    | cartItems    | List<CartItem> | @OneToMany         |
    | user         | User           | @OneToOne
+
+
+7. **Inventory**
+
+   | id         | Long          | @Id                |
+   |------------|---------------|--------------------|
+   | book       | Book          | @OneToOne          |
+   | emails     | List<String>  | @ElementCollection |
+
+7. **Category**
+
+   | id          | Long       | @Id        |
+   |-------------|------------|------------|
+   | name        | String     |            |
+   | description | String     |            |
+   | book        | List<Book> | @OneToMany |
 
 
 # User Account Management Module
@@ -220,5 +238,18 @@ To use the User Account Management features:
 
 This module provides a robust and secure user management system, enabling efficient registration, login, password management, and role-based access control. By distinguishing between **Administrator** and **Customer** roles, the system ensures that each user has the appropriate access and permissions.
 
+### 2. Product Management
 
+#### 2.1 Book Management:
+The admins can 
+- Add new books to the inventory. 
+- Edit existing book details. 
+- Delete books from the inventory.
 
+#### 2.2 Category Management:
+The admins can Create and manage book categories.
+
+#### 2.2 Inventory Management:
+-Update and monitor inventory levels for each book.
+-When stock drops to 10, all administrators receive an email notification to order more books.
+-When stock falls below 3, customers who have shown interest in the book receive an email notification.
