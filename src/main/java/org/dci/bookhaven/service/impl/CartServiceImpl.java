@@ -1,9 +1,9 @@
 package org.dci.bookhaven.service.impl;
 
 import org.dci.bookhaven.model.Book;
-import org.dci.bookhaven.service.ShoppingCartService;
+import org.dci.bookhaven.service.CartService;
 
-public class ShoppingCartServiceImpl implements ShoppingCartService {
+public class CartServiceImpl implements CartService {
 
     public void add (Book book) {
         // Add book to shopping cart

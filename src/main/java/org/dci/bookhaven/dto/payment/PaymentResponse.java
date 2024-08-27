@@ -1,4 +1,4 @@
-package org.dci.bookhaven.dto;
+package org.dci.bookhaven.dto.payment;
 
 import lombok.Data;
 

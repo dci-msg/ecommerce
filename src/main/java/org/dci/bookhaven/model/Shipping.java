@@ -2,7 +2,6 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.dci.bookhaven.dto.ShoppingCart;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;

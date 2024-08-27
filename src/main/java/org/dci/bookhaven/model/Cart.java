@@ -3,6 +3,8 @@ package org.dci.bookhaven.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -10,15 +12,12 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "line_items")
-public class LineItem {
+@Table(name = "carts")
+public class Cart {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Book book;
-
-    @Column(name = "quantity", nullable = false)
-    private int quantity;
+    @OneToMany
+    private Set<LineItem> lineItems;
 }

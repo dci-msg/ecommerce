@@ -1,4 +1,4 @@
 package org.dci.bookhaven.service;
 
-public interface PaymentService {
+public interface CartService {
 }

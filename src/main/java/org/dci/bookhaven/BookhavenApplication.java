@@ -18,20 +18,16 @@ public class BookhavenApplication {
         SpringApplication.run(BookhavenApplication.class, args);
     }
 
-    UserService userService;
-    UserTypeService userTypeService;
-    AddressService addressService;
-    OrderService orderService;
-    CheckoutService checkoutService;
-
-    @Autowired
-    public BookhavenApplication(UserService userService, UserTypeService userTypeService, AddressService addressService, OrderService orderService, CheckoutService checkoutService) {
-        this.userService = userService;
-        this.userTypeService = userTypeService;
-        this.addressService = addressService;
-        this.orderService = orderService;
-        this.checkoutService = checkoutService;
-    }
+//    UserService userService;
+//    UserTypeService userTypeService;
+//    OrderService orderService;
+//
+//    @Autowired
+//    public BookhavenApplication(UserService userService, UserTypeService userTypeService, OrderService orderService) {
+//        this.userService = userService;
+//        this.userTypeService = userTypeService;
+//        this.orderService = orderService;
+//    }
 
 ////    // Create 2 roles
 ////    @Bean
