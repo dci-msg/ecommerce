@@ -16,6 +16,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
 
+    @Value("${stripe.sk}")
+    private String secretKey;
+
+    @Autowired
+    public CheckoutServiceImpl(@Value("${stripe.sk}") String secretKey) {
+        this.secretKey = secretKey;
+        Stripe.apiKey = secretKey;
+    }
+
     @Override
     @Modifying
     @Transactional
