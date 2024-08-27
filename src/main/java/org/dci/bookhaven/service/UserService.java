@@ -1,126 +1,117 @@
 package org.dci.bookhaven.service;
 
-
 import jakarta.transaction.Transactional;
-import org.dci.bookhaven.model.PasswordResetToken;
 import org.dci.bookhaven.model.User;
+import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.model.VerificationToken;
-import org.dci.bookhaven.repository.PasswordResetRepository;
 import org.dci.bookhaven.repository.UserRepository;
-import org.dci.bookhaven.repository.VerificationRepository;
+import org.dci.bookhaven.repository.UserTypeRepository;
+import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private VerificationRepository tokenRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private PasswordResetRepository passwordResetRepository;
+    private final UserRepository userRepository;
+    private final VerificationTokenRepository tokenRepository;
+    private final JavaMailSender mailSender;
+    private final UserTypeRepository userTypeRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public User registerUser(User user) {
-        // check if user with the same email already exists
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new IllegalArgumentException("Email is already in use.");
+    @Autowired
+    public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
+                       JavaMailSender mailSender, UserTypeRepository userTypeRepository,
+                       PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.mailSender = mailSender;
+        this.userTypeRepository = userTypeRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    // REGISTER new user
+    public User registerNewUserAccount(User user) {
+        // existed user registration
+        // check if user in db
+        User existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser != null) {
+            if (existingUser.isActive()) {
+                throw new IllegalArgumentException("Email address already exists.");
+            } else {
+                // if user is not active, update it
+                existingUser.setActive(false);
+
+                User updatedUser = userRepository.save(existingUser);
+                sendVerificationEmail(updatedUser);
+                return updatedUser;
+            }
         }
-
-        System.out.println("Registering user: " + user);
+        // new user registration
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User savedUser = userRepository.save(user); // first, save the user
+        user.setActive(false);    // until email verification provided it should be inactive
 
-        sendVerificationEmail(savedUser); // send verification email
+        // assign "Customer" user type
+        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
+        if (customerType == null) {
+            throw new IllegalArgumentException(("Customer user type not found"));
+        }
+        user.setUserType(customerType);
+
+        User savedUser = userRepository.save(user);
+
+        sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
-
     }
 
-    private void sendVerificationEmail(User user) {
-        try {
-            String token = UUID.randomUUID().toString();
-            VerificationToken verificationToken = new VerificationToken(token, user, LocalDateTime.now().plusDays(1));
-            tokenRepository.save(verificationToken);
 
-            String recipientAddress = user.getEmail();
-            String subject = "Email Verification";
-            String confirmationUrl = "http://localhost:3030/verify?token=" + token;
-            String message = "Please click the link below to VERIFY your email:\n" + confirmationUrl;
-
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setTo(recipientAddress);
-            simpleMailMessage.setSubject(subject);
-            simpleMailMessage.setText(message);
-
-            mailSender.send(simpleMailMessage);
-            System.out.println("Verification email sent to: " + recipientAddress);
-        } catch (Exception e) {
-            System.err.println("Failed to send verification email: " + e.getMessage());
-        }
-    }
-
-    // verify user
+    // VERIFICATION EMAIL
     @Transactional
-    public boolean verifyUser(String token) {
-        VerificationToken verificationToken = tokenRepository.findByToken(token);
-        if (verificationToken == null || verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            return false;
+    public void sendVerificationEmail(User savedUser) {
+        // check and delete if token already in the db
+        VerificationToken existingToken = tokenRepository.findByUser(savedUser);
+        if (existingToken != null) {
+            tokenRepository.delete(existingToken);
         }
-        User user = verificationToken.getUser();
-        user.setVerified(true);
-        userRepository.save(user);
-        tokenRepository.delete(verificationToken);
-        return true;
-
-    }
-
-
-    public void sendPasswordResetEmail(User user) {
+        // create a new token
         String token = UUID.randomUUID().toString();
-        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user, LocalDateTime.now().plusDays(1));
-        passwordResetRepository.save(passwordResetToken);
+        VerificationToken verificationToken = new VerificationToken();   // create token
+        verificationToken.setToken(token);
+        verificationToken.setUser(savedUser);
+        verificationToken.setExpiryDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 
-        String recipientAddress = user.getEmail();
-        String subject = "Password Reset";
-        String resetUrl = "http://localhost:3030/reset-password?token=" + token;
-        String message = "Please click the link below to RESET your email:\n" + resetUrl;
+        tokenRepository.save(verificationToken);   // save token
 
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(recipientAddress);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(message);
+        String recipientAddress = savedUser.getEmail();
+        String subject = "Email Confirmation";
+        String confirmationUrl = "/verify-email?token=" + token;
+        String message = "Please confirm your email by clicking the link below:\n";
 
-        mailSender.send(simpleMailMessage);
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(recipientAddress);
+        email.setSubject(subject);
+        email.setText(message + "http://localhost:8080" + confirmationUrl);
+
+        mailSender.send(email); // send token
     }
 
-    // reset password
-    @Transactional
-    public boolean resetPassword(String token, String newPassword) {
-        PasswordResetToken passwordResetToken = passwordResetRepository.findByToken(token);
-        if (passwordResetToken == null || passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            return false;
+    public void verifyUser(String token) {
+        VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
+
+        if (verificationToken != null && verificationToken.getExpiryDate().after(new Date())) {
+            User verifiedUser = verificationToken.getUser();
+            verifiedUser.setActive(true);   // -----> now new user is active
+
+            userRepository.save(verifiedUser);
         }
-        User user = passwordResetToken.getUser();
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-        passwordResetRepository.delete(passwordResetToken);
-        return true;
     }
 
 
-    // find user by email
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
 }

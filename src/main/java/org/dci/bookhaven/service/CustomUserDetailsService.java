@@ -3,13 +3,11 @@ package org.dci.bookhaven.service;
 
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.repository.UserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-
-import java.util.ArrayList;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -22,21 +20,23 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Loading user by email " + email);  //--->log
 
-        // find my user in the db:
-        User user = userRepository.findByUsername(username);
-
-        // if no such a user in the db:
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+        User user = userRepository.findByEmail(email);
+        if (user == null){
+            System.out.println("User not found: " + email);   //--->log
+            throw new UsernameNotFoundException("User not found with email " + email);
         }
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.isVerified(),
-                true, true, true,
-                new ArrayList<>(user.getRoles()) // convert Set to Collection here
-        );
+        if (user.getUserType() == null){
+            System.out.println("User type is null for email: " + email); //--->log
+        }
+        System.out.println("User found: " + user.getEmail()); //--->log
+
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getUserType().getUserTypeName())
+                .disabled(!user.isActive())
+                .build();
     }
 }

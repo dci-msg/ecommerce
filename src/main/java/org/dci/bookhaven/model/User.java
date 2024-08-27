@@ -1,10 +1,12 @@
 package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -12,89 +14,41 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String username;
-    @Column(nullable = false)
-    private String password;
-    @Column(nullable = false, unique = true)
+    private Long userId;
+    @Column(unique = true)
     private String email;
-    @Column(nullable = false)
-    private String firstName;
-    @Column(nullable = false)
-    private String lastName;
+    @NotEmpty
+    private String password;
+    private boolean isActive;
 
-    @Column
-    private Date dateOfBirth;
-
-    // for user verifying with email
-    @Column
-    private boolean verified = false;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-                name = "user_roles",
-                joinColumns = @JoinColumn(name = "user_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    @CreationTimestamp
+    private LocalDateTime registrationDate;
 
 
-    /*@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Address> addresses;*/
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
+    private UserType userType;
 
-    // constructors
+    //constructors
     public User() {
-
     }
 
-    public User(String username, String password, String email, String firstName, String lastName, Date dateOfBirth, boolean verified, Set<Role> roles) {
-        this.username = username;
-        this.password = password;
+    public User(Long userId, String email, String password, boolean isActive, LocalDateTime registrationDate, UserType userType) {
+        this.userId = userId;
         this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.verified = verified;
-        this.roles = roles;
-    }
-
-    public User(Long id, String username, String password, String email, String firstName, String lastName, Date dateOfBirth, boolean verified, Set<Role> roles) {
-        this.id = id;
-        this.username = username;
         this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.verified = verified;
-        this.roles = roles;
-    }
-    // getter setter
-
-
-    public Long getId() {
-        return id;
+        this.isActive = isActive;
+        this.registrationDate = registrationDate;
+        this.userType = userType;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    //getters setters
+    public Long getUserId() {
+        return userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -105,60 +59,49 @@ public class User {
         this.email = email;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPassword() {
+        return password;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getLastName() {
-        return lastName;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
-    public boolean isVerified() {
-        return verified;
+    public UserType getUserType() {
+        return userType;
     }
 
-    public void setVerified(boolean verified) {
-        this.verified = verified;
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    // toString
+    //toString
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                "userId=" + userId +
                 ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", verified=" + verified +
-                ", roles=" + roles +
+                ", password='" + password + '\'' +
+                ", isActive=" + isActive +
+                ", registrationDate=" + registrationDate +
+                ", userType=" + userType +
                 '}';
     }
 }

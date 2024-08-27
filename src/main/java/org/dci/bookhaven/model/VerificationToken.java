@@ -1,42 +1,25 @@
 package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
+import org.springframework.context.annotation.Primary;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "verification_tokens")
 public class VerificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String token;
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
-    private LocalDateTime expiryDate;
+    @Column(nullable = false)
+    private Date expiryDate;
 
-    //constructors
-    public VerificationToken() {
-    }
-
-    public VerificationToken(String token, User user, LocalDateTime expiryDate) {
-        this.token = token;
-        this.user = user;
-        this.expiryDate = expiryDate;
-    }
-
-    public VerificationToken(Long id, String token, User user, LocalDateTime expiryDate) {
-        this.id = id;
-        this.token = token;
-        this.user = user;
-        this.expiryDate = expiryDate;
-    }
-
-    //getters setters
+    // getters setters
 
     public Long getId() {
         return id;
@@ -62,11 +45,11 @@ public class VerificationToken {
         this.user = user;
     }
 
-    public LocalDateTime getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(LocalDateTime expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 }

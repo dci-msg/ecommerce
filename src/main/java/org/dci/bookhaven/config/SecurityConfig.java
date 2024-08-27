@@ -1,69 +1,83 @@
 package org.dci.bookhaven.config;
 
-
-
 import org.dci.bookhaven.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
-    }
-
-    /*@Autowired
-    private CustomUserDetailsService customUserDetailsService;*/
-
-    /*@Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }*/
-
-    // to use custom html forms - login/register..:
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/register", "/verify", "forgot-password", "/reset-password", "/login").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()  // any request to the app must be authenticated
-                )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/",true)
-                        //.loginProcessingUrl("/authenticateTheUser")
-                        .permitAll() // anyone can see the login page
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)
-                        .permitAll()
-                /*)
-                .exceptionHandling(configurer ->
-                        configurer.accessDeniedPage("/access-denied")*/
-                );
-
-        return http.build();   //it returns securityFilterChain instance
-    }
+    private final AuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, AuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
     }
+
+    //OPEN URLs for everyone
+    private static final String[] PUBLIC_URLS = {
+            "/",
+            "/register",
+            "/register/new",
+            "/verify-email",
+            "/forgot-password",
+            "/reset-password",
+            "/webjars/**",
+            "/resources/**",
+            "/css/**",
+            "/js/**",
+            "/images/**"
+    };
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authenticationProvider(authenticationProvider());
+
+        // HTTP Security structure
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
+            auth.requestMatchers("/admin/**").hasAuthority("Admin");
+            auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
+            auth.anyRequest().authenticated();                  // all other requests required authentication
+        });
+
+        //LOGIN Page structure - with usage of customAuthentication
+        http.formLogin(form -> form
+                    .loginPage("/login")        // custom login page
+                    .usernameParameter("email") // login.html-->name="email", but should accept email as a username
+                    .permitAll()                // can anyone access
+                    .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
+                .logout(logout -> {
+                    logout.logoutUrl("/logout");                // logout URL
+                    logout.logoutSuccessUrl("/login?logout");   // after success logout direction
+
+                }).csrf(csrf -> csrf.disable());  //csrf protection disabled
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService);   //customUSerDetailsService usage here
+        authProvider.setPasswordEncoder(passwordEncoder());             // BCrypt usage for encoding
+        return authProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();  // for BCrypt algorithm
+    }
+
 
 }
