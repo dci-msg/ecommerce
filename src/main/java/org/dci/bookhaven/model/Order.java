@@ -23,13 +23,13 @@ public class Order {
     )
     private long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     private Set<LineItem> lineItems = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Coupon coupon;
 
     @Column(name = "total", nullable = false, precision = 2, columnDefinition = "double precision")
@@ -38,7 +38,7 @@ public class Order {
     @Column(name = "currency", nullable = false)
     private String currency;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Address billingAddress;
 
     @Column(name = "status", nullable = false)

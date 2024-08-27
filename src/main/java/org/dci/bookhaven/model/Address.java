@@ -20,7 +20,22 @@ public class Address {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    private List<Shipping> shippings;
+    @Column(name = "street", nullable = true)
+    private String street;
+
+    @Column(name = "address_line_2", nullable = true)
+    private String addressLine2;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "zip")
+    private String zip;
+
+    @Column(name = "country", nullable = false)
+    private String country;
 
 }

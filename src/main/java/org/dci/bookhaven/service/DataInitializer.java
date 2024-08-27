@@ -29,10 +29,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Admin type
-        UserType adminType = userTypeRepository.findByUserTypeName("Admin");
+        UserType adminType = userTypeRepository.findByName("ADMIN");
         if (adminType == null){
             adminType = new UserType();
-            adminType.setUserTypeName("Admin");
+            adminType.setName("ADMIN");
             userTypeRepository.save(adminType);
         }
 
@@ -46,10 +46,10 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Customer type
-        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
+        UserType customerType = userTypeRepository.findByName("CUSTOMER");
         if (customerType == null){
             customerType = new UserType();
-            customerType.setUserTypeName("Customer");
+            customerType.setName("CUSTOMER");
             userTypeRepository.save(customerType);
         }
 

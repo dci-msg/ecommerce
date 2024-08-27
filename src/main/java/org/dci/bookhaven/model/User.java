@@ -27,7 +27,7 @@ public class User {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
+    @JoinColumn(name = "user_type_id")
     private UserType userType;
 
     //constructors

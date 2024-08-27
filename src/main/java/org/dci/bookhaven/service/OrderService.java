@@ -9,10 +9,14 @@ public interface OrderService {
 
     @Transactional
     @Modifying
-    void createOrder(
+    void createFromCart(
             ShoppingCart shoppingCart,
             User user,
             Address billingAddress);
+
+    @Transactional
+    @Modifying
+    void createOrder(Order order);
 
     // Update order status after the 30-day return period
     @Modifying

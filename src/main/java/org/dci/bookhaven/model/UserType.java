@@ -2,63 +2,50 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "users_type")
 public class UserType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userTypeId;
-    private String userTypeName;
-    @OneToMany(mappedBy = "userType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<User> users;
+    private Long id;
+
+    @Column(unique = true)
+    private String name;
 
     //constructors
     public UserType() {
     }
 
-    public UserType(Long userTypeId, String userTypeName, List<User> users) {
-        this.userTypeId = userTypeId;
-        this.userTypeName = userTypeName;
-        this.users = users;
+    public UserType(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     //getters setters
-
     public Long getUserTypeId() {
-        return userTypeId;
+        return id;
     }
 
     public void setUserTypeId(Long userTypeId) {
-        this.userTypeId = userTypeId;
+        this.id = userTypeId;
     }
 
-    public String getUserTypeName() {
-        return userTypeName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserTypeName(String userTypeName) {
-        this.userTypeName = userTypeName;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setName(String userTypeName) {
+        this.name = userTypeName;
     }
 
 
     //toString
-
     @Override
     public String toString() {
         return "UserType{" +
-                "userTypeId=" + userTypeId +
-                ", userTypeName='" + userTypeName + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

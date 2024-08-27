@@ -1,14 +1,13 @@
 package org.dci.bookhaven.service.impl;
 
 import com.stripe.Stripe;
-import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.Order;
 import org.dci.bookhaven.service.CheckoutService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -16,16 +15,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
-    @Value("${app.domain}")
-    private String DOMAIN;
-
-    @Value("${stripe.sk}")
-    private String secretKey;
-
-    @PostConstruct
-    public void init() {
-        Stripe.apiKey = secretKey;
-    }
 
     @Override
     @Modifying

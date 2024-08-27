@@ -46,8 +46,8 @@ public class SecurityConfig {
         // HTTP Security structure
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
-            auth.requestMatchers("/admin/**").hasAuthority("Admin");
-            auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
+            auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
+            auth.requestMatchers("/dashboard/**").hasAuthority("CUSTOMER");
             auth.anyRequest().authenticated();                  // all other requests required authentication
         });
 

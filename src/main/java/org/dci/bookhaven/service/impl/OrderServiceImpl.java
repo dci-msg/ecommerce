@@ -5,6 +5,7 @@ import org.dci.bookhaven.dto.ShoppingCart;
 import org.dci.bookhaven.model.*;
 import org.dci.bookhaven.repository.OrderRepository;
 import org.dci.bookhaven.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,17 @@ import org.springframework.stereotype.Service;
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
-    private CheckoutService checkoutService;
-    private EmailService emailService;
-    private PaymentService paymentService;
-    private UserService userService;
-    private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    public OrderServiceImpl(
+            OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     @Override
     @Transactional
     @Modifying
-    public void createOrder(
+    public void createFromCart(
             ShoppingCart shoppingCart,
             User user,
             Address billingAddress) {
@@ -36,6 +38,17 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("OPEN");
 
         orderRepository.save(order);
+    }
+
+    @Override
+    @Modifying
+    @Transactional
+    public void createOrder(Order order) {
+        if(orderRepository.existsById(order.getId())){
+            throw new IllegalStateException("Order already exists");
+        }else{
+            orderRepository.save(order);
+        }
     }
 
     // Update order status after the 30-day return period automatically

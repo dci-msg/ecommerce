@@ -9,13 +9,14 @@ import org.dci.bookhaven.repository.UserTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -42,6 +43,8 @@ public class UserService {
     }
 
     // REGISTER new user
+    @Modifying
+    @Transactional
     public User registerNewUserAccount(User user) {
         // existed user registration
         // check if user in db
@@ -63,7 +66,7 @@ public class UserService {
         user.setActive(false);    // until email verification provided it should be inactive
 
         // assign "Customer" user type
-        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
+        UserType customerType = userTypeRepository.findByName("Customer");
         if (customerType == null) {
             throw new IllegalArgumentException(("Customer user type not found"));
         }
@@ -106,6 +109,8 @@ public class UserService {
         mailSender.send(email); // send token
     }
 
+    @Modifying
+    @Transactional
     public void verifyUser(String token) {
         VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
 
@@ -115,6 +120,16 @@ public class UserService {
 
             userRepository.save(verifiedUser);
         }
+    }
+
+    // FIND user by email
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // FIND all users
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
 
