@@ -64,3 +64,20 @@ function addToCart(bookId, userId, quantity) {
         })
         .catch(error => console.error('Error:', error));
 }
+
+function goToLogin() {
+    alert("fuck");
+    window.location.href = '/login';
+}
+
+function goToRegister() {
+    window.location.href = '/register';
+}
+
+function goToCart() {
+    window.location.href = '/cart';
+}
+
+function goToLogout() {
+    window.location.href = '/logout';
+}

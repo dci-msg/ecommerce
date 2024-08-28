@@ -32,6 +32,7 @@ public class CartController {
         this.userService = userService;
     }
 
+
     @GetMapping("/")
     public String viewCart(Model model) {
         User user = userService.getLoggedInUser();

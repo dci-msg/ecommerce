@@ -37,13 +37,7 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/images/**",
-            "/book/**",
-    };
-
-    // customer private endpoints
-    private static final String[] CUSTOMER_URLS = {
-            "/cart/**",
-            "/orders/**",
+            "/book/**"
     };
 
     @Bean
@@ -53,8 +47,8 @@ public class SecurityConfig {
         // HTTP Security structure
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
-            auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
-            auth.requestMatchers("/dashboard/**").hasAuthority("CUSTOMER");
+            auth.requestMatchers("/admin/**").hasAuthority("Admin");
+            auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
             auth.anyRequest().authenticated();                  // all other requests required authentication
         });
 
@@ -66,7 +60,7 @@ public class SecurityConfig {
                     .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
                 .logout(logout -> {
                     logout.logoutUrl("/logout");                // logout URL
-                    logout.logoutSuccessUrl("/login?logout");   // after success logout direction
+                    logout.logoutSuccessUrl("/");   // after success logout direction
 
                 }).csrf(csrf -> csrf.disable());  //csrf protection disabled
 
