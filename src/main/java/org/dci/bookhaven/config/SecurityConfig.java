@@ -49,6 +49,7 @@ public class SecurityConfig {
             auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
             auth.requestMatchers("/admin/**").hasAuthority("Admin");
             auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
+            auth.requestMatchers("/cart/**").authenticated();
             auth.anyRequest().authenticated();                  // all other requests required authentication
         });
 

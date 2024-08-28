@@ -1,7 +1,6 @@
 package org.dci.bookhaven.controller;
 
 import org.dci.bookhaven.model.Cart;
-import org.dci.bookhaven.model.LineItem;
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.service.CartService;
 import org.dci.bookhaven.service.LineItemService;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/cart")
+@RequestMapping()
 public class CartController {
 
     private final CartService cartService;
@@ -32,28 +31,21 @@ public class CartController {
         this.userService = userService;
     }
 
-
-    @GetMapping("/")
+    @GetMapping("/cart")
     public String viewCart(Model model) {
         User user = userService.getLoggedInUser();
-        Long userId = user.getId();
-        if (userId != null) {
+        if (user != null) {
+            Long userId = user.getId();
             Cart cart = cartService.getOrCreateCart(userId);
             model.addAttribute("cart", cart);
-            if(cart.getLineItems().size() > 0) {
-                model.addAttribute("lineItems", cart.getLineItems());
-                model.addAttribute("cartTotal", cartService.getCartTotal(cart.getId()));
-                model.addAttribute("cartSize", cartService.getCartSize(cart.getId()));
-            }else{
-                model.addAttribute("cartTotal", 0.0);
-                model.addAttribute("cartSize", 0);
-            }
-
-            model.addAttribute("userId", userId);
-            return "cart";
+            model.addAttribute("lineItems", cart.getLineItems());
+            model.addAttribute("cartTotal", cartService.getCartTotal(cart.getId()));
+            model.addAttribute("isEmpty", cart.getLineItems().isEmpty());
+            model.addAttribute("isLoggedIn", true);
         } else {
-            return "redirect:/login";
+            model.addAttribute("isLoggedIn", false);
         }
+        return "cart";
     }
 
     @PostMapping("/update-quantity")

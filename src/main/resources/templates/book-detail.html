@@ -81,7 +81,7 @@
                 </button>
             </form>
 
-            <form th:if="${not isLoggedIn}" class="d-flex" action="/register">
+            <form th:if="${not isLoggedIn}" class="d-flex" action="/register/new">
                 <button class="btn btn-outline-custom">
                     <i class="bi-person-circle"></i>
                     Register
@@ -98,6 +98,7 @@
         </div>
     </div>
 </nav>
+
 <!-- Product section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
