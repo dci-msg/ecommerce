@@ -2,9 +2,10 @@ package org.dci.bookhaven.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @Data
@@ -21,4 +22,13 @@ public class Cart {
 
     @OneToMany
     private List<LineItem> lineItems;
+
+    @Column(nullable = false)
+    private boolean isOpen;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @ManyToOne
+    private User user;
 }

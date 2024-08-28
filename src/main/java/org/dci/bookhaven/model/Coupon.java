@@ -27,7 +27,7 @@ public class Coupon {
     private double discount;
 
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private boolean isActive;
 
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
