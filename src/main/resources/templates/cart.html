@@ -20,7 +20,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="/index">
+        <a class="navbar-brand" href="/">
             <img src="images/favicon.ico" height="30">
             Book Haven
         </a>
@@ -29,7 +29,7 @@
                 class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/index">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">All</a>
@@ -111,7 +111,9 @@
                                 <div class="p-5">
                                     <div class="d-flex justify-content-between align-items-center mb-5">
                                         <h1 class="fw-bold mb-0">Shopping Cart</h1>
-                                        <h6 class="mb-0 text-muted" th:text = "${lineItemSize}"></h6> <span>items</span>
+                                        <h6 th:unless="${isEmpty}" class="mb-0 text-muted" th:text = "${lineItemSize}">
+                                            <span> items </span>
+                                        </h6>
 
                                     </div>
                                     <hr class="my-4">
@@ -124,11 +126,11 @@
                                     <div th:unless="${isEmpty}" th:each="lineItem : ${lineItems}">
 
                                         <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                            <div class="col-md-2 col-lg-2 col-xl-2">
-                                                <img
-                                                        th:src="${lineItem.book.image}"
-                                                        class="img-fluid rounded-3" th:alt="${lineItem.book.name}">
-                                            </div>
+<!--                                            <div class="col-md-2 col-lg-2 col-xl-2">-->
+<!--                                                <img-->
+<!--                                                        th:src="${lineItem.book.imagePath}"-->
+<!--                                                        class="img-fluid rounded-3" th:alt="${lineItem.book.name}">-->
+<!--                                            </div>-->
                                             <div class="col-md-3 col-lg-3 col-xl-3">
                                                 <h6 class="text-muted" th:text = "${lineItem.book.isbn}"></h6>
                                                 <h6 class="mb-0" th:text = "${lineItem.book.title}"></h6>
@@ -151,12 +153,12 @@
                                                 </button>
                                             </div>
 
-<!--                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">-->
-<!--                                                <h6 class="mb-0" th:text="${lineItem.total()}"></h6>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">-->
-<!--                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>-->
-<!--                                            </div>-->
+                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                <h6 class="mb-0" th:text="${lineItem.total()}"></h6>
+                                            </div>
+                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                            </div>
                                         </div>
 
                                         <hr class="my-4">
@@ -164,13 +166,17 @@
                                     </div>
 
                                     <div class="pt-5">
-                                        <h6 class="mb-0"><a href="#!" class="text-body">
-                                            <i class="bi bi-arrow-left"></i> Back to shop</a></h6>
+                                        <h6 class="mb-0">
+                                            <a href="/" class="text-body">
+                                             <i class="bi bi-arrow-left" href="/"></i>  Back to shop
+                                            </a>
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 bg-body-tertiary">
-                                <div class="p-5">
+                                <div class="p-5" th:unless="${isEmpty}">
                                     <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                                     <hr class="my-4">
 
