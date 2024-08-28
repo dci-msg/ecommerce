@@ -2,8 +2,10 @@ package org.dci.bookhaven.controller;
 
 import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.LineItem;
+import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.service.CartService;
 import org.dci.bookhaven.service.LineItemService;
+import org.dci.bookhaven.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,48 +14,49 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
     private final LineItemService lineItemService;
+    private final UserService userService;
 
     @Autowired
     public CartController(
             CartService cartService,
-            LineItemService lineItemService) {
+            LineItemService lineItemService,
+            UserService userService) {
         this.cartService = cartService;
         this.lineItemService = lineItemService;
+        this.userService = userService;
     }
 
+    @GetMapping("/")
+    public String viewCart(Model model) {
+        User user = userService.getLoggedInUser();
+        Long userId = user.getId();
+        if (userId != null) {
+            Cart cart = cartService.getOrCreateCart(userId);
+            model.addAttribute("cart", cart);
+            if(cart.getLineItems().size() > 0) {
+                model.addAttribute("lineItems", cart.getLineItems());
+                model.addAttribute("cartTotal", cartService.getCartTotal(cart.getId()));
+                model.addAttribute("cartSize", cartService.getCartSize(cart.getId()));
+            }else{
+                model.addAttribute("cartTotal", 0.0);
+                model.addAttribute("cartSize", 0);
+            }
 
-    public void addToCart(
-            @RequestParam("bookId") Long bookId,
-            @RequestParam("cartId") Long shoppingCartId,
-            @RequestParam("quantity") int quantity
-    ) {
-        cartService.addToCart(bookId, shoppingCartId, quantity);
-    }
-
-    // Redirect to shopping cart
-    @PostMapping("/cart")
-    public String shoppingCart(
-            Long userId,
-            Model model) {
-        // Redirect to shopping cart
-        Cart cart = cartService.getRecentCartAndCloseOtherCarts(userId);
-
-        model.addAttribute("cart", cart);
-        model.addAttribute("lineItems", cart.getLineItems());
-        model.addAttribute("total", cartService.getCartTotal(cart.getId()));
-        model.addAttribute("totalItems", cart.getLineItems().size());
-        model.addAttribute("userId", userId);
-
-        return "cart";
+            model.addAttribute("userId", userId);
+            return "cart";
+        } else {
+            return "redirect:/login";
+        }
     }
 
     @PostMapping("/update-quantity")
+    @ResponseBody
     public Map<String, Double> updateQuantity(
             @RequestParam("lineItemId") Long lineItemId,
             @RequestParam("quantity") int quantity,
@@ -69,6 +72,7 @@ public class CartController {
     }
 
     @PostMapping("/apply-coupon")
+    @ResponseBody
     public Map<String, Double> applyCoupon(
             @RequestParam("cartId") Long cartId,
             @RequestParam("couponCode") String couponCode
@@ -78,4 +82,23 @@ public class CartController {
         response.put("cartTotalAfterCoupon", cartTotalAfterCoupon);
         return response;
     }
+
+    @PostMapping("/add-to-cart")
+    public String addToCart(
+            @RequestParam("bookId") Long bookId,
+            @RequestParam("quantity") int quantity
+    ) {
+        User user = userService.getLoggedInUser();
+        Long userId = user.getId();
+        if (user != null) {
+            Cart cart = cartService.getOrCreateCart(userId);
+            cartService.addToCart(cart.getId(), bookId, quantity);
+            return "redirect:/cart/";
+        } else {
+            // Handle the case where userId is null (e.g., user not authenticated)
+            return "redirect:/login";
+        }
+    }
+
+
 }

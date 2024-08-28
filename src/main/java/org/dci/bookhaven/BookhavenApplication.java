@@ -1,15 +1,13 @@
 package org.dci.bookhaven;
 
-import com.stripe.model.PaymentIntent;
 import org.dci.bookhaven.model.*;
 import org.dci.bookhaven.service.*;
+import org.dci.bookhaven.util.UtilGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.*;
 
 @SpringBootApplication
 public class BookhavenApplication {
@@ -20,89 +18,69 @@ public class BookhavenApplication {
 
 //    UserService userService;
 //    UserTypeService userTypeService;
-//    OrderService orderService;
+//    CartService cartService;
+//    LineItemService lineItemService;
+//    BookService bookService;
+//    UtilGenerator generator;
+//
 //
 //    @Autowired
-//    public BookhavenApplication(UserService userService, UserTypeService userTypeService, OrderService orderService) {
+//    public BookhavenApplication(
+//            UserService userService,
+//            UserTypeService userTypeService,
+//            CartService cartService,
+//            LineItemService lineItemService,
+//            BookService bookService,
+//            UtilGenerator generator
+//            ) {
 //        this.userService = userService;
 //        this.userTypeService = userTypeService;
-//        this.orderService = orderService;
+//        this.cartService = cartService;
+//        this.lineItemService = lineItemService;
+//        this.bookService = bookService;
+//        this.generator = generator;
 //    }
-
-////    // Create 2 roles
-////    @Bean
-////    CommandLineRunner runner0(){
-////        return args -> {
-////            UserType admin = new UserType(1L, "ADMIN");
-////            UserType user = new UserType(2L, "USER");
-////            userTypeService.createUserType(admin);
-////            userTypeService.createUserType(user);
-////        };
-////    }
 //
-//    // Create 5 users
+//
+//    // Create 20 users
 //    @Bean
 //    CommandLineRunner runner1() {
 //        return args -> {
-//            for(int i = 0; i < 5; i++) {
-//                UserType customer = userTypeService.getUserTypeByName("CUSTOMER");
+//
+//            for(int i = 0; i < 20; i++) {
 //                User user = new User();
 //                user.setEmail("user" + i + "@example.com");
 //                user.setPassword("password" + i);
-//                user.setActive(true);
-//                user.setUserType(customer);
 //                userService.registerNewUserAccount(user);
 //            }
 //        };
 //    }
 //
-////    // Create 10 books
-////    CommandLineRunner runner2() {
-////        return args -> {
-////        };
-////    }
-//
-//
-//    // Create 8 addresses
+//    // Create 50 books
 //    @Bean
-//    CommandLineRunner runner3() {
+//    CommandLineRunner runner2() {
 //        return args -> {
-//            for(int i = 0; i < 8; i++) {
-//                Address address = new Address();
-//                address.setStreet("Street " + i);
-//                address.setCity("City " + i);
-//                address.setState("State " + i);
-//                address.setZip("Zip " + i);
-//                address.setCountry("Country " + i);
 //
-//                addressService.createAddress(address);
+//            for(int i = 0; i < 50; i++) {
+//                Book book = new Book();
+//                book.setTitle("Book " + i);
+//                book.setAuthor("Author " + i);
+//                book.setPrice(generator.generateRandomPrice());
+//                book.setIsbn("ISBN" + i);
+//                book.setPublicationDate(generator.generateRandomLocalDate());
+//                book.setPages(100 + i);
+//                book.setLanguage("English");
+//                book.setDescription("Description " + i);
+//                book.setImagePath("book_01.jpg");
+//                bookService.addBook(book);
 //            }
 //        };
 //    }
 
-//    // Create 6 orders
-//    @Bean
-//    CommandLineRunner runner4() {
-//        return args -> {
-//            List<User> users = userService.getAllUsers();
-//            List<Address> addresses = addressService.findAllAddresses();
-//
-//            // Get Random total price
-//            Random random = new Random();
-//
-//            for(int i=0; i<6; i++) {
-//                Order order = new Order();
-//
-//                order.setUser(users.get(i));
-//                order.setCurrency("eur");
-//                order.setBillingAddress(addresses.get(i));
-//                order.setTotal(random.nextDouble(0, 100));
-//                order.setStatus("OPEN");
-//                orderService.createOrder(order);
-//            }
-//
-//        };
-//    }
+
+    // Create 8 addresses
+    // Create 6 orders
+
 
 
 

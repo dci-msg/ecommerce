@@ -30,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Admin type
-        UserType adminType = userTypeRepository.findByUserTypeName("ADMIN");
+        UserType adminType = userTypeRepository.findByUserTypeName("Admin");
         if (adminType == null){
             adminType = new UserType();
             adminType.setUserTypeName("Admin");
@@ -47,7 +47,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Customer type
-        UserType customerType = userTypeRepository.findByUserTypeName("CUSTOMER");
+        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
         if (customerType == null){
             customerType = new UserType();
             customerType.setUserTypeName("Customer");
@@ -75,4 +75,5 @@ public class DataInitializer implements CommandLineRunner {
 
 
     }
+
 }

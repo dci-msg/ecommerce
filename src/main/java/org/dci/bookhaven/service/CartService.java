@@ -13,14 +13,6 @@ public interface CartService {
     // Remove book from shopping cart
     void remove(Long cartId, Long bookId);
 
-
-    @Modifying
-    @Transactional
-    void clearCartAndDelete(Long cartId);
-
-    // Get shopping cart by id
-    Cart getCartById(Long cartId);
-
     int getCartSize(Long cartId);
 
     // Get shopping cart total
@@ -28,8 +20,6 @@ public interface CartService {
 
     double getCartTotalAfterCoupon(Long cartId, String couponCode);
 
-    // Retrieve the latest cart and close all other carts
     @Modifying
-    @Transactional
-    Cart getRecentCartAndCloseOtherCarts(Long userId);
+    Cart getOrCreateCart(Long userId);
 }

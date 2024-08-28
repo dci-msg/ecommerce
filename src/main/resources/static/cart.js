@@ -40,3 +40,27 @@ function applyCoupon(cartId, couponCode) {
         })
         .catch(error => console.error('Error:', error));
 }
+
+function addToCart(bookId, userId, quantity) {
+    fetch('/cart/add-to-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'bookId': bookId,
+            'userId': userId,
+            'quantity': quantity
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Item added to cart successfully!');
+                document.getElementById('cartSize').innerText = data.cartSize;
+            } else {
+                alert('Failed to add item to cart.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}

@@ -36,12 +36,12 @@ public class SecurityConfig {
             "/resources/**",
             "/css/**",
             "/js/**",
-            "/images/**"
+            "/images/**",
+            "/book/**",
     };
 
     // customer private endpoints
     private static final String[] CUSTOMER_URLS = {
-            "/dashboard/**",
             "/cart/**",
             "/orders/**",
     };
@@ -55,7 +55,6 @@ public class SecurityConfig {
             auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
             auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
             auth.requestMatchers("/dashboard/**").hasAuthority("CUSTOMER");
-            auth.requestMatchers(CUSTOMER_URLS).authenticated(); // customer private endpoints
             auth.anyRequest().authenticated();                  // all other requests required authentication
         });
 

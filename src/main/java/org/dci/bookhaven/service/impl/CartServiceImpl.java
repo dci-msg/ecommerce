@@ -1,11 +1,9 @@
 package org.dci.bookhaven.service.impl;
 
 import jakarta.transaction.Transactional;
-import org.dci.bookhaven.model.Book;
-import org.dci.bookhaven.model.Cart;
-import org.dci.bookhaven.model.Coupon;
-import org.dci.bookhaven.model.LineItem;
+import org.dci.bookhaven.model.*;
 import org.dci.bookhaven.repository.CartRepository;
+import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.service.BookService;
 import org.dci.bookhaven.service.CartService;
 import org.dci.bookhaven.service.CouponService;
@@ -20,6 +18,7 @@ import java.util.List;
 @Service
 public class CartServiceImpl implements CartService {
 
+    private UserRepository userRepository;
     private CartRepository cartRepository;
     private BookService bookService;
     private LineItemService lineItemService;
@@ -27,10 +26,12 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     public CartServiceImpl(
+            UserRepository userRepository,
             CartRepository cartRepository,
             BookService bookService,
             LineItemService lineItemService,
             CouponService couponService) {
+        this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.bookService = bookService;
         this.lineItemService = lineItemService;
@@ -79,7 +80,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-
     // Remove book from shopping cart
     @Modifying
     @Transactional
@@ -109,34 +109,6 @@ public class CartServiceImpl implements CartService {
         throw new RuntimeException("Book not found in cart");
     }
 
-    // Clear shopping cart
-
-    @Modifying
-    @Transactional
-    @Override
-    public void clearCartAndDelete(Long cartId) {
-        // Retrieve shopping cart from database
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-
-        // Retrieve line items from shopping cart
-        List<LineItem> lineItems = cart.getLineItems();
-
-        // Remove all line items from shopping cart
-        for (LineItem lineItem : lineItems) {
-            lineItemService.deleteLineItem(lineItem.getId());
-        }
-
-        // Update shopping cart
-        cart.setLineItems(null);
-        cartRepository.delete(cart);
-    }
-
-    // Get shopping cart by id
-    @Override
-    public Cart getCartById(Long cartId) {
-        return cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-    }
-
     // Get shopping cart size
     @Override
     public int getCartSize(Long cartId) {
@@ -150,7 +122,7 @@ public class CartServiceImpl implements CartService {
         List<LineItem> lineItems = cart.getLineItems();
         double total = 0;
         for (LineItem lineItem : lineItems) {
-            total +=lineItem.getBook().getPrice().doubleValue() * lineItem.getQuantity();
+            total += lineItem.getBook().getPrice().doubleValue() * lineItem.getQuantity();
         }
         return total;
     }
@@ -162,34 +134,41 @@ public class CartServiceImpl implements CartService {
         double total = getCartTotal(cartId);
 
         Coupon coupon = couponService.findByCode(couponCode);
-        if(coupon != null && coupon.isActive() && coupon.getStartDate().isBefore(LocalDateTime.now())) {
+        if (coupon != null && coupon.isActive() && coupon.getStartDate().isBefore(LocalDateTime.now())) {
             total = total * (1 - coupon.getDiscount());
         }
 
         return total;
     }
 
-    // Retrieve the latest cart and close all other carts
     @Modifying
     @Transactional
     @Override
-    public Cart getRecentCartAndCloseOtherCarts(Long userId) {
-        // Get all open carts
-        List<Cart> openCarts = cartRepository.findAllByUser_IdAndAndIsOpenTrue(userId);
+    public Cart getOrCreateCart(Long userId) {
+        List<Cart> carts = cartRepository.findAllByUser_IdAndAndIsOpenTrue(userId);
+        if (carts.size() > 0) {
+            // Sort cart by created date
+            carts.sort((c1, c2) -> c1.getCreatedAt().compareTo(c2.getCreatedAt()));
 
-        // Find the most recent cart
-        openCarts.sort((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()));
-        Cart recentCart = openCarts.get(0);
+            Cart latestCart = carts.get(carts.size() - 1);
 
-        // Close all other carts
-        for (Cart cart : openCarts) {
-            if (cart.getId() != recentCart.getId()) {
-                cart.setOpen(false);
-                cartRepository.save(cart);
+            // Close all other carts
+            for (Cart cart : carts) {
+                if (cart.getId() != latestCart.getId()) {
+                    cart.setOpen(false);
+                    cartRepository.save(cart);
+                }
             }
+            return latestCart;
+
+        } else {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            Cart cart = Cart.builder()
+                    .user(user)
+                    .isOpen(true)
+                    .build();
+            cartRepository.save(cart);
+            return cart;
         }
-
-        return recentCart;
-
     }
 }

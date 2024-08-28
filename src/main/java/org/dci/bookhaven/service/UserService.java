@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 
 import java.util.Date;
 import java.util.List;
@@ -74,7 +77,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        sendVerificationEmail(savedUser);    // verification email send
+//        sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
@@ -122,14 +125,19 @@ public class UserService {
         }
     }
 
-    // FIND user by email
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            return userRepository.findByEmail(username);
+        }
+        return null;
     }
 
-    // FIND all users
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public boolean isLoggedIn(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
     }
 
 
