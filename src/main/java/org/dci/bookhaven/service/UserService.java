@@ -66,7 +66,7 @@ public class UserService {
         user.setActive(false);    // until email verification provided it should be inactive
 
         // assign "Customer" user type
-        UserType customerType = userTypeRepository.findByName("Customer");
+        UserType customerType = userTypeRepository.findByUserTypeName("Customer");
         if (customerType == null) {
             throw new IllegalArgumentException(("Customer user type not found"));
         }

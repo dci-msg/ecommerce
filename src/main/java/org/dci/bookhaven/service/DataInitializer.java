@@ -5,7 +5,6 @@ import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -31,10 +30,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Admin type
-        UserType adminType = userTypeRepository.findByName("ADMIN");
+        UserType adminType = userTypeRepository.findByUserTypeName("ADMIN");
         if (adminType == null){
             adminType = new UserType();
-            adminType.setName("ADMIN");
+            adminType.setUserTypeName("Admin");
             userTypeRepository.save(adminType);
         }
 
@@ -48,10 +47,10 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Customer type
-        UserType customerType = userTypeRepository.findByName("CUSTOMER");
+        UserType customerType = userTypeRepository.findByUserTypeName("CUSTOMER");
         if (customerType == null){
             customerType = new UserType();
-            customerType.setName("CUSTOMER");
+            customerType.setUserTypeName("Customer");
             userTypeRepository.save(customerType);
         }
 

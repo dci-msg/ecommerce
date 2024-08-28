@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.dci.bookhaven.model.Coupon;
 
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -15,7 +16,7 @@ import java.util.Set;
 public class CartDto {
     private Long id;
 
-    private Set<LineItemDto> lineItemDtos;
+    private List<LineItemDto> lineItemDtos;
 
     private Coupon coupon;
 

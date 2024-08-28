@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -28,7 +29,7 @@ public class Order {
     private User user;
 
     @OneToMany
-    private Set<LineItem> lineItems = new HashSet<>();
+    private List<LineItem> lineItems;
 
     @ManyToOne
     private Coupon coupon;

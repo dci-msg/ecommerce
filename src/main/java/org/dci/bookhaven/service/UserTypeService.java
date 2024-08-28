@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 
 @Service
 public class UserTypeService {
@@ -27,6 +25,6 @@ public class UserTypeService {
     }
 
     public UserType getUserTypeByName(String name) {
-        return userTypeRepository.findByName(name);
+        return userTypeRepository.findByUserTypeName(name);
     }
 }

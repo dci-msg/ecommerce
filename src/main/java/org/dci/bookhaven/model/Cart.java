@@ -3,6 +3,7 @@ package org.dci.bookhaven.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -19,5 +20,5 @@ public class Cart {
     private Long id;
 
     @OneToMany
-    private Set<LineItem> lineItems;
+    private List<LineItem> lineItems;
 }
