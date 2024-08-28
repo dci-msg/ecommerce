@@ -6,6 +6,8 @@ import org.dci.bookhaven.repository.AddressRepository;
 import org.dci.bookhaven.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +26,54 @@ public class userProfileController {
     private AddressRepository addressRepository;
 
     // GET method to display the user's profile
-    @GetMapping("/view")
-    public String viewProfile(@RequestParam (name = "id") Long id, Model model) {
+    @GetMapping("/view{id}")
+    public String viewProfile(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
+
+        // Check if the user profile is incomplete of personal details are null
+        if (userProfile.getFirstName() == null || userProfile.getLastName() == null ||
+                userProfile.getDateOfBirth() == null || userProfileService.getAddresses(id).isEmpty()) {
+            return "redirect:/profile/complete?id=" + id;
+        }
+
         model.addAttribute("userProfile", userProfile);
         return "viewProfile";
     }
+
+    @GetMapping
+    public String userProfileHome(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        UserProfile profile = userProfileService.getUserProfileByUserId(userDetails.getUserId());
+        model.addAttribute("user", profile.getUser());
+        model.addAttribute("profile", profile);
+        return "userProfile";
+    }
+
+    // GET method to display the form to complete profile information
+    @GetMapping("/complete")
+    public String showCompleteProfileForm(@RequestParam Long id, Model model) {
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
+        model.addAttribute("userProfile", userProfile);
+        model.addAttribute("address", new Address());
+        return "completeProfile";
+    }
+
+    // POST method to handle form submission and save the profile details
+    @PostMapping("/complete")
+    public String completeProfile(@RequestParam Long id,
+                                  @RequestParam String firstName,
+                                  @RequestParam String lastName,
+                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth,
+                                  @RequestParam String gender,
+                                  @ModelAttribute Address address) {
+        // Update user profile with the provided information
+        userProfileService.updateProfile(id, firstName, lastName, dateOfBirth, gender);
+
+        // Add address to the user profile
+        userProfileService.addAddress(id, address);
+
+        return "redirect:/profile/view?id=" + id;
+    }
+
 
     // GET method to show the update form
     @GetMapping("/edit")

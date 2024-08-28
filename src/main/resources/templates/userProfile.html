@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Your User Profile</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">User Profile</h1>
+
+    <!-- Button to complete user profile -->
+    <div class="mb-4">
+        <h2>Complete Your Profile</h2>
+        <p>If you haven’t completed your profile yet, please fill in your details.</p>
+        <a th:href="@{/profiles/complete}" class="btn btn-primary">Complete User Profile</a>
+    </div>
+
+    <!-- Button to edit personal information -->
+    <div class="mb-4">
+        <h2>Edit Personal Information</h2>
+        <a th:href="@{/profiles/edit}" class="btn btn-secondary">Edit Personal Information</a>
+    </div>
+
+    <!-- Button to view and manage addresses -->
+    <div class="mb-4">
+        <h2>View Your Addresses</h2>
+        <a th:href="@{/profiles/addresses}" class="btn btn-info">View Addresses</a>
+    </div>
+
+    <!-- Button to add a new address -->
+    <div class="mb-4">
+        <h2>Add New Address</h2>
+        <a th:href="@{/profiles/addresses/new}" class="btn btn-success">Add New Address</a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="bookhaven@localhost [2]" uuid="9abacf53-52a3-429b-b7c8-ade1a6e3a6f6">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/bookhaven</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="bookhaven@localhost" uuid="c967fe32-ad41-4260-9dec-51f3710549ef">
+    <data-source source="LOCAL" name="bookhaven@localhost" uuid="c6950cd5-dff0-4ca7-a960-2812abc5edd5">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

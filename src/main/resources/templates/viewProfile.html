@@ -8,7 +8,8 @@
 <body>
 <div class="container mt-4">
     <!-- Greeting with the user's name -->
-    <h3 class="mb-4">Hello, <span th:text="${userProfile.firstName}"></span>!</h3>
+    <h3 class="mb-4">Hello! </h3>
+        <!--<span th:text="${userProfile.firstName}"></span>!</h3>-->
 
     <!-- Tab Bar -->
     <ul class="nav nav-tabs" id="profileTab" role="tablist">
@@ -32,7 +33,7 @@
 
         <!-- Add Address Tab -->
         <div class="tab-pane fade" id="add-address" role="tabpanel" aria-labelledby="add-address-tab">
-            <a th:href="@{/profile/addresses/add(id=${userProfile.id})}" class="btn btn-link">Add Address</a>
+            <a th:href="@{/profile/addresses/add(id=${userProfile.id})}" class="btn btn-link">Add New Address</a>
         </div>
 
         <!-- Personal Information Tab -->
