@@ -2,15 +2,16 @@ package org.dci.bookhaven.service;
 
 import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.User;
+import org.dci.bookhaven.model.UserProfile;
 import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.model.VerificationToken;
+import org.dci.bookhaven.repository.UserProfileRepository;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +27,17 @@ public class UserService {
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final UserProfileRepository userProfileRepository;
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
                        JavaMailSender mailSender, UserTypeRepository userTypeRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, UserProfileRepository userProfileRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.mailSender = mailSender;
         this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userProfileRepository = userProfileRepository;
     }
 
     // REGISTER new user
@@ -66,6 +69,11 @@ public class UserService {
         user.setUserType(customerType);
 
         User savedUser = userRepository.save(user);
+        // changes made to sync, create userProfile with user
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUser(savedUser);
+        userProfileRepository.save(userProfile);
+        System.out.println(user);
 
         sendVerificationEmail(savedUser);    // verification email send
         return savedUser;

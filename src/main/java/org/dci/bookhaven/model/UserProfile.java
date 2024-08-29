@@ -25,11 +25,11 @@ public class UserProfile {
     private User user;
 
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String firstName;
 
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String lastName;
 
     @Getter
@@ -42,6 +42,8 @@ public class UserProfile {
 
 
     //Constructors
+
+
     public UserProfile() {
     }
 
@@ -67,6 +69,8 @@ public class UserProfile {
         this.gender = gender;
         this.addresses = addresses;
     }
+
+
 
     public void setId(Long profileId) {
         this.id = profileId;
