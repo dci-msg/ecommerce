@@ -40,8 +40,8 @@ public class Address {
         this.country = country;
     }
 
-    public Address(Long addressId, UserProfile userProfile, String street, String city, String zipCode, String country) {
-        this.id = addressId;
+    public Address(Long id, UserProfile userProfile, String street, String city, String zipCode, String country) {
+        this.id = id;
         this.userProfile = userProfile;
         this.street = street;
         this.city = city;
@@ -74,8 +74,8 @@ public class Address {
         return country;
     }
 
-    public void setId(Long addressId) {
-        this.id = addressId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
 

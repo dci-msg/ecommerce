@@ -13,25 +13,27 @@
     <div class="mb-4">
         <h2>Complete Your Profile</h2>
         <p>If you haven’t completed your profile yet, please fill in your details.</p>
-        <a th:href="@{/profiles/complete}" class="btn btn-primary">Complete User Profile</a>
+        <a th:href="@{/profile/complete{id}}" class="btn btn-primary">Complete User Profile</a>
+        <!--(id=${userProfile.id})-->
     </div>
 
     <!-- Button to edit personal information -->
     <div class="mb-4">
         <h2>Edit Personal Information</h2>
-        <a th:href="@{/profiles/edit}" class="btn btn-secondary">Edit Personal Information</a>
+        <a th:href="@{/profile/edit}" class="btn btn-secondary">Edit Personal Information</a>
     </div>
 
     <!-- Button to view and manage addresses -->
     <div class="mb-4">
         <h2>View Your Addresses</h2>
-        <a th:href="@{/profiles/addresses}" class="btn btn-info">View Addresses</a>
+        <a th:href="@{/profile/addresses}" class="btn btn-info">View Addresses</a>
     </div>
 
     <!-- Button to add a new address -->
     <div class="mb-4">
         <h2>Add New Address</h2>
-        <a th:href="@{/profiles/addresses/new}" class="btn btn-success">Add New Address</a>
+        <a th:href="@{/profile/addresses/add{id}}" class="btn btn-success">Add New Address</a>
+        <!--@{/profile/complete{id}(id=${userProfile.id})}-->
     </div>
 </div>
 

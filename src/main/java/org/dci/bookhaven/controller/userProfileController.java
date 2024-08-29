@@ -6,8 +6,6 @@ import org.dci.bookhaven.repository.AddressRepository;
 import org.dci.bookhaven.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,7 @@ public class userProfileController {
     private AddressRepository addressRepository;
 
     // GET method to display the user's profile
-    @GetMapping("/view/{id}")
+/*    @GetMapping("/view/{id}")
     public String viewProfile(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
 
@@ -38,7 +36,7 @@ public class userProfileController {
 
         model.addAttribute("userProfile", userProfile);
         return "viewProfile";
-    }
+    }*/
 
  /*   @GetMapping
     public String userProfileHome(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -48,9 +46,17 @@ public class userProfileController {
         return "userProfile";
     }*/
 
-    // GET method to display the form to complete profile information
-    @GetMapping("/complete")
-    public String showCompleteProfileForm(@RequestParam Long id, Model model) {
+    @GetMapping()
+    public String userProfile() {
+        return "userProfile";
+    }
+
+    /* UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
+        model.addAttribute("userProfile", userProfile);*/
+
+    // GET method to display the form to complete user's profile information
+    @GetMapping("/complete/{id}")
+    public String showCompleteProfileForm(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
         model.addAttribute("userProfile", userProfile);
         model.addAttribute("address", new Address());
@@ -71,7 +77,7 @@ public class userProfileController {
         // Add address to the user profile
         userProfileService.addAddress(id, address);
 
-        return "redirect:/profile/view?id=" + id;
+        return "redirect:/profile/userProfile?id=" + id;
     }
 
 
@@ -101,14 +107,14 @@ public class userProfileController {
     public String viewAddresses(@RequestParam Long id, Model model) {
         List<Address> addresses = userProfileService.getAddresses(id);
         model.addAttribute("addresses", addresses);
-        model.addAttribute("id", id);
+        model.addAttribute("userId", id);
         return "viewAddresses";
     }
 
     @GetMapping("/addresses/add")
     public String showAddAddressForm(@RequestParam Long id, Model model) {
         model.addAttribute("address", new Address());
-        model.addAttribute("id", id);
+        model.addAttribute("userId", id);
         return "addAddress";
     }
 
@@ -122,6 +128,7 @@ public class userProfileController {
     public String showEditAddressForm(@RequestParam Long id, Model model) {
         Address address = addressRepository.findById(id).orElse(null);
         model.addAttribute("address", address);
+        model.addAttribute("userId", address.getUserProfile().getId());
         return "editAddress";
     }
 
