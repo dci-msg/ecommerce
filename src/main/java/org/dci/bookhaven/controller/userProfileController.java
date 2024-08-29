@@ -26,7 +26,7 @@ public class userProfileController {
     private AddressRepository addressRepository;
 
     // GET method to display the user's profile
-    @GetMapping("/view{id}")
+    @GetMapping("/view/{id}")
     public String viewProfile(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
 
@@ -40,13 +40,13 @@ public class userProfileController {
         return "viewProfile";
     }
 
-    @GetMapping
+ /*   @GetMapping
     public String userProfileHome(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         UserProfile profile = userProfileService.getUserProfileByUserId(userDetails.getUserId());
         model.addAttribute("user", profile.getUser());
         model.addAttribute("profile", profile);
         return "userProfile";
-    }
+    }*/
 
     // GET method to display the form to complete profile information
     @GetMapping("/complete")
