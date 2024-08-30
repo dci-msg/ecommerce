@@ -31,8 +31,8 @@
 
     <!-- Button to add a new address -->
     <div class="mb-4">
-        <h2>Add New Address</h2>
-        <a th:href="@{/profile/addresses/add/edit/{id}(id=${user.id})}" class="btn btn-success">Add New Address</a>
+        <h2>Manage Addresses</h2>
+        <a th:href="@{/profile/addresses/{id}(id=${user.id})}" class="btn btn-success">Manage Your Addresses</a>
         <!--@{/profile/complete{id}(id=${userProfile.id})}-->
     </div>
 </div>

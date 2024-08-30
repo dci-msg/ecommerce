@@ -32,6 +32,13 @@
         </tr>
         </tbody>
     </table>
+
+    <!-- Button to add a new address -->
+    <div class="mb-4">
+        <h2>Add New Address</h2>
+        <a th:href="@{/profile/addresses/add/{id}(id=${userProfile.id})}" class="btn btn-success">Add New Address</a>
+        <!--@{/profile/complete{id}(id=${userProfile.id})}-->
+    </div>
 </div>
 </body>
 </html>

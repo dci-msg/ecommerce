@@ -33,13 +33,16 @@
     <label for="city">City:</label>
     <input type="text" id="city" name="city" th:value="${address.city}" required/>
 
-    <label for="country">Country:</label>
-    <input type="text" id="country" name="country" th:value="${address.country}" required/>
-
     <label for="zipCode">Postal Code:</label>
     <input type="text" id="zipCode" name="zipCode" th:value="${address.zipCode}" required/>
 
+    <label for="country">Country:</label>
+    <input type="text" id="country" name="country" th:value="${address.country}" required/>
+
+    <br> <br>
     <button type="submit">Complete Profile</button>
+    <br> <br>
+    <button><a th:href="@{/profile}" class="btn btn-secondary">Cancel</a></button>
 </form>
 </body>
 </html>

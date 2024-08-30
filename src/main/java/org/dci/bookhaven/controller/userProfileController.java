@@ -86,7 +86,7 @@ public class userProfileController {
         // Add address to the user profile
         userProfileService.addAddress(id, address);
 
-        return "redirect:/profile/view?id=" + id;
+        return "redirect:/profile/view/" + id;
     }
 
 
@@ -118,6 +118,7 @@ public class userProfileController {
     // Managing Addresses
     @GetMapping("/addresses")
     public String viewAddresses(@RequestParam Long id, Model model) {
+        System.out.println("User ID: " + id);
         List<Address> addresses = userProfileService.getAddresses(id);
         model.addAttribute("addresses", addresses);
         model.addAttribute("userId", id);
@@ -137,8 +138,8 @@ public class userProfileController {
         return "redirect:/profile/addresses?id=" + id;
     }
 
-    @GetMapping("/addresses/edit")
-    public String showEditAddressForm(@RequestParam Long id, Model model) {
+    @GetMapping("/addresses/edit/{id}")
+    public String showEditAddressForm(Model model, @PathVariable Long id) {
         Address address = addressRepository.findById(id).orElse(null);
         model.addAttribute("address", address);
         model.addAttribute("userId", address.getUserProfile().getId());
