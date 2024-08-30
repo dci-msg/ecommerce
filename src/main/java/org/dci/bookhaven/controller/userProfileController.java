@@ -1,8 +1,10 @@
 package org.dci.bookhaven.controller;
 
 import org.dci.bookhaven.model.Address;
+import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.model.UserProfile;
 import org.dci.bookhaven.repository.AddressRepository;
+import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,20 +26,18 @@ public class userProfileController {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // GET method to display the user's profile
-/*    @GetMapping("/view/{id}")
+    @GetMapping("/view/{id}")
     public String viewProfile(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
 
-        // Check if the user profile is incomplete of personal details are null
-        if (userProfile.getFirstName() == null || userProfile.getLastName() == null ||
-                userProfile.getDateOfBirth() == null || userProfileService.getAddresses(id).isEmpty()) {
-            return "redirect:/profile/complete?id=" + id;
-        }
-
+        // Add the userProfile object to the model so it can be accessed in the Thymeleaf template
         model.addAttribute("userProfile", userProfile);
         return "viewProfile";
-    }*/
+    }
 
  /*   @GetMapping
     public String userProfileHome(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -47,7 +48,15 @@ public class userProfileController {
     }*/
 
     @GetMapping()
-    public String userProfile() {
+    public String userProfile(Principal principal, Model model) {
+        System.out.println("HELLO USER ");
+        String loggedInUserEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInUserEmail);
+        System.out.println(user);
+        model.addAttribute("user", user);
+
+        /*User user = (User) principal;
+        System.out.println(user);*/
         return "userProfile";
     }
 
@@ -77,15 +86,16 @@ public class userProfileController {
         // Add address to the user profile
         userProfileService.addAddress(id, address);
 
-        return "redirect:/profile/userProfile?id=" + id;
+        return "redirect:/profile/view?id=" + id;
     }
 
 
     // GET method to show the update form
-    @GetMapping("/edit")
-    public String showUpdateForm(@RequestParam Long id, Model model) {
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
         model.addAttribute("userProfile", userProfile);
+        System.out.println(userProfile);
         return "editProfile";
     }
 
@@ -99,7 +109,7 @@ public class userProfileController {
                                 Model model) {
         userProfileService.updateProfile(id, firstName, lastName, dateOfBirth, gender);
         model.addAttribute("message", "Profile updated successfully!");
-        return "redirect:/profile/view?id=" + id;
+        return "redirect:/profile/view/" + id;
     }
 
     // Managing Addresses

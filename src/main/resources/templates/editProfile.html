@@ -9,25 +9,30 @@
 <div class="container">
     <h1 class="mt-4">Edit Profile</h1>
     <form th:action="@{/profile/update}" th:object="${userProfile}" method="post" class="mt-4">
-        <input type="hidden" th:value="${userProfile.getId}" name="userId"/>
+        <input type="hidden" th:value="${userProfile.getId}" name="id"/>
 
         <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="Enter First Name">
+            <input th:value="${userProfile.firstName}" type="text" class="form-control" id="firstName" placeholder="Enter First Name">
         </div>
 
         <div class="mb-3">
             <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name">
+            <input th:value="${userProfile.getLastName}" type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Enter Last Name">
         </div>
 
         <div class="mb-3">
             <label for="dateOfBirth" class="form-label">Date of Birth</label>
-            <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}">
+            <input th:value="${userProfile.getDateOfBirth}" type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}">
+        </div>
+
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <input th:value="${userProfile.getGender}" type="text" class="form-control" id="gender" th:field="*{gender}" placeholder="Enter Gender">
         </div>
 
         <button type="submit" class="btn btn-success">Save Changes</button>
-        <a href="/profile/view?id=1" class="btn btn-secondary">Cancel</a>
+        <a th:href="@{/profile/view(id=${userProfile.id})}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 </body>
