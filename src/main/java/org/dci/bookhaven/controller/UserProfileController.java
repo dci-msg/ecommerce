@@ -4,6 +4,7 @@ import org.dci.bookhaven.model.Address;
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.model.UserProfile;
 import org.dci.bookhaven.repository.AddressRepository;
+import org.dci.bookhaven.repository.UserProfileRepository;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,13 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/profile")
-public class userProfileController {
+public class UserProfileController {
     //Controller class for user profile
     @Autowired
     private UserProfileService userProfileService;
+
+    @Autowired
+    UserProfileRepository userProfileRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -109,10 +113,17 @@ public class userProfileController {
                                 Model model) {
         userProfileService.updateProfile(id, firstName, lastName, dateOfBirth, gender);
         model.addAttribute("message", "Profile updated successfully!");
-        System.out.println("ID: " + id);
-        System.out.println("First Name: " + firstName);
-        System.out.println("Last Name: " + lastName);
-        return "redirect:/profile/view/" + id;
+
+        UserProfile existingProfile = userProfileRepository.findById(id).orElse(null);
+        if (existingProfile != null) {
+            existingProfile.setFirstName(firstName);
+            existingProfile.setLastName(lastName);
+            existingProfile.setDateOfBirth(dateOfBirth);
+            existingProfile.setGender(gender);
+            userProfileRepository.save(existingProfile);
+        }
+
+        return "redirect:/profile/view/?id=" + id;
     }
 
     // Managing Addresses

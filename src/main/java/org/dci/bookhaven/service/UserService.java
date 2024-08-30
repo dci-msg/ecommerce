@@ -9,6 +9,8 @@ import org.dci.bookhaven.repository.UserProfileRepository;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +30,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserProfileRepository userProfileRepository;
+
+    // Define the logger for this class
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
                        JavaMailSender mailSender, UserTypeRepository userTypeRepository,
@@ -73,6 +79,8 @@ public class UserService {
         UserProfile userProfile = new UserProfile();
         userProfile.setUser(savedUser);
         userProfileRepository.save(userProfile);
+        // Added logging to track UserProfile creation
+        logger.info("UserProfile created with ID: {}", userProfile.getUser().getId());
         System.out.println(user);
 
         sendVerificationEmail(savedUser);    // verification email send
