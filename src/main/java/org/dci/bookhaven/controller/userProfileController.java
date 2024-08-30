@@ -109,6 +109,9 @@ public class userProfileController {
                                 Model model) {
         userProfileService.updateProfile(id, firstName, lastName, dateOfBirth, gender);
         model.addAttribute("message", "Profile updated successfully!");
+        System.out.println("ID: " + id);
+        System.out.println("First Name: " + firstName);
+        System.out.println("Last Name: " + lastName);
         return "redirect:/profile/view/" + id;
     }
 

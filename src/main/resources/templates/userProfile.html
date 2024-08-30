@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="mb-4">User Profile</h1>
+    <h1 class="mb-4">Manage Your User Profile</h1>
 
     <!-- Button to complete user profile -->
     <div class="mb-4">
@@ -25,8 +25,8 @@
 
     <!-- Button to view and manage addresses -->
     <div class="mb-4">
-        <h2>View Your Addresses</h2>
-        <a th:href="@{/profile/addresses/edit/{id}(id=${user.id})}" class="btn btn-info">View Addresses</a>
+        <h2>View Your Profile</h2>
+        <a th:href="@{/profile/view/{id}(id=${user.id})}" class="btn btn-info">View Profile</a>
     </div>
 
     <!-- Button to add a new address -->
