@@ -3,15 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Book Haven</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 24px;
+            color: #ffcc00;
+        }
+
+        .navbar-brand img {
+            max-height: 40px;
+            margin-right: 10px;
+        }
+
+        .category-filter {
+            padding: 20px 0;
+            text-align: center;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0;
+        }
+
+        .dropdown-menu {
+            margin-top: 0;
+        }
+
+        .category-filter a {
+            margin: 0 10px;
+            font-weight: bold;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .category-filter a.active {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 20px;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            padding: 20px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar h5 {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .sidebar label {
+            margin-top: 10px;
+        }
+
+        .sidebar .form-control {
+            margin-bottom: 15px;
+        }
+
+        .sidebar button {
+            width: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .book-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #fff;
+            position: relative;
+            text-align: center;
+        }
+
+        .book-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .book-price {
+            font-size: 16px;
+            color: #e67e22;
+            font-weight: bold;
+        }
+
+        .book-original-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-left: 5px;
+        }
+
+        .book-discount {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 5px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+        }
+
+        .book-rating {
+            font-size: 14px;
+            color: #2ecc71;
+            margin-top: 5px;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #ffdb4d;
+            border-color: #ffdb4d;
+            color: #333;
+        }
+
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto;
+        }
+    </style>
 </head>
+
 <body>
+
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Book Haven</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="#">Book Haven
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -25,34 +211,90 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>
             </li>
-            <!-- Login & Registration Buttons -->
             <li class="nav-item">
-                <a class="nav-link btn btn-outline-primary ml-2" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-primary ml-2" href="/register">Registration</a>
+                <a class="nav-link" href="#">About</a>
             </li>
         </ul>
     </div>
 </nav>
 
-<!-- Main Content -->
-<div class="container mt-5">
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to Book Haven!</h1>
-        <p class="lead">Your one-stop shop for all kinds of books. Explore our extensive collection and find your next great read.</p>
-        <hr class="my-4">
-        <p>Browse our categories, discover bestsellers, and stay tuned for new arrivals.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Shop Now</a>
+<!-- Category Filter -->
+<div class="category-filter">
+    <div class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">All</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Thriller</a>
+            <a class="dropdown-item" href="#">Kinder</a>
+            <a class="dropdown-item" href="#">History</a>
+            <!-- Add more categories as needed -->
+        </div>
+    </div>
+    <a href="#">Action</a>
+    <a href="#">Sci-fi</a>
+    <a href="#">Crime</a>
+    <a href="#">Novels</a>
+    <a href="#">Comics</a>
+    <form class="d-flex" method="get" action="/searching">
+        <input class="form-control mr-2" type="text" name="query" placeholder="Title, Author, ISBN, keyword" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+</div>
+
+<!-- Content Wrapper -->
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Search Filters</h5>
+        <form>
+            <label for="bookName">Search Book </label>
+            <input type="text" id="bookName" class="form-control" placeholder="Enter the book name">
+
+            <label for="priceCriteria">Select Price Criteria</label>
+            <select id="priceCriteria" class="form-control">
+                <option>All Books</option>
+                <option>Below 500</option>
+                <option>500 - 1000</option>
+                <option>Above 1000</option>
+            </select>
+
+            <label for="language">Select Book Language</label>
+            <select id="language" class="form-control">
+                <option>Any Language</option>
+                <option>English</option>
+                <option>Germany</option>
+                <option>Russian</option>
+                <option>Others</option>
+            </select>
+
+            <label for="publishDateFrom">Publish Date From</label>
+            <input type="date" id="publishDateFrom" class="form-control">
+
+            <label for="publishDateTo">Publish Date To</label>
+            <input type="date" id="publishDateTo" class="form-control">
+
+            <button type="submit" class="btn btn-warning mt-3">Find Book</button>
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Book Grid -->
+        <div class="book-grid">
+            <!-- Dynamic Book Items -->
+            <div class="book-item" th:each="book : ${books}">
+                <img th:src="@{'/images/' + ${book.imagePath}}" alt="Book Image">
+                <div class="book-title" th:text="${book.title}">Book Title</div>
+                <div class="book-author" th:text="${book.author}">Author Name</div>
+                <div class="book-price" th:text="${book.price}">Price</div>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Footer -->
-<footer class="bg-light text-center text-lg-start mt-5">
-    <div class="container p-4">
-        <div class="text-center">
-            <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
-        </div>
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
     </div>
 </footer>
 

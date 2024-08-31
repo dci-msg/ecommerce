@@ -39,11 +39,12 @@ public class BookController {
         return "book/manage-books";
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String bookhaven(Model model) {
         List<Book> books = bookService.getBooks();
 
         model.addAttribute("books", books);
+        System.out.println("books    " + books.size());
         return "index";
     }
 
