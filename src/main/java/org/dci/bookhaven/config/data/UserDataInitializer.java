@@ -1,4 +1,4 @@
-package org.dci.bookhaven.service;
+package org.dci.bookhaven.config.data;
 
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.model.UserType;
@@ -22,7 +22,6 @@ public class DataInitializer implements CommandLineRunner {
         this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     // ADMIN defined as "active" (default) no validation required
     @Override
@@ -52,6 +51,5 @@ public class DataInitializer implements CommandLineRunner {
             customerType.setUserTypeName("Customer");
             userTypeRepository.save(customerType);
         }
-
     }
 }
