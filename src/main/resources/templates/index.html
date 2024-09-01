@@ -262,7 +262,7 @@
             <div class="book-item" th:each="book : ${books}">
                 <img th:src="@{'/images/' + ${book.imagePath}}" alt="Book Image">
                 <div class="book-title" th:text="${book.title}">Book Title</div>
-                <div class="book-author" th:text="${book.author}">Author Name</div>
+                <div class="book-author" th:text="|By ${book.author}|">Author Name</div>
                 <div class="book-price" th:text="${book.price}">Price</div>
             </div>
         </div>

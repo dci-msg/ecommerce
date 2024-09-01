@@ -77,6 +77,8 @@ public class BookService {
 
         if (keyword.isBlank()) {
             keyword = null;
+        } else {
+            keyword = "%" + keyword.toLowerCase() + "%";
         }
 
         if (priceCriteria.isBlank()) {
