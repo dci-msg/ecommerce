@@ -6,18 +6,20 @@ import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataInitializer implements CommandLineRunner {
+@Order(DataInitOrder.USER)
+public class UserDataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataInitializer(UserRepository userRepository, UserTypeRepository userTypeRepository, PasswordEncoder passwordEncoder) {
+    public UserDataInitializer(UserRepository userRepository, UserTypeRepository userTypeRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
@@ -26,7 +28,6 @@ public class DataInitializer implements CommandLineRunner {
     // ADMIN defined as "active" (default) no validation required
     @Override
     public void run(String... args) throws Exception {
-
         // Admin type
         UserType adminType = userTypeRepository.findByUserTypeName("Admin");
         if (adminType == null){

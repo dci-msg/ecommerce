@@ -218,59 +218,37 @@
     </div>
 </nav>
 
-<!-- Category Filter -->
-<div class="category-filter">
-    <div class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">All</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Thriller</a>
-            <a class="dropdown-item" href="#">Kinder</a>
-            <a class="dropdown-item" href="#">History</a>
-            <!-- Add more categories as needed -->
-        </div>
-    </div>
-    <a href="#">Action</a>
-    <a href="#">Sci-fi</a>
-    <a href="#">Crime</a>
-    <a href="#">Novels</a>
-    <a href="#">Comics</a>
-    <form class="d-flex" method="get" action="/searching">
-        <input class="form-control mr-2" type="text" name="query" placeholder="Title, Author, ISBN, keyword" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
-</div>
-
 <!-- Content Wrapper -->
 <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
         <h5>Search Filters</h5>
-        <form>
-            <label for="bookName">Search Book </label>
-            <input type="text" id="bookName" class="form-control" placeholder="Enter the book name">
+        <form action="/search" method="GET">
+            <label for="keyword">Search Book </label>
+            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Title, Author, ISBN">
+
+            <label for="categoryId">By Category</label>
+            <select id="categoryId" name="categoryId" class="form-control">
+                <option value="">All Categories</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
 
             <label for="priceCriteria">Select Price Criteria</label>
-            <select id="priceCriteria" class="form-control">
-                <option>All Books</option>
-                <option>Below 500</option>
-                <option>500 - 1000</option>
-                <option>Above 1000</option>
+            <select id="priceCriteria" name="priceCriteria" class="form-control">
+                <option value="">All Books</option>
+                <option value="Below 500">Below 500</option>
+                <option value="500 - 1000">500 - 1000</option>
+                <option value="Above 1000">Above 1000</option>
             </select>
 
             <label for="language">Select Book Language</label>
-            <select id="language" class="form-control">
-                <option>Any Language</option>
-                <option>English</option>
-                <option>Germany</option>
-                <option>Russian</option>
-                <option>Others</option>
+            <select id="language" name="language" class="form-control">
+                <option value="">Any Language</option>
+                <option value="English">English</option>
+                <option value="German">German</option>
+                <option value="Russian">Russian</option>
+                <option value="Others">Others</option>
             </select>
-
-            <label for="publishDateFrom">Publish Date From</label>
-            <input type="date" id="publishDateFrom" class="form-control">
-
-            <label for="publishDateTo">Publish Date To</label>
-            <input type="date" id="publishDateTo" class="form-control">
 
             <button type="submit" class="btn btn-warning mt-3">Find Book</button>
         </form>
@@ -292,11 +270,14 @@
 </div>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
+<footer class="bg-light text-center text-lg-start mt-5">
+    <div class="container p-4 d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
+        </div>
     </div>
 </footer>
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
