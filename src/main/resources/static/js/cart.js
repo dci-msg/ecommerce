@@ -47,11 +47,15 @@ function addToCart(bookId, quantity){
         .catch(error => console.error('Error:', error));
 }
 
-function checkEnter(event) {
-    if (event.key === 'Enter') {
-        applyCoupon();
-    }
-}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const couponCodeInput = document.getElementById('couponCode');
+    couponCodeInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            applyCoupon();
+        }
+    });
+});
 
 function applyCoupon() {
     const couponCode = document.getElementById('couponCode').value;
@@ -64,12 +68,10 @@ function applyCoupon() {
     })
         .then(response => response.json())
         .then(data => {
-            const couponMsg = document.getElementById('couponMsg');
             if (data.couponIsValid) {
-                couponMsg.innerText = 'Coupon applied successfully!';
-                couponMsg.classList.add('text-success');
-                couponMsg.classList.remove('text-danger');
+                window.location.reload(); // Refresh the page to apply the coupon
             } else {
+                const couponMsg = document.getElementById('couponMsg');
                 couponMsg.innerText = 'Invalid coupon code.';
                 couponMsg.classList.add('text-danger');
                 couponMsg.classList.remove('text-success');

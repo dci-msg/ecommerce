@@ -1,5 +1,6 @@
 package org.dci.bookhaven.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.LineItem;
 import org.dci.bookhaven.model.User;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,21 +125,24 @@ public class CartController {
     }
 
 
-    @RequestMapping(value = "/cart", method = RequestMethod.GET)
-    public String getCart(Model model, HttpSession session) {
+    @RequestMapping(value = "/applyCoupon", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> applyCoupon(@RequestParam String couponCode, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        if(userService.getLoggedInUser() == null) {
+            response.put("couponIsValid", false);
+            return response;
+        }
         User user = userService.getLoggedInUser();
-        if (user == null) {
-            return "redirect:/login";
-        }
         Cart cart = cartService.getOrCreateCart(user.getId());
-        model.addAttribute("cart", cart);
-        String couponCode = (String) session.getAttribute("couponCode");
-        if (couponCode != null) {
-            model.addAttribute("couponCode", couponCode);
-        }else{
-            model.addAttribute("couponCode", "");
+        boolean couponIsValid = couponService.isValid(couponCode);
+        if (couponIsValid) {
+            session.setAttribute("couponCode", couponCode); // Store new coupon code in session
+        } else {
+            session.removeAttribute("couponCode"); // Remove existing coupon code if invalid
         }
-        return "cart";
+        response.put("couponIsValid", couponIsValid);
+        return response;
     }
 
 
