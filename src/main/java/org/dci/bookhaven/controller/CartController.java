@@ -4,6 +4,7 @@ import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.LineItem;
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.service.CartService;
+import org.dci.bookhaven.service.CouponService;
 import org.dci.bookhaven.service.LineItemService;
 import org.dci.bookhaven.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +24,17 @@ public class CartController {
     private final CartService cartService;
     private final LineItemService lineItemService;
     private final UserService userService;
+    private final CouponService couponService;
 
     @Autowired
     public CartController(
             CartService cartService,
             LineItemService lineItemService,
+            CouponService couponService,
             UserService userService) {
         this.cartService = cartService;
         this.lineItemService = lineItemService;
+        this.couponService = couponService;
         this.userService = userService;
     }
 
@@ -63,20 +68,24 @@ public class CartController {
                 model.addAttribute("cartSizeText", "items");
             }
             model.addAttribute("cartSize", cart.getLineItems().size());
+            model.addAttribute("isEmpty", false);
         }else{
             model.addAttribute("cartSizeText", "items");
             model.addAttribute("cartSize", 0);
+            model.addAttribute("isEmpty", true);
         }
 
         BigDecimal total = cartService.getTotal(cart.getId());
         model.addAttribute("total", total);
 
-        if(cart.getLineItems() != null && cart.getLineItems().isEmpty()) {
-            model.addAttribute("isEmpty", true);
-        } else {
-            model.addAttribute("isEmpty", false);
+        if(cart.getCoupon() != null && !cart.getCoupon().isEmpty() && couponService.isValid(cart.getCoupon())){
+            model.addAttribute("couponCode", cart.getCoupon());
+        }else{
+            model.addAttribute("couponCode", "");
         }
 
+        BigDecimal orderTotal = cartService.getTotalAfterCouponAndShipping(cart.getId());
+        model.addAttribute("orderTotal", orderTotal);
 
         return "cart";
     }
@@ -99,6 +108,38 @@ public class CartController {
         }
         lineItemService.updateQuantity(lineItemId, lineItem.getQuantity() - 1);
         return "redirect:/cart";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addToCart(@RequestParam Long bookId) {
+
+        if(userService.isLoggedIn()) {
+            Long userId = userService.getLoggedInUser().getId();
+            Cart cart = cartService.getOrCreateCart(userId);
+            cartService.addToCart(cart.getId(), bookId);
+        } else{
+            return "redirect:/login";
+        }
+
+        return "redirect:/book/" + bookId;
+    }
+
+
+    @RequestMapping(value = "/cart", method = RequestMethod.GET)
+    public String getCart(Model model, HttpSession session) {
+        User user = userService.getLoggedInUser();
+        if (user == null) {
+            return "redirect:/login";
+        }
+        Cart cart = cartService.getOrCreateCart(user.getId());
+        model.addAttribute("cart", cart);
+        String couponCode = (String) session.getAttribute("couponCode");
+        if (couponCode != null) {
+            model.addAttribute("couponCode", couponCode);
+        }else{
+            model.addAttribute("couponCode", "");
+        }
+        return "cart";
     }
 
 

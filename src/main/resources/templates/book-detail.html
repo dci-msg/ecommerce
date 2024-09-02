@@ -54,7 +54,7 @@
                 </li>
             </ul>
 
-            <a class = "navbar-brand d-flex flex-column" href = "#!">
+            <a class="navbar-brand d-flex flex-column" href="#!">
                 <form class="d-inline-flex" th:action="@{/search}">
                     <input
                             class="form-control mr-sm-2"
@@ -68,7 +68,7 @@
             </a>
 
             <form th:if="${not isLoggedIn}" class="d-flex" action="/login">
-                <button class="btn btn-outline-custom" >
+                <button class="btn btn-outline-custom">
                     <i class="bi bi-door-open"></i>
                     Login
                 </button>
@@ -89,7 +89,7 @@
             </form>
 
             <form class="d-flex" action="/cart">
-                <button class="btn btn-outline-custom" id="cart" >
+                <button class="btn btn-outline-custom" id="cart">
                     <i class="bi-cart-fill me-1"></i>
                     Cart
                     <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${cartSize}"></span>
@@ -103,8 +103,10 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
-                                       src="src/main/resources/static/images/book_01.jpg" alt="imagePath"/></div>
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0"
+                     th:src="${book.imagePath}" alt="imagePath"/>
+            </div>
             <div class="col-md-6">
                 <div class="small mb-1" th:text="${book.isbn}">SKU: BST-498</div>
                 <h1 class="display-5 fw-bolder" th:text="${book.title}">book title</h1>
@@ -114,10 +116,8 @@
                 </div>
                 <p class="lead" th:text="${book.description}">Lorem ipsum </p>
                 <div class="d-flex">
-                    <input class="form-control text-center me-3" id="quantity" type="num" value="1"
-                           style="max-width: 3rem"/>
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button" id = "addToCart"
-                            onclick="addToCart([[${book.id}]], [[${cart.id}]], document.getElementById('quantity').value)">
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button" id="addToCart"
+                            th:attr="onclick='addToCart(' + ${book.id} + ')'">
                         <i class="bi-cart-fill me-1"></i>
                         Add to cart
                     </button>

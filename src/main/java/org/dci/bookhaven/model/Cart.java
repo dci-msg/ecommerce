@@ -31,4 +31,10 @@ public class Cart {
 
     @ManyToOne
     private User user;
+
+    @Column(name = "shipping_method", nullable = true)
+    private String shippingMethod;
+
+    @Column(name = "coupon_code", nullable = true)
+    private String coupon;
 }

@@ -4,10 +4,7 @@ import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.*;
 import org.dci.bookhaven.repository.CartRepository;
 import org.dci.bookhaven.repository.UserRepository;
-import org.dci.bookhaven.service.BookService;
-import org.dci.bookhaven.service.CartService;
-import org.dci.bookhaven.service.CouponService;
-import org.dci.bookhaven.service.LineItemService;
+import org.dci.bookhaven.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -19,6 +16,7 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
 
     private UserRepository userRepository;
+    private UserService userService;
     private CartRepository cartRepository;
     private BookService bookService;
     private LineItemService lineItemService;
@@ -27,11 +25,13 @@ public class CartServiceImpl implements CartService {
     @Autowired
     public CartServiceImpl(
             UserRepository userRepository,
+            UserService userService,
             CartRepository cartRepository,
             BookService bookService,
             LineItemService lineItemService,
             CouponService couponService) {
         this.userRepository = userRepository;
+        this.userService = userService;
         this.cartRepository = cartRepository;
         this.bookService = bookService;
         this.lineItemService = lineItemService;
@@ -42,7 +42,7 @@ public class CartServiceImpl implements CartService {
     @Modifying
     @Transactional
     @Override
-    public void addToCart(Long cartId, Long bookId, int quantity) {
+    public void addToCart(Long cartId, Long bookId) {
         // Retrieve shopping cart from database
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
 
@@ -54,7 +54,7 @@ public class CartServiceImpl implements CartService {
         for (LineItem lineItem : lineItems) {
             // If book is already in shopping cart, increase quantity by 1
             if (lineItem.getBook().getId() == bookId) {
-                int newQuantity = lineItem.getQuantity() + quantity;
+                int newQuantity = lineItem.getQuantity() + 1;
                 lineItemService.updateQuantity(lineItem.getId(), newQuantity);
 
                 // Update shopping cart
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
         // If book is not in shopping cart, create new line item
         LineItem lineItem = LineItem.builder()
                 .book(book)
-                .quantity(quantity)
+                .quantity(1)
                 .build();
         lineItemService.addLineItem(lineItem);
 
@@ -77,6 +77,7 @@ public class CartServiceImpl implements CartService {
 
         // Update shopping cart
         cart.setLineItems(lineItems);
+        sortCartByBookTitle(cart);
         cartRepository.save(cart);
     }
 
@@ -130,9 +131,30 @@ public class CartServiceImpl implements CartService {
         return total;
     }
 
+
     @Override
-    public Cart getCartById(Long cartId){
-        return cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+    public BigDecimal getTotalAfterCouponAndShipping(Long cartId){
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        BigDecimal total = getTotal(cartId);
+
+        // Apply shipping cost
+        if(cart.getShippingMethod() != null){
+            if(cart.getShippingMethod().equals("Standard")){
+                total = total.add(new BigDecimal(5));
+            } else if(cart.getShippingMethod().equals("Express")){
+                total = total.add(new BigDecimal(10));
+            }
+        }
+
+        // Apply coupon discount percentage
+        if(cart.getCoupon() != null && !cart.getCoupon().isEmpty() && couponService.isValid(cart.getCoupon())){
+            Coupon coupon = couponService.getByCode(cart.getCoupon());
+            BigDecimal discount = coupon.getDiscount().divide(new BigDecimal(100));
+            total = total.subtract(total.multiply(discount));
+        }
+
+        return total;
     }
 
     @Override
@@ -157,8 +179,33 @@ public class CartServiceImpl implements CartService {
         List<LineItem> lineItems = cart.getLineItems();
         lineItems.removeIf(lineItem -> lineItem.getId() == lineItemId);
         cart.setLineItems(lineItems);
+        sortCartByBookTitle(cart);
         cartRepository.save(cart);
         lineItemService.deleteLineItemById(lineItemId);
+    }
+
+    @Override
+    public void applyCoupon(Long cartId, String couponCode){
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        if(couponService.isValid(couponCode)){
+            cart.setCoupon(couponCode);
+            cartRepository.save(cart);
+        }
+    }
+
+    @Override
+    public void sortCartByBookTitle(Cart cart){
+        List<LineItem> lineItems = cart.getLineItems();
+        lineItems.sort((l1, l2) -> l1.getBook().getTitle().compareTo(l2.getBook().getTitle()));
+        cart.setLineItems(lineItems);
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void updateShipping(Long cartId, String shippingMethod) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        cart.setShippingMethod(shippingMethod);
+        cartRepository.save(cart);
     }
 
 }

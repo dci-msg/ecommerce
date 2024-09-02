@@ -3,6 +3,7 @@ package org.dci.bookhaven.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
@@ -24,7 +25,7 @@ public class Coupon {
     private String code;
 
     @Column(name = "discount", nullable = false)
-    private double discount;
+    private BigDecimal discount;
 
     @Column(name = "active", nullable = false)
     private boolean isActive;

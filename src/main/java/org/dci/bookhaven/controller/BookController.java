@@ -127,14 +127,14 @@ public class BookController {
     }
 
     @GetMapping("/book/{bookId}")
-    public String getBookDetail(@PathVariable Long bookId, Model model) {
+    public String viewBookDetail(@PathVariable Long bookId, Model model) {
         Book book = bookService.getBookById(bookId);
         model.addAttribute("book", book);
         if(userService.isLoggedIn()){
             boolean isLoggedIn = true;
             model.addAttribute("isLoggedIn", isLoggedIn);
             Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
-            if(cart.getLineItems()!=null){
+            if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
                 model.addAttribute("cartSize", cart.getLineItems().size());
             } else{
                 model.addAttribute("cartSize", 0);
@@ -144,6 +144,16 @@ public class BookController {
             model.addAttribute("cartSize", 0);
         }
         return "book-detail";
+    }
+
+    @RequestMapping(value="/add-to-cart", method = RequestMethod.POST)
+    public String addToCart(@RequestParam Long bookId, @RequestParam int quantity){
+        if(userService.isLoggedIn()){
+            Long userId = userService.getLoggedInUser().getId();
+            Cart cart = cartService.getOrCreateCart(userId);
+            cartService.addToCart(cart.getId(), bookId);
+        }
+        return "redirect:/book/"+bookId;
     }
 
 

@@ -28,8 +28,11 @@ public class Order {
     @OneToMany
     private List<LineItem> lineItems;
 
-    @ManyToOne
-    private Coupon coupon;
+    @Column(name = "coupon_code", nullable = true)
+    private String couponCode;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Shipping shipping;
 
     @Column(name = "total", nullable = false, precision = 2, columnDefinition = "double precision")
     private Double total;

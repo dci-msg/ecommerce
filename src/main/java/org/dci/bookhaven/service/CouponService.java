@@ -3,10 +3,15 @@ package org.dci.bookhaven.service;
 import org.dci.bookhaven.model.Coupon;
 import org.dci.bookhaven.service.impl.CouponServiceImpl;
 
+import java.util.List;
+
 public interface CouponService {
 
+    Coupon getByCode(String code);
 
-    Coupon findByCode(String code);
+    List<Coupon> getAllCoupons();
 
-    void applyCoupon(Coupon coupon);
+    String applyCouponMsg(String couponCode);
+
+    boolean isValid(String couponCode);
 }

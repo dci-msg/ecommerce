@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
@@ -27,6 +28,11 @@ public class Shipping {
     @Column(name = "shipping_method", nullable = false)
     private String shippingMethod;
 
-    @Column(name = "tracking_number", nullable = false)
+    @Column(name = "cost", nullable = false)
+    private BigDecimal cost;
+
+    @Column(name = "tracking_number", nullable = true)
     private String trackingNumber;
+
+
 }

@@ -2,6 +2,7 @@ package org.dci.bookhaven.service;
 
 import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.Cart;
+import org.dci.bookhaven.model.LineItem;
 import org.dci.bookhaven.model.User;
 import org.springframework.data.jpa.repository.Modifying;
 
@@ -11,7 +12,7 @@ public interface CartService {
     // Add x number of books to shopping cart
     @Modifying
     @Transactional
-    void addToCart(Long cartId, Long bookId, int quantity);
+    void addToCart(Long cartId, Long bookId);
 
     int getCartSize(Long cartId);
 
@@ -20,11 +21,17 @@ public interface CartService {
 
     BigDecimal getTotal(Long cartId);
 
-    Cart getCartById(Long cartId);
+    BigDecimal getTotalAfterCouponAndShipping(Long cartId);
 
     Cart getCartByLineItemId(Long lineItemId);
 
     @Modifying
     @Transactional
     void deleteLineItemById(Long lineItemId);
+
+    void applyCoupon(Long cartId, String couponCode);
+
+    void sortCartByBookTitle(Cart cart);
+
+    void updateShipping(Long cartId, String shippingMethod);
 }
