@@ -206,7 +206,7 @@
 
                                     <div class="mb-5">
                                         <div class="form-group-sm">
-                                            <input type="text" id="couponCode" name="couponCode" class="form-control form-control-lg" placeholder="Enter your code" th:value="${couponCode}">
+                                            <input type="text" id="couponCode" name="couponCode" class="form-control form-control-lg" placeholder="Enter your code" th:text="${couponCode}">
                                             <div id="couponMsg" th:if="${couponIsValid != null}" th:classappend="${couponIsValid} ? 'text-success' : 'text-danger'">
                                                 <span th:text="${couponIsValid} ? 'Coupon applied successfully!' : 'Invalid coupon code.'"></span>
                                             </div>

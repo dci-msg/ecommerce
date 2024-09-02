@@ -80,6 +80,7 @@ public class CartController {
 
         if(cart.getCoupon() != null && !cart.getCoupon().isEmpty() && couponService.isValid(cart.getCoupon())){
             model.addAttribute("couponCode", cart.getCoupon());
+            model.addAttribute("couponIsValid", true);
         }else{
             model.addAttribute("couponCode", "");
         }
@@ -129,19 +130,23 @@ public class CartController {
     @ResponseBody
     public Map<String, Object> applyCoupon(@RequestParam String couponCode, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
-        if(userService.getLoggedInUser() == null) {
-            response.put("couponIsValid", false);
-            return response;
+        if(!userService.isLoggedIn()){
+            // redirect to login page
+            response.put("status", "redirect:/login");
         }
-        User user = userService.getLoggedInUser();
-        Cart cart = cartService.getOrCreateCart(user.getId());
-        boolean couponIsValid = couponService.isValid(couponCode);
-        if (couponIsValid) {
-            session.setAttribute("couponCode", couponCode); // Store new coupon code in session
-        } else {
-            session.removeAttribute("couponCode"); // Remove existing coupon code if invalid
+
+        boolean isCouponValid = couponService.isValid(couponCode);
+
+        if(isCouponValid){
+            Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
+            cartService.applyCoupon(cart.getId(), couponCode);
+            response.put("couponIsValid",true);
+            session.setAttribute("couponCode", couponCode);
+        }else{
+            session.removeAttribute("couponCode");
+            response.put("couponIsValid", "false");
         }
-        response.put("couponIsValid", couponIsValid);
+
         return response;
     }
 
