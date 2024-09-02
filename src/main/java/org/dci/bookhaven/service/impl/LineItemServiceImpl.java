@@ -1,7 +1,6 @@
 package org.dci.bookhaven.service.impl;
 
 import jakarta.transaction.Transactional;
-import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.LineItem;
 import org.dci.bookhaven.repository.LineItemRepository;
 import org.dci.bookhaven.service.LineItemService;
@@ -20,12 +19,6 @@ public class LineItemServiceImpl implements LineItemService {
         this.lineItemRepository = lineItemRepository;
     }
 
-    @Modifying
-    @Transactional
-    @Override
-    public void deleteLineItem(Long lineItemId) {
-        lineItemRepository.deleteById(lineItemId);
-    }
 
     @Modifying
     @Transactional
@@ -59,6 +52,13 @@ public class LineItemServiceImpl implements LineItemService {
     @Override
     public LineItem getLineItemById(Long lineItemId) {
         return lineItemRepository.findById(lineItemId).orElseThrow(() -> new RuntimeException("Line item not found"));
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void deleteLineItemById(Long lineItemId) {
+        lineItemRepository.deleteById(lineItemId);
     }
 
 

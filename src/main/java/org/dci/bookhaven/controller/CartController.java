@@ -93,6 +93,10 @@ public class CartController {
     @RequestMapping(value = "/decreaseQuantity", method = RequestMethod.POST)
     public String decreaseQuantity(@RequestParam Long lineItemId) {
         LineItem lineItem = lineItemService.getLineItemById(lineItemId);
+        if(lineItem.getQuantity() == 1) {
+            cartService.deleteLineItemById(lineItemId);
+            return "redirect:/cart";
+        }
         lineItemService.updateQuantity(lineItemId, lineItem.getQuantity() - 1);
         return "redirect:/cart";
     }

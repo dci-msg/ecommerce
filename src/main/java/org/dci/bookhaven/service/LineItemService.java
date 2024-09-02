@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import java.math.BigDecimal;
 
 public interface LineItemService {
-    void deleteLineItem(Long lineItemId);
-
     @Modifying
     @Transactional
     void updateQuantity(Long lineItemId, int quantity);
@@ -21,4 +19,7 @@ public interface LineItemService {
 
     LineItem getLineItemById(Long lineItemId);
 
+    @Modifying
+    @Transactional
+    void deleteLineItemById(Long lineItemId);
 }

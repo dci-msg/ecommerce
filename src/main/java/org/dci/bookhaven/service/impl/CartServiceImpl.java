@@ -149,4 +149,16 @@ public class CartServiceImpl implements CartService {
         throw new RuntimeException("Cart not found");
     }
 
+    @Modifying
+    @Transactional
+    @Override
+    public void deleteLineItemById(Long lineItemId){
+        Cart cart = getCartByLineItemId(lineItemId);
+        List<LineItem> lineItems = cart.getLineItems();
+        lineItems.removeIf(lineItem -> lineItem.getId() == lineItemId);
+        cart.setLineItems(lineItems);
+        cartRepository.save(cart);
+        lineItemService.deleteLineItemById(lineItemId);
+    }
+
 }

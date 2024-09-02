@@ -23,4 +23,8 @@ public interface CartService {
     Cart getCartById(Long cartId);
 
     Cart getCartByLineItemId(Long lineItemId);
+
+    @Modifying
+    @Transactional
+    void deleteLineItemById(Long lineItemId);
 }
