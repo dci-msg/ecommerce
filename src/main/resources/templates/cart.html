@@ -111,9 +111,6 @@
                                 <div class="p-5">
                                     <div class="d-flex justify-content-between align-items-center mb-5">
                                         <h1 class="fw-bold mb-0">Shopping Cart</h1>
-                                        <h6 th:unless="${isEmpty}" class="mb-0 text-muted" th:text="${lineItemSize}">
-                                            <span> items </span>
-                                        </h6>
 
                                     </div>
                                     <hr class="my-4">
@@ -142,30 +139,27 @@
                                             </div>
 
                                             <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                                <button data-mdb-button-init data-mdb-ripple-init
-                                                        class="btn btn-link px-2"
-                                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                                    <i class="fas fa-minus"></i>
+                                                <button class="btn btn-outline-custom btn-sm"
+                                                th:attr="onclick='increaseQuantity(' + ${lineItem.id} + ')'">
+                                                    <i class="bi bi-plus-square"></i>
                                                 </button>
 
-                                                <input id="form1" min="0" name="quantity" value="1" type="number"
-                                                       class="form-control form-control-sm"/>
+                                                <span th:text="${lineItem.quantity}"></span>
 
-                                                <button data-mdb-button-init data-mdb-ripple-init
-                                                        class="btn btn-link px-2"
-                                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                                    <i class="fas fa-plus"></i>
+                                                <button class="btn btn-outline-custom btn-sm"
+                                                th:attr="onclick='decreaseQuantity(' + ${lineItem.id} + ')'">
+                                                    <i class="bi bi-dash-square"></i>
                                                 </button>
                                             </div>
 
                                             <div class="col-md-3 col-lg-3 col-xl-2 d-flex me-auto">
-                                                <span class="mb-0" th:text="${lineTotals[lineItem.id]}"></span>
+                                                <span class="line-total mb-0"
+                                                      th:text="${lineTotals[lineItem.id]}"></span>
                                             </div>
 
+                                            <hr class="my-4">
 
                                         </div>
-
-                                        <hr class="my-4">
 
                                     </div>
 
@@ -187,7 +181,7 @@
                                     <div class="d-flex justify-content-between mb-4">
                                         <h5 class="text-uppercase">
                                             <span th:text="${cartSize}"></span>
-                                            <span> items </span>
+                                            <span th:text="${cartSizeText}"> </span>
                                         </h5>
                                         <h5 class="cart-total" th:text="${total}"></h5>
                                     </div>

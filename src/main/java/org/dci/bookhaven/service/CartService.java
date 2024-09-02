@@ -19,4 +19,8 @@ public interface CartService {
     Cart getOrCreateCart(Long userId);
 
     BigDecimal getTotal(Long cartId);
+
+    Cart getCartById(Long cartId);
+
+    Cart getCartByLineItemId(Long lineItemId);
 }

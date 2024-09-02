@@ -57,8 +57,14 @@ public class CartController {
         }
 
         if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
+            if(cart.getLineItems().size() == 1){
+                model.addAttribute("cartSizeText", "item");
+            } else{
+                model.addAttribute("cartSizeText", "items");
+            }
             model.addAttribute("cartSize", cart.getLineItems().size());
         }else{
+            model.addAttribute("cartSizeText", "items");
             model.addAttribute("cartSize", 0);
         }
 
@@ -76,6 +82,20 @@ public class CartController {
     }
 
 
+    @RequestMapping(value = "/increaseQuantity", method = RequestMethod.POST)
+    public String increaseQuantity(@RequestParam Long lineItemId) {
+        LineItem lineItem = lineItemService.getLineItemById(lineItemId);
+        lineItemService.updateQuantity(lineItemId, lineItem.getQuantity() + 1);
+        return "redirect:/cart";
+    }
+
+
+    @RequestMapping(value = "/decreaseQuantity", method = RequestMethod.POST)
+    public String decreaseQuantity(@RequestParam Long lineItemId) {
+        LineItem lineItem = lineItemService.getLineItemById(lineItemId);
+        lineItemService.updateQuantity(lineItemId, lineItem.getQuantity() - 1);
+        return "redirect:/cart";
+    }
 
 
 }

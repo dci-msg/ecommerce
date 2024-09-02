@@ -1,6 +1,7 @@
 package org.dci.bookhaven.service.impl;
 
 import jakarta.transaction.Transactional;
+import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.LineItem;
 import org.dci.bookhaven.repository.LineItemRepository;
 import org.dci.bookhaven.service.LineItemService;

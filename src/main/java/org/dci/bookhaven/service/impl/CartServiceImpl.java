@@ -130,4 +130,23 @@ public class CartServiceImpl implements CartService {
         return total;
     }
 
+    @Override
+    public Cart getCartById(Long cartId){
+        return cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+    }
+
+    @Override
+    public Cart getCartByLineItemId(Long lineItemId){
+        List<Cart> carts = cartRepository.findAll();
+        for(Cart cart : carts){
+            List<LineItem> lineItems = cart.getLineItems();
+            for(LineItem lineItem : lineItems){
+                if(lineItem.getId() == lineItemId){
+                    return cart;
+                }
+            }
+        }
+        throw new RuntimeException("Cart not found");
+    }
+
 }
