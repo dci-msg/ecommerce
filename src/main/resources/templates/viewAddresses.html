@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <h1 class="mt-4">Manage Addresses</h1>
-    <a th:href="@{/profile/addresses/add?id=${userId}}" class="btn btn-primary mt-3">Add New Address</a>
+    <!--<a th:href="@{/profile/addresses/add?id=${userId}}" class="btn btn-primary mt-3">Add New Address</a>-->
     <table class="table table-striped mt-4">
         <thead>
         <tr>
@@ -36,7 +36,7 @@
     <!-- Button to add a new address -->
     <div class="mb-4">
         <h2>Add New Address</h2>
-        <a th:href="@{/profile/addresses/add/{id}(id=${userProfile.id})}" class="btn btn-success">Add New Address</a>
+        <a th:href="@{/profile/addresses/add?id=${userProfile.id}}" class="btn btn-success">Add New Address</a>
         <!--@{/profile/complete{id}(id=${userProfile.id})}-->
     </div>
 </div>

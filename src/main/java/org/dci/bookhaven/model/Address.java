@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "Addresses")
+@Table(name = "addresses")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -12,20 +12,20 @@ public class Address {
 
     @Getter
     @ManyToOne
-    @JoinColumn(name = "profileId", nullable = false)
+    @JoinColumn(name = "profile_id", nullable = false)
     private UserProfile userProfile;
 
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String street;
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String city;
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String zipCode;
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String country;
 
     //Constructors
@@ -89,6 +89,18 @@ public class Address {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", userProfile id=" + userProfile.getId()+
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", country='" + country + '\'' +
+                '}';
     }
 
     public void setCountry(String country) {

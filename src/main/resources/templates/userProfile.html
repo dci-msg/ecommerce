@@ -17,6 +17,12 @@
         <!--(id=${userProfile.id})-->
     </div>
 
+    <!-- Button to view your Profile -->
+    <div class="mb-4">
+        <h2>View Your Profile</h2>
+        <a th:href="@{/profile/view/{id}(id=${user.id})}" class="btn btn-info">View Profile</a>
+    </div>
+
     <!-- Button to edit personal information -->
     <div class="mb-4">
         <h2>Edit Personal Information</h2>
@@ -24,12 +30,6 @@
     </div>
 
     <!-- Button to view and manage addresses -->
-    <div class="mb-4">
-        <h2>View Your Profile</h2>
-        <a th:href="@{/profile/view/{id}(id=${user.id})}" class="btn btn-info">View Profile</a>
-    </div>
-
-    <!-- Button to add a new address -->
     <div class="mb-4">
         <h2>Manage Addresses</h2>
         <a th:href="@{/profile/addresses/{id}(id=${user.id})}" class="btn btn-success">Manage Your Addresses</a>

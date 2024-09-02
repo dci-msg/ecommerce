@@ -72,7 +72,7 @@ public class UserProfileController {
     public String showCompleteProfileForm(Model model, @PathVariable Long id) {
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
         model.addAttribute("userProfile", userProfile);
-        model.addAttribute("address", new Address());
+        model.addAttribute("address", userProfile.getAddresses().get(0));
         return "completeProfile";
     }
 
@@ -84,13 +84,16 @@ public class UserProfileController {
                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth,
                                   @RequestParam String gender,
                                   @ModelAttribute Address address) {
+
+        userProfileService.addAddress(id, address);
+        System.out.println(address);
         // Update user profile with the provided information
         userProfileService.updateProfile(id, firstName, lastName, dateOfBirth, gender);
 
         // Add address to the user profile
-        userProfileService.addAddress(id, address);
-
-        return "redirect:/profile/view/" + id;
+        /*userProfileService.addAddress(id, address);*/
+        UserProfile userProfile = userProfileService.getUserProfileById(id);
+        return "redirect:/profile/view/" + userProfile.getUser().getId();
     }
 
 
@@ -122,17 +125,18 @@ public class UserProfileController {
             existingProfile.setGender(gender);
             userProfileRepository.save(existingProfile);
         }
-
-        return "redirect:/profile/view/?id=" + id;
+        UserProfile userProfile = userProfileService.getUserProfileById(id);
+        return "redirect:/profile/view/" + userProfile.getUser().getId();
     }
 
     // Managing Addresses
-    @GetMapping("/addresses")
-    public String viewAddresses(@RequestParam Long id, Model model) {
+    @GetMapping("/addresses/{id}")
+    public String viewAddresses(Model model, @PathVariable Long id) {
         System.out.println("User ID: " + id);
         List<Address> addresses = userProfileService.getAddresses(id);
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
+        model.addAttribute("userProfile", userProfile);
         model.addAttribute("addresses", addresses);
-        model.addAttribute("userId", id);
         return "viewAddresses";
     }
 
@@ -152,14 +156,24 @@ public class UserProfileController {
     @GetMapping("/addresses/edit/{id}")
     public String showEditAddressForm(Model model, @PathVariable Long id) {
         Address address = addressRepository.findById(id).orElse(null);
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
+        model.addAttribute("userProfile", userProfile);
         model.addAttribute("address", address);
-        model.addAttribute("userId", address.getUserProfile().getId());
+        /*model.addAttribute("userId", address.getUserProfile().getId());*/
         return "editAddress";
     }
 
     @PostMapping("/addresses/edit")
     public String updateAddress(@RequestParam Long id, @ModelAttribute Address address) {
-        userProfileService.updateAddress(id, address);
+        Address existingAddress = addressRepository.findById(id).orElse(null);
+
+        if (existingAddress != null) {
+            address.setUserProfile(existingAddress.getUserProfile()); // Set the UserProfile from the existing address
+            userProfileService.updateAddress(id, address);
+            System.out.println("Updated Address ID: " + id);
+            System.out.println("User Profile ID: " + address.getUserProfile().getId());
+        }
+
         return "redirect:/profile/addresses?id=" + address.getUserProfile().getId();
     }
 

@@ -48,7 +48,7 @@ public class UserProfileService {
         }
 
         // Find the user's profile by ID
-        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
+        UserProfile userProfile = userProfileRepository.findUserProfileById(id);
 
         // If the userProfile exists, update the profile details
         if (userProfile != null) {
@@ -81,8 +81,9 @@ public class UserProfileService {
     }
 
     public void addAddress(Long id, Address address) {
-        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
+        UserProfile userProfile = userProfileRepository.findUserProfileById(id);
         address.setUserProfile(userProfile);
+        System.out.println(address);
         addressRepository.save(address);
     }
 
@@ -97,6 +98,10 @@ public class UserProfileService {
         address.setZipCode(updatedAddress.getZipCode());
         address.setCountry(updatedAddress.getCountry());
         addressRepository.save(address);
+    }
+
+    public UserProfile getUserProfileById(Long id) {
+        return userProfileRepository.findUserProfileById(id);
     }
 }
 
