@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.LineItem;
 import org.springframework.data.jpa.repository.Modifying;
 
+import java.math.BigDecimal;
+
 public interface LineItemService {
     void deleteLineItem(Long lineItemId);
 
@@ -13,9 +15,10 @@ public interface LineItemService {
 
     void addLineItem(LineItem lineItem);
 
-    double getLineTotal(LineItem lineItem);
+    BigDecimal getLineTotal(LineItem lineItem);
 
-    double getLineTotal(Long id);
+    double getLineTotalById(Long id);
 
     LineItem getLineItemById(Long lineItemId);
+
 }

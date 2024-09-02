@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -80,34 +80,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-    // Remove book from shopping cart
-    @Modifying
-    @Transactional
-    @Override
-    public void remove(Long cartId, Long bookId) {
-        // Retrieve shopping cart from database
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-
-        // Retrieve line items from shopping cart
-        List<LineItem> lineItems = cart.getLineItems();
-
-        // Find line item with book id
-        for (LineItem lineItem : lineItems) {
-            if (lineItem.getBook().getId() == bookId) {
-                // Remove line item from shopping cart
-                lineItems.remove(lineItem);
-                lineItemService.deleteLineItem(lineItem.getId());
-
-                // Update shopping cart
-                cart.setLineItems(lineItems);
-                cartRepository.save(cart);
-
-                return;
-            }
-        }
-
-        throw new RuntimeException("Book not found in cart");
-    }
 
     // Get shopping cart size
     @Override
@@ -115,31 +87,6 @@ public class CartServiceImpl implements CartService {
         return cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found")).getLineItems().size();
     }
 
-    // Get shopping cart total
-    @Override
-    public double getCartTotal(Long cartId) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        List<LineItem> lineItems = cart.getLineItems();
-        double total = 0;
-        for (LineItem lineItem : lineItems) {
-            total += lineItem.getBook().getPrice().doubleValue() * lineItem.getQuantity();
-        }
-        return total;
-    }
-
-    @Override
-    public double getCartTotalAfterCoupon(Long cartId, String couponCode) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        List<LineItem> lineItems = cart.getLineItems();
-        double total = getCartTotal(cartId);
-
-        Coupon coupon = couponService.findByCode(couponCode);
-        if (coupon != null && coupon.isActive() && coupon.getStartDate().isBefore(LocalDateTime.now())) {
-            total = total * (1 - coupon.getDiscount());
-        }
-
-        return total;
-    }
 
     @Modifying
     @Transactional
@@ -171,4 +118,16 @@ public class CartServiceImpl implements CartService {
             return cart;
         }
     }
+
+    @Override
+    public BigDecimal getTotal(Long cartId){
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        List<LineItem> lineItems = cart.getLineItems();
+        BigDecimal total = new BigDecimal(0);
+        for(LineItem lineItem : lineItems){
+            total = total.add(lineItemService.getLineTotal(lineItem));
+        }
+        return total;
+    }
+
 }

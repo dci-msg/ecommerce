@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class LineItemServiceImpl implements LineItemService {
     private LineItemRepository lineItemRepository;
@@ -34,7 +36,6 @@ public class LineItemServiceImpl implements LineItemService {
         });
     }
 
-
     @Modifying
     @Transactional
     @Override
@@ -43,15 +44,16 @@ public class LineItemServiceImpl implements LineItemService {
     }
 
     @Override
-    public double getLineTotal(LineItem lineItem) {
-        return lineItem.getBook().getPrice().doubleValue() * lineItem.getQuantity();
+    public BigDecimal getLineTotal(LineItem lineItem) {
+        return lineItem.getBook().getPrice().multiply(BigDecimal.valueOf(lineItem.getQuantity()));
     }
 
     @Override
-    public double getLineTotal(Long id){
+    public double getLineTotalById(Long id){
         LineItem lineItem = lineItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Line item not found"));
         return lineItem.getBook().getPrice().doubleValue() * lineItem.getQuantity();
     }
+
 
     @Override
     public LineItem getLineItemById(Long lineItemId) {

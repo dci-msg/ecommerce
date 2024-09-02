@@ -16,30 +16,30 @@ public class BookhavenApplication {
         SpringApplication.run(BookhavenApplication.class, args);
     }
 
-//    UserService userService;
-//    UserTypeService userTypeService;
-//    CartService cartService;
-//    LineItemService lineItemService;
-//    BookService bookService;
-//    UtilGenerator generator;
-//
-//
-//    @Autowired
-//    public BookhavenApplication(
-//            UserService userService,
-//            UserTypeService userTypeService,
-//            CartService cartService,
-//            LineItemService lineItemService,
-//            BookService bookService,
-//            UtilGenerator generator
-//            ) {
-//        this.userService = userService;
-//        this.userTypeService = userTypeService;
-//        this.cartService = cartService;
-//        this.lineItemService = lineItemService;
-//        this.bookService = bookService;
-//        this.generator = generator;
-//    }
+    UserService userService;
+    UserTypeService userTypeService;
+    CartService cartService;
+    LineItemService lineItemService;
+    BookService bookService;
+    UtilGenerator generator;
+
+
+    @Autowired
+    public BookhavenApplication(
+            UserService userService,
+            UserTypeService userTypeService,
+            CartService cartService,
+            LineItemService lineItemService,
+            BookService bookService,
+            UtilGenerator generator
+            ) {
+        this.userService = userService;
+        this.userTypeService = userTypeService;
+        this.cartService = cartService;
+        this.lineItemService = lineItemService;
+        this.bookService = bookService;
+        this.generator = generator;
+    }
 //
 //
 //    // Create 20 users
@@ -80,7 +80,6 @@ public class BookhavenApplication {
 
     // Create 8 addresses
     // Create 6 orders
-
 
 
 

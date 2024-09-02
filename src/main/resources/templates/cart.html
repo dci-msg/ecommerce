@@ -54,7 +54,7 @@
                 </li>
             </ul>
 
-            <a class = "navbar-brand d-flex flex-column" href = "#!">
+            <a class="navbar-brand d-flex flex-column" href="#!">
                 <form class="d-inline-flex" th:action="@{/search}">
                     <input
                             class="form-control mr-sm-2"
@@ -68,7 +68,7 @@
             </a>
 
             <form th:if="${not isLoggedIn}" class="d-flex" action="/login">
-                <button class="btn btn-outline-custom" >
+                <button class="btn btn-outline-custom">
                     <i class="bi bi-door-open"></i>
                     Login
                 </button>
@@ -89,7 +89,7 @@
             </form>
 
             <form class="d-flex" action="/cart">
-                <button class="btn btn-outline-custom" id="cart" >
+                <button class="btn btn-outline-custom" id="cart">
                     <i class="bi-cart-fill me-1"></i>
                     Cart
                     <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${cartSize}"></span>
@@ -111,29 +111,34 @@
                                 <div class="p-5">
                                     <div class="d-flex justify-content-between align-items-center mb-5">
                                         <h1 class="fw-bold mb-0">Shopping Cart</h1>
-                                        <h6 th:unless="${isEmpty}" class="mb-0 text-muted" th:text = "${lineItemSize}">
+                                        <h6 th:unless="${isEmpty}" class="mb-0 text-muted" th:text="${lineItemSize}">
                                             <span> items </span>
                                         </h6>
 
                                     </div>
                                     <hr class="my-4">
 
-<!--                                    Beginning of the left column of cart details-->
+                                    <!--                                    Beginning of the left column of cart details-->
                                     <div th:if="${isEmpty}">
                                         <p>Your cart is empty.</p>
                                     </div>
 
-                                    <div th:unless="${isEmpty}" th:each="lineItem : ${lineItems}">
+                                    <div th:if="${not isEmpty}" th:each="lineItem : ${lineItems}">
 
                                         <div class="row mb-4 d-flex justify-content-between align-items-center">
-<!--                                            <div class="col-md-2 col-lg-2 col-xl-2">-->
-<!--                                                <img-->
-<!--                                                        th:src="${lineItem.book.imagePath}"-->
-<!--                                                        class="img-fluid rounded-3" th:alt="${lineItem.book.name}">-->
-<!--                                            </div>-->
+                                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                                <img
+                                                        th:src="${lineItem.book.imagePath}"
+                                                        class="img-fluid rounded-3">
+                                            </div>
                                             <div class="col-md-3 col-lg-3 col-xl-3">
-                                                <h6 class="text-muted" th:text = "${lineItem.book.isbn}"></h6>
-                                                <h6 class="mb-0" th:text = "${lineItem.book.title}"></h6>
+                                                <h6 class="text-muted" th:text="${lineItem.book.isbn}"></h6>
+                                                <h6 class="mb-0" th:text="${lineItem.book.title}"></h6>
+                                            </div>
+
+                                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                                <span class="text-muted">€ </span>
+                                                <span class="mb-0" th:text="${lineItem.book.price}"></span>
                                             </div>
 
                                             <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -153,12 +158,11 @@
                                                 </button>
                                             </div>
 
-                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                <h6 class="mb-0" th:text="${lineItem.total()}"></h6>
+                                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex me-auto">
+                                                <span class="mb-0" th:text="${lineTotals[lineItem.id]}"></span>
                                             </div>
-                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                                            </div>
+
+
                                         </div>
 
                                         <hr class="my-4">
@@ -168,7 +172,7 @@
                                     <div class="pt-5">
                                         <h6 class="mb-0">
                                             <a href="/" class="text-body">
-                                             <i class="bi bi-arrow-left" href="/"></i>  Back to shop
+                                                <i class="bi bi-arrow-left" href="/"></i> Back to shop
                                             </a>
                                         </h6>
                                     </div>
@@ -181,8 +185,11 @@
                                     <hr class="my-4">
 
                                     <div class="d-flex justify-content-between mb-4">
-                                        <h5 class="text-uppercase">items <span th:text="${totalItems}"></span></h5>
-                                        <h5 class = "cart-total" th:text="${total}"> € 132.00</h5>
+                                        <h5 class="text-uppercase">
+                                            <span th:text="${cartSize}"></span>
+                                            <span> items </span>
+                                        </h5>
+                                        <h5 class="cart-total" th:text="${total}"></h5>
                                     </div>
 
                                     <h5 class="text-uppercase mb-3">Shipping</h5>
@@ -191,7 +198,7 @@
                                         <select data-mdb-select-init>
                                             <option value="1">Premium-Delivery - €5.00</option>
                                             <option value="2">Standard-Delivery - € 10.00</option>
-                                            <option value="3">Pick up at a store - €0.00 </option>
+                                            <option value="3">Pick up at a store - €0.00</option>
                                         </select>
                                     </div>
 
@@ -207,10 +214,10 @@
 
                                     <hr class="my-4">
 
-<!--                                    <div class="d-flex justify-content-between mb-5">-->
-<!--                                        <h5 class="text-uppercase">Total price</h5>-->
-<!--                                        <h5 th:text="${totalAfterCoupon}">€ 137.00</h5>-->
-<!--                                    </div>-->
+                                    <!--                                    <div class="d-flex justify-content-between mb-5">-->
+                                    <!--                                        <h5 class="text-uppercase">Total price</h5>-->
+                                    <!--                                        <h5 th:text="${totalAfterCoupon}">€ 137.00</h5>-->
+                                    <!--                                    </div>-->
 
                                     <button type="button" data-mdb-button-init data-mdb-ripple-init
                                             class="btn btn-success btn-block btn-lg"
