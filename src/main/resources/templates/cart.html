@@ -194,12 +194,29 @@
                                     <h5 class="text-uppercase mb-3">Shipping</h5>
 
                                     <div class="mb-4 pb-2">
-                                        <select data-mdb-select-init>
+                                        <select data-mdb-select-init id = "shippingMethod">
                                             <option value="0">Choose your option</option>
-                                            <option value="1">Pick up at a store - €0.00</option>
-                                            <option value="2">Standard-Delivery - €5.00</option>
-                                            <option value="3">Premium-Delivery - €10.00</option>
+                                            <option value="pickup" th:selected="${shippingMethod == 'pickup'}">Pick up at a store - €0.00</option>
+                                            <option value="standard" th:selected="${shippingMethod == 'standard'}">Standard-Delivery - €5.00</option>
+                                            <option value="express" th:selected="${shippingMethod == 'express'}">Express-Delivery - €10.00</option>
                                         </select>
+                                    </div>
+
+                                    <div id="addressCard" class="card" style="display: none;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Shipping Address</h5>
+                                            <p class="card-text">Please enter your shipping address.</p>
+                                            <!-- Add form fields for address here -->
+
+                                        </div>
+                                    </div>
+
+                                    <div id="storeAddressCard" class="card" style="display: none;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Store Address</h5>
+                                            <p class="card-text">Please select a store for pickup.</p>
+                                            <!-- Add form fields for store selection here -->
+                                        </div>
                                     </div>
 
                                     <h5 class="text-uppercase mb-3">Coupon</h5>

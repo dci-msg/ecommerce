@@ -39,7 +39,7 @@ public class CartController {
     }
 
     @GetMapping("")
-    public String viewCart(Model model) {
+    public String viewCart(Model model, HttpSession session) {
         if(userService.getLoggedInUser() == null) {
             return "redirect:/login";
         }
@@ -77,6 +77,13 @@ public class CartController {
 
         BigDecimal total = cartService.getTotal(cart.getId());
         model.addAttribute("total", total);
+
+        if(cart.getShippingMethod() != null){
+            String shippingMethod = session.getAttribute("shippingMethod").toString();
+            model.addAttribute("shippingMethod", shippingMethod);
+        }else{
+            model.addAttribute("shippingMethod", "");
+        }
 
         if(cart.getCoupon() != null && !cart.getCoupon().isEmpty() && couponService.isValid(cart.getCoupon())){
             model.addAttribute("couponCode", cart.getCoupon());
@@ -147,6 +154,23 @@ public class CartController {
             response.put("couponIsValid", "false");
         }
 
+        return response;
+    }
+
+    @RequestMapping(value = "/chooseShipping", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> chooseShippingMethod(@RequestParam String shippingMethod, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        if(!userService.isLoggedIn()){
+            // redirect to login page
+            response.put("status", "redirect:/login");
+        }
+
+        Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
+        cartService.updateShipping(cart.getId(), shippingMethod);
+        session.setAttribute("shippingMethod", shippingMethod);
+
+        response.put("shippingMethod", shippingMethod);
         return response;
     }
 

@@ -81,7 +81,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-
     // Get shopping cart size
     @Override
     public int getCartSize(Long cartId) {
@@ -138,20 +137,20 @@ public class CartServiceImpl implements CartService {
 
         BigDecimal total = getTotal(cartId);
 
-        // Apply shipping cost
-        if(cart.getShippingMethod() != null){
-            if(cart.getShippingMethod().equals("Standard")){
-                total = total.add(new BigDecimal(5));
-            } else if(cart.getShippingMethod().equals("Express")){
-                total = total.add(new BigDecimal(10));
-            }
-        }
-
         // Apply coupon discount percentage
         if(cart.getCoupon() != null && !cart.getCoupon().isEmpty() && couponService.isValid(cart.getCoupon())){
             Coupon coupon = couponService.getByCode(cart.getCoupon());
             BigDecimal discount = coupon.getDiscount().divide(new BigDecimal(100));
             total = total.subtract(total.multiply(discount));
+        }
+
+        // Apply shipping cost
+        if(cart.getShippingMethod() != null){
+            if(cart.getShippingMethod().equals("standard")){
+                total = total.add(new BigDecimal(5));
+            } else if(cart.getShippingMethod().equals("express")){
+                total = total.add(new BigDecimal(10));
+            }
         }
 
         return total;
@@ -184,6 +183,8 @@ public class CartServiceImpl implements CartService {
         lineItemService.deleteLineItemById(lineItemId);
     }
 
+    @Modifying
+    @Transactional
     @Override
     public void applyCoupon(Long cartId, String couponCode){
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
@@ -193,6 +194,9 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+
+    @Modifying
+    @Transactional
     @Override
     public void sortCartByBookTitle(Cart cart){
         List<LineItem> lineItems = cart.getLineItems();
@@ -201,6 +205,8 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
+    @Modifying
+    @Transactional
     @Override
     public void updateShipping(Long cartId, String shippingMethod) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
