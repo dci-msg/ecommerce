@@ -61,7 +61,7 @@ public class SecurityConfig {
                     .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
                 .logout(logout -> {
                     logout.logoutUrl("/logout");                // logout URL
-                    logout.logoutSuccessUrl("/login?logout");   // after success logout direction
+                    logout.logoutSuccessUrl("/");   // after success logout direction
 
                 }).csrf(csrf -> csrf.disable());  //csrf protection disabled
 
@@ -80,6 +80,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();  // for BCrypt algorithm
     }
-
-
 }
