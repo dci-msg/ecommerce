@@ -81,12 +81,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-    // Get shopping cart size
-    @Override
-    public int getCartSize(Long cartId) {
-        return cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found")).getLineItems().size();
-    }
-
 
     @Modifying
     @Transactional
@@ -212,6 +206,39 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
         cart.setShippingMethod(shippingMethod);
         cartRepository.save(cart);
+    }
+
+    @Override
+    public BigDecimal getShippingCost(String shippingMethod){
+        if(shippingMethod.equals("standard")){
+            return new BigDecimal(5);
+        } else if(shippingMethod.equals("express")){
+            return new BigDecimal(10);
+        }
+        return new BigDecimal(0);
+    }
+
+    @Override
+    public BigDecimal getCouponDiscountedValue(Long cartId, String couponCode){
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        if (couponService.isValid(couponCode)) {
+            Coupon coupon = couponService.getByCode(couponCode);
+            BigDecimal discount = coupon.getDiscount().divide(new BigDecimal(100));
+            return getTotal(cartId).multiply(discount);
+        }
+        return new BigDecimal(0);
+    }
+
+    @Override
+    public int getCartItemNumber(Cart cart) {
+        int size = 0;
+        if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
+            List<LineItem> lineItems = cart.getLineItems();
+            for(LineItem lineItem : lineItems){
+                size += lineItem.getQuantity();
+            }
+        }
+        return size;
     }
 
 }

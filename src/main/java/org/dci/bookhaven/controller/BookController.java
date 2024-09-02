@@ -135,7 +135,7 @@ public class BookController {
             model.addAttribute("isLoggedIn", isLoggedIn);
             Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
             if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
-                model.addAttribute("cartSize", cart.getLineItems().size());
+                model.addAttribute("cartSize", cartService.getCartItemNumber(cart));
             } else{
                 model.addAttribute("cartSize", 0);
             }

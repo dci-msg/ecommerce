@@ -62,12 +62,12 @@ public class CartController {
         }
 
         if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
-            if(cart.getLineItems().size() == 1){
+            if(cartService.getCartItemNumber(cart) == 1){
                 model.addAttribute("cartSizeText", "item");
             } else{
                 model.addAttribute("cartSizeText", "items");
             }
-            model.addAttribute("cartSize", cart.getLineItems().size());
+            model.addAttribute("cartSize", cartService.getCartItemNumber(cart));
             model.addAttribute("isEmpty", false);
         }else{
             model.addAttribute("cartSizeText", "items");
@@ -81,6 +81,7 @@ public class CartController {
         if(cart.getShippingMethod() != null){
             String shippingMethod = session.getAttribute("shippingMethod").toString();
             model.addAttribute("shippingMethod", shippingMethod);
+            model.addAttribute("shippingCost", cartService.getShippingCost(shippingMethod));
         }else{
             model.addAttribute("shippingMethod", "");
         }
@@ -88,6 +89,7 @@ public class CartController {
         if(cart.getCoupon() != null && !cart.getCoupon().isEmpty() && couponService.isValid(cart.getCoupon())){
             model.addAttribute("couponCode", cart.getCoupon());
             model.addAttribute("couponIsValid", true);
+            model.addAttribute("couponDiscountedValue", cartService.getCouponDiscountedValue(cart.getId(), cart.getCoupon()));
         }else{
             model.addAttribute("couponCode", "");
         }

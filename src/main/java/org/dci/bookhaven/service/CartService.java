@@ -14,8 +14,6 @@ public interface CartService {
     @Transactional
     void addToCart(Long cartId, Long bookId);
 
-    int getCartSize(Long cartId);
-
     @Modifying
     Cart getOrCreateCart(Long userId);
 
@@ -34,4 +32,10 @@ public interface CartService {
     void sortCartByBookTitle(Cart cart);
 
     void updateShipping(Long cartId, String shippingMethod);
+
+    BigDecimal getShippingCost(String shippingMethod);
+
+    BigDecimal getCouponDiscountedValue(Long cartId, String couponCode);
+
+    int getCartItemNumber(Cart cart);
 }
