@@ -21,9 +21,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             " AND (:keyword IS NULL OR (LOWER(b.title) LIKE :keyword ) " +
             " OR (LOWER(b.author) LIKE :keyword) " +
             " OR (LOWER(b.isbn) LIKE :keyword)) " +
-            " AND (:priceCriteria IS NULL OR (b.price < 500 AND :priceCriteria = 'Below 500') " +
-            " OR (b.price BETWEEN 500 AND 1000 AND :priceCriteria = '500 - 1000') " +
-            " OR (b.price > 1000 AND :priceCriteria = 'Above 1000')) "
+            " AND (:priceCriteria IS NULL OR (b.price < 5 AND :priceCriteria = 'Below 5') " +
+            " OR (b.price BETWEEN 5 AND 10 AND :priceCriteria = '5 - 10') " +
+            " OR (b.price > 10 AND :priceCriteria = 'Above 10')) "
 
     )
     List<Book> findByKeyWordAndCategoryAndPriceAndLanguage(String keyword, Long categoryId, String priceCriteria,
@@ -34,4 +34,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
                                                                                               String title,
                                                                                               String isbn,
                                                                                               String description);
+
+    List<Book> findByTitle(String title);
 }

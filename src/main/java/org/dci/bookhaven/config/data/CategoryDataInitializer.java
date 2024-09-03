@@ -22,37 +22,50 @@ public class CategoryDataInitializer implements CommandLineRunner {
                 "Uncategorized",
                 "This category is for items that have not been assigned to any specific category."
         );
-        createCategory(
-                "Thriller",
-                "Suspenseful tales with intense excitement, unexpected twists, and heart-pounding moments that keep you hooked."
-        );
+
         createCategory(
                 "Children",
                 "Stories and adventures designed to spark imagination and nurture a love of reading in young minds."
         );
+
         createCategory(
-                "History",
-                "Explore the events and cultures that shaped our world, from ancient times to modern days."
+                "Classic",
+                "This category is for timeless works of literature that have been widely recognized for their artistic and cultural value."
         );
+
         createCategory(
-                "Action",
-                "High-octane adventures with fast-paced plots, thrilling sequences, and formidable heroes."
+                "Dystopian",
+                "This category includes books that explore societies characterized by poverty, oppression, and a totalitarian regime, often set in a speculative or future world."
         );
+
         createCategory(
-                "Sci-fi",
-                "Futuristic worlds, alien civilizations, and mind-bending concepts that push the boundaries of imagination."
+                "Adventure",
+                "Books in this category involve exciting journeys, exploration, and often feature daring heroes undertaking dangerous quests."
         );
+
         createCategory(
-                "Crime",
-                "Gripping stories of mystery and detective work that delve into the complexities of justice."
+                "Romance",
+                "This category is for books that focus on romantic relationships and love stories, often with emotional and passionate plots."
         );
+
         createCategory(
-                "Novel",
-                "A collection of narrative fiction offering deep characters, rich storytelling, and emotional depth."
+                "Historical",
+                "Books in this category are set in a specific historical period, often focusing on historical figures, events, and cultural contexts."
         );
+
         createCategory(
-                "Comics",
-                "Stories come to life through dynamic illustrations, featuring superheroes, everyday heroes, and fantastical tales."
+                "Science Fiction",
+                "Books in this category explore imaginative concepts such as futuristic science, advanced technology, and space exploration."
+        );
+
+        createCategory(
+                "Psychological",
+                "This category includes books that delve into the human mind, exploring psychological conflicts, mental health, and the complexities of human emotions."
+        );
+        
+        createCategory(
+                "Fantasy",
+                "This category includes books that involve magical elements, mythical creatures, and supernatural phenomena, creating imaginary worlds and epic adventures."
         );
     }
 

@@ -1,100 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Book Haven</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="/css/styles.css" rel="stylesheet">
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .content-wrapper {
+            display: flex;
+            justify-content: center; /* Center the content */
+            margin-top: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+
+        .main-content {
+            max-width: 1200px; /* Maximum width to control the center alignment */
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .book-item {
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .book-item img {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .book-price {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .heart-icon {
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .likes-counter {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .heart-icon:hover {
+            color: green; /* Change the heart color to green on hover */
+        }
+
+        .book-item-link {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
 </head>
 
 <body>
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <a class="navbar-brand" href="#">Book Haven</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Books</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/contact">Contact</a>
-            </li>
-            <<<<<<< HEAD
-            <!-- Login, Registration, and Logout Buttons -->
-            <li class="nav-item" th:if="${not isLoggedIn}">
-                <a class="nav-link btn btn-outline-primary ml-2" href="/login">Login</a>
-            </li>
-            <li class="nav-item" th:if="${not isLoggedIn}">
-                <a class="nav-link btn btn-primary ml-2" href="/register">Registration</a>
-                =======
-            <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-                >>>>>>> shoghik
-            </li>
-            <li class="nav-item" th:if="${isLoggedIn}">
-                <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
-            </li>
-        </ul>
+
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="/">
+            <img src="/images/favicon.ico" height="30" alt="Book Haven Logo">
+            Book Haven
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Books</a></li>
+            </ul>
+
+            <form class="d-flex" action="/likes">
+                <button class="btn btn-outline-custom" id="like">
+                    <i class="bi bi-heart-fill me-1"></i>
+                    Likes
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="likeCount">0</span>
+                </button>
+            </form>
+
+            <form class="d-flex" action="/cart">
+                <button class="btn btn-outline-custom" id="cart">
+                    <i class="bi bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${cartSize}"></span>
+                </button>
+            </form>
+        </div>
     </div>
 </nav>
 
 <!-- Content Wrapper -->
-<div class="container">
+<div class="content-wrapper">
     <!-- Sidebar -->
-    <div class="sidebar">
+    <aside class="sidebar">
         <h5>Search Filters</h5>
         <form action="/search" method="GET">
-            <label for="keyword">Search Book</label>
-            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Title, Author, ISBN">
+            <div class="mb-3">
+                <label for="keyword" class="form-label">Search Book</label>
+                <input type="text" id="keyword" name="keyword" class="form-control"
+                       placeholder="Title, Author, ISBN">
+            </div>
 
-            <label for="categoryId">By Category</label>
-            <select id="categoryId" name="categoryId" class="form-control">
-                <option value="">All Categories</option>
-                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-            </select>
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">By Category</label>
+                <select id="categoryId" name="categoryId" class="form-control">
+                    <option value="">All Categories</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">
+                    </option>
+                </select>
+            </div>
 
-            <label for="priceCriteria">Select Price Criteria</label>
-            <select id="priceCriteria" name="priceCriteria" class="form-control">
-                <option value="">All Books</option>
-                <option value="Below 500">Below 500</option>
-                <option value="500 - 1000">500 - 1000</option>
-                <option value="Above 1000">Above 1000</option>
-            </select>
+            <div class="mb-3">
+                <label for="priceCriteria" class="form-label">Select Price Criteria</label>
+                <select id="priceCriteria" name="priceCriteria" class="form-control">
+                    <option value="">All Books</option>
+                    <option value="Below 5">Below 5</option>
+                    <option value="5 - 10">5 - 10</option>
+                    <option value="Above 10">Above 10</option>
+                </select>
+            </div>
 
-            <label for="language">Select Book Language</label>
-            <select id="language" name="language" class="form-control">
-                <option value="">Any Language</option>
-                <option value="English">English</option>
-                <option value="German">German</option>
-                <option value="Russian">Russian</option>
-                <option value="Others">Others</option>
-            </select>
+            <div class="mb-3">
+                <label for="language" class="form-label">Select Book Language</label>
+                <select id="language" name="language" class="form-control">
+                    <option value="">Any Language</option>
+                    <option value="English">English</option>
+                    <option value="German">German</option>
+                    <option value="Russian">Russian</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
 
             <button type="submit" class="btn btn-warning mt-3">Find Book</button>
         </form>
-    </div>
+    </aside>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Book Grid -->
         <div class="book-grid">
             <!-- Dynamic Book Items -->
-            <div class="book-item" th:each="book : ${books}">
-                <img th:src="@{'/images/' + ${book.imagePath}}" alt="Book Image">
-                <div class="book-title" th:text="${book.title}">Book Title</div>
-                <div class="book-author" th:text="|By ${book.author}|">Author Name</div>
-                <div class="book-price" th:text="${book.price}">Price</div>
-            </div>
+            <a th:href="@{/book/{id}(id=${book.id})}" th:each="book : ${books}" class="book-item-link">
+                <div class="book-item">
+                    <img class="card-img-top mb-5 mb-md-0"
+                         th:src="@{'/images/' + ${book.imagePath}}" alt="imagePath"/>
+
+                    <div class="book-title" th:text="${book.title}">Book Title</div>
+                    <div class="book-author" th:text="|By ${book.author}|">Author Name</div>
+
+                    <div class="book-price">
+                        <span th:text="${book.price}">Price</span>
+                        <i class="bi bi-heart heart-icon" onclick="toggleHeart(event, this)"></i>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
@@ -108,10 +214,34 @@
     </div>
 </footer>
 
-
 <!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+<script>
+    let likeCount = 0; // Initial like count
+
+    document.getElementById('like').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+        likeCount++;
+        document.getElementById('likeCount').innerText = likeCount;
+    });
+
+    function toggleHeart(event, element) {
+        event.preventDefault(); // Prevent navigation to another page
+        event.stopPropagation(); // Stop the event from bubbling up
+
+        element.classList.toggle('bi-heart-fill');
+        element.classList.toggle('bi-heart');
+
+        if (element.classList.contains('bi-heart-fill')) {
+            likeCount++;
+        } else {
+            likeCount--;
+        }
+        document.getElementById('likeCount').innerText = likeCount;
+    }
+</script>
 </body>
+
 </html>

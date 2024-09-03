@@ -30,6 +30,10 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found id = " + id));
     }
 
+    public List<Book> getBookByTitle(String title) {
+        return bookRepository.findByTitle(title);
+    }
+
     @Transactional
     public void addBook(Book book) {
         if (book == null) {
