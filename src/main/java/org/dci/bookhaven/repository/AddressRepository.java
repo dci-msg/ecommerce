@@ -1,11 +1,10 @@
 package org.dci.bookhaven.repository;
 
-import org.dci.bookhaven.model.UserType;
+import org.dci.bookhaven.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserTypeRepository extends JpaRepository<UserType, Long> {
-    UserType findByUserTypeName(String name);
-
+public interface AddressRepository extends JpaRepository<Address, Long> {
+    Address findAddressById(Long id);
 }

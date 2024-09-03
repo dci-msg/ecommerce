@@ -110,6 +110,13 @@ Develop a comprehensive platform for online shopping, allowing users to browse, 
    | status       | String         |                    |
    | totalPrice   | Double         |                    |
 
+8. **ShoppingCart**
+
+   | id           | Long           | @Id                |
+   |--------------|----------------|--------------------|
+   | cartItems    | List<CartItem> | @OneToMany         |
+   | user         | User           | @OneToOne
+
 
 8. **Inventory**
 

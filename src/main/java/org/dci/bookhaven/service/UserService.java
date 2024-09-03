@@ -8,13 +8,18 @@ import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.dci.bookhaven.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,6 +30,9 @@ public class UserService {
     private final JavaMailSender mailSender;
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.domain}")
+    private String DOMAIN;
 
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
@@ -38,6 +46,8 @@ public class UserService {
     }
 
     // REGISTER new user
+    @Modifying
+    @Transactional
     public User registerNewUserAccount(User user) {
         // existed user registration
         // check if user in db
@@ -67,7 +77,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        sendVerificationEmail(savedUser);    // verification email send
+//        sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
@@ -97,11 +107,13 @@ public class UserService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "http://localhost:8080" + confirmationUrl);
+        email.setText(message + DOMAIN + confirmationUrl);
 
         mailSender.send(email); // send token
     }
 
+    @Modifying
+    @Transactional
     public void verifyUser(String token) {
         VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
 
@@ -111,6 +123,21 @@ public class UserService {
 
             userRepository.save(verifiedUser);
         }
+    }
+
+
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            return userRepository.findByEmail(username);
+        }
+        return null;
+    }
+
+    public boolean isLoggedIn(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
     }
 
 

@@ -1,9 +1,12 @@
 package org.dci.bookhaven.controller;
 
 import org.dci.bookhaven.model.Book;
+import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.Category;
 import org.dci.bookhaven.service.BookService;
+import org.dci.bookhaven.service.CartService;
 import org.dci.bookhaven.service.CategoryService;
+import org.dci.bookhaven.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +22,15 @@ public class BookController {
 
     private final CategoryService categoryService;
 
-    public BookController(BookService bookService, CategoryService categoryService) {
+    private final UserService userService;
+
+    private final CartService cartService;
+
+    public BookController(BookService bookService, CategoryService categoryService, UserService userService, CartService cartService) {
         this.bookService = bookService;
         this.categoryService = categoryService;
+        this.userService = userService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/manage-books")
@@ -116,4 +125,37 @@ public class BookController {
         model.addAttribute("book", book);
         return "subpage";
     }
+
+    @GetMapping("/book/{bookId}")
+    public String viewBookDetail(@PathVariable Long bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        if(userService.isLoggedIn()){
+            boolean isLoggedIn = true;
+            model.addAttribute("isLoggedIn", isLoggedIn);
+            Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
+            if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
+                model.addAttribute("cartSize", cartService.getCartItemNumber(cart));
+            } else{
+                model.addAttribute("cartSize", 0);
+            }
+        } else{
+            model.addAttribute("isLoggedIn", false);
+            model.addAttribute("cartSize", 0);
+        }
+        return "book-detail";
+    }
+
+    @RequestMapping(value="/add-to-cart", method = RequestMethod.POST)
+    public String addToCart(@RequestParam Long bookId, @RequestParam int quantity){
+        if(userService.isLoggedIn()){
+            Long userId = userService.getLoggedInUser().getId();
+            Cart cart = cartService.getOrCreateCart(userId);
+            cartService.addToCart(cart.getId(), bookId);
+        }
+        return "redirect:/book/"+bookId;
+    }
+
+
+
 }
