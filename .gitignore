@@ -2,7 +2,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # Ignore the target directory (typically used for build outputs in Java/Scala projects)
-target/
+target
 
 # Ignore the .idea directory (used by JetBrains IDEs like IntelliJ IDEA)
 .idea/

@@ -57,6 +57,4 @@ public class UsersController {
         userService.verifyUser(token);
         return "redirect:/login?verified=true";
     }
-
-
 }

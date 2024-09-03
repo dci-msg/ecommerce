@@ -24,53 +24,69 @@
 </nav>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h2 class="text-center mt-5">Add Book</h2>
-            <a th:href="@{/manage-books}" class="btn btn-primary">Back</a>
+            <a th:href="@{/manage-books}" class="btn btn-outline-secondary">Back</a>
             <form th:action="@{/add-book}" method="post">
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="author" class="form-label">Author</label>
+                        <input type="text" class="form-control" id="author" name="author" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="author" class="form-label">Author</label>
-                    <input type="text" class="form-control" id="author" name="author" required>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" name="category" class="form-control" required>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" min="0" step="0.5" class="form-control" id="price" name="price" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="number" min="0" step="0.5" class="form-control" id="price" name="price" required>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="language" class="form-label">Select Book Language</label>
+                        <select id="language" name="language" class="form-control" required>
+                            <option value="">Any Language</option>
+                            <option value="English">English</option>
+                            <option value="German">German</option>
+                            <option value="Russian">Russian</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" required>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="isbn" class="form-label">Isbn</label>
+                        <input type="text" class="form-control" id="isbn" name="isbn" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="publicationDate" class="form-label">Publication Date</label>
+                        <input type="date" max="{{today}}" class="form-control" id="publicationDate" name="publicationDate" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="isbn" class="form-label">Isbn</label>
-                    <input type="text" class="form-control" id="isbn" name="isbn" required>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="pages" class="form-label">Pages</label>
+                        <input type="number" min="0" step="1" class="form-control" id="pages" name="pages" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="imagePath" class="form-label">Upload Image</label>
+                        <input type="file" class="form-control" id="imagePath" name="imagePath" accept="image/*" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="publicationDate" class="form-label">PublicationDate</label>
-                    <input type="date" max="{{today}}" class="form-control" id="publicationDate" name="publicationDate" required>
-                </div>
-                <div class="mb-3">
-                    <label for="pages" class="form-label">Pages</label>
-                    <input type="number" min="0" step="1" class="form-control" id="pages" name="pages" required>
-                </div>
-                <div class="mb-3">
-                    <label for="language" class="form-label">Language</label>
-                    <input type="text" class="form-control" id="language" name="language" required>
-                </div>
-                <div class="mb-3">
-                    <label for="imagePath" class="form-label">Upload Image</label>
-                    <input type="file" class="form-control" id="imagePath" name="imagePath" accept="image/*" required>
-                </div>
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select id="category" name="category" required>
-                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Add Book</button>
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Add Book</button>
             </form>
         </div>
     </div>

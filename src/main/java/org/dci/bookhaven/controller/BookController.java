@@ -48,11 +48,29 @@ public class BookController {
         return "book/manage-books";
     }
 
-    @GetMapping("/index")
+    @GetMapping("/search")
+    public String searchBooks(@RequestParam String keyword,
+                              @RequestParam(value = "categoryId", required = false) Long categoryId,
+                              @RequestParam String priceCriteria,
+                              @RequestParam String language,
+                              Model model)
+    {
+        List<Book> books = bookService.getBooks(keyword, categoryId, priceCriteria, language);
+        List<Category> categories = categoryService.getCategoriesAsc();
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("books", books);
+        return "index";
+    }
+
+    @GetMapping("/")
     public String bookhaven(Model model) {
         List<Book> books = bookService.getBooks();
+        List<Category> categories = categoryService.getCategoriesAsc();
 
         model.addAttribute("books", books);
+        model.addAttribute("categories", categories);
+        System.out.println("books    " + books.size());
         return "index";
     }
 
@@ -155,7 +173,4 @@ public class BookController {
         }
         return "redirect:/book/"+bookId;
     }
-
-
-
 }

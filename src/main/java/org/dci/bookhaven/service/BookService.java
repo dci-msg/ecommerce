@@ -7,6 +7,7 @@ import org.dci.bookhaven.repository.BookRepository;
 import org.dci.bookhaven.repository.InventoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -27,26 +28,6 @@ public class BookService {
 
     public Book getBookById(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found id = " + id));
-    }
-
-    public List<Book> getBooksByCategoryName(String categoryName) {
-        return bookRepository.findByCategoryName(categoryName);
-    }
-
-    public List<Book> getBooksByCategoryId(Long categoryId) {
-        return bookRepository.findByCategoryId(categoryId);
-    }
-
-    public List<Book> getBooksByTitle(String title) {
-        return bookRepository.findByTitleContaining(title);
-    }
-
-    public Book getBookByIsbn(String isbn) {
-        return bookRepository.findByIsbn(isbn).orElseThrow(() -> new RuntimeException("Not found isbn = " + isbn));
-    }
-
-    public List<Book> getBooksByAuthor(String author) {
-        return bookRepository.findByAuthor(author);
     }
 
     @Transactional
@@ -80,9 +61,38 @@ public class BookService {
     }
 
     public List<Book> searchBooks(String query) {
-        if (query == null || query.isEmpty()) {
+        if (query.isBlank()) {
             return bookRepository.findAll();
         }
-        return bookRepository.findByAuthorContainingOrTitleContainingOrIsbnContainingOrDescriptionContaining(query, query, query, query);
+        return bookRepository.findByAuthorContainingOrTitleContainingOrIsbnContainingOrDescriptionContaining(query,
+                query, query, query);
+    }
+
+    public List<Book> getBooks(String keyword, Long categoryId, String priceCriteria, String language) {
+        System.out.println("server");
+
+        if (keyword.isBlank() && categoryId == null && priceCriteria.isBlank() && language.isBlank()) {
+            return bookRepository.findAll();
+        }
+
+        if (keyword.isBlank()) {
+            keyword = null;
+        } else {
+            keyword = "%" + keyword.toLowerCase() + "%";
+        }
+
+        if (priceCriteria.isBlank()) {
+            priceCriteria = null;
+        }
+
+        if (language.isBlank()) {
+            language = null;
+        }
+
+        System.out.println("keyWord:" + keyword);
+        System.out.println("categoryId:" + categoryId);
+        System.out.println("priceCriteria:" + priceCriteria);
+        System.out.println("language:" + language);
+        return bookRepository.findByKeyWordAndCategoryAndPriceAndLanguage(keyword, categoryId, priceCriteria, language);
     }
 }
