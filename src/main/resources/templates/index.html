@@ -116,6 +116,26 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Books</a></li>
             </ul>
+            <form sec:authorize="!isAuthenticated()" class="d-flex" action="/login">
+                <button class="btn btn-outline-custom">
+                    <i class="bi bi-door-open"></i>
+                    Login
+                </button>
+            </form>
+
+            <form sec:authorize="isAuthenticated()" class="d-flex" action="/logout">
+                <button class="btn btn-outline-custom" href="">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </button>
+            </form>
+
+            <form sec:authorize="!isAuthenticated()" class="d-flex" action="/register">
+                <button class="btn btn-outline-custom">
+                    <i class="bi-person-circle"></i>
+                    Register
+                </button>
+            </form>
 
             <form class="d-flex" action="/likes">
                 <button class="btn btn-outline-custom" id="like">
