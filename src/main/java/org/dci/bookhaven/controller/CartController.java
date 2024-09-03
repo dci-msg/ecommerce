@@ -39,7 +39,7 @@ public class CartController {
     }
 
     @GetMapping("")
-    public String viewCart(Model model, HttpSession session) {
+    public String viewCart(Model model) {
         if(userService.getLoggedInUser() == null) {
             return "redirect:/login";
         }
@@ -79,9 +79,8 @@ public class CartController {
         model.addAttribute("total", total);
 
         if(cart.getShippingMethod() != null){
-            String shippingMethod = session.getAttribute("shippingMethod").toString();
-            model.addAttribute("shippingMethod", shippingMethod);
-            model.addAttribute("shippingCost", cartService.getShippingCost(shippingMethod));
+            model.addAttribute("shippingMethod", cart.getShippingMethod());
+            model.addAttribute("shippingCost", cartService.getShippingCost(cart.getShippingMethod()));
         }else{
             model.addAttribute("shippingMethod", "");
         }

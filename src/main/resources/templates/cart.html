@@ -122,44 +122,48 @@
 
                                     <div th:if="${not isEmpty}" th:each="lineItem : ${lineItems}">
 
-                                        <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                            <div class="col-md-2 col-lg-2 col-xl-2">
-                                                <img
-                                                        th:src="${lineItem.book.imagePath}"
-                                                        class="img-fluid rounded-3">
+                                        <div class="container">
+                                            <div class="row mb-4 d-flex justify-content-between align-items-center"
+                                                 id="booksList">
+                                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                                    <img
+                                                            th:src="${lineItem.book.imagePath}"
+                                                            class="img-fluid rounded-3">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-xl-3">
+                                                    <h6 class="mb-0" th:text="${lineItem.book.title}"></h6>
+                                                    <span class="text-muted" th:text="${lineItem.book.author}"></span>
+                                                </div>
+
+                                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                                    <span>€</span>
+                                                    <span class="mb-0"
+                                                          th:text="${#numbers.formatDecimal(lineItem.book.price,1,2)}"></span>
+                                                </div>
+
+                                                <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
+                                                    <button class="btn btn-outline-custom btn-sm"
+                                                            th:attr="onclick='increaseQuantity(' + ${lineItem.id} + ')'">
+                                                        <i class="bi bi-plus-square"></i>
+                                                    </button>
+
+                                                    <span class = "mb-0" th:text="${lineItem.quantity}"></span>
+
+                                                    <button class="btn btn-outline-custom btn-sm"
+                                                            th:attr="onclick='decreaseQuantity(' + ${lineItem.id} + ')'">
+                                                        <i class="bi bi-dash-square"></i>
+                                                    </button>
+                                                </div>
+
+                                                <div class="col-sm-12 col-md-3 col-lg-3 col-xl-2">
+                                                    <span>€ </span>
+                                                    <span class="line-total mb-0"
+                                                          th:text="${#numbers.formatDecimal(lineTotals[lineItem.id],1,2)}"></span>
+                                                </div>
+
+                                                <hr class="my-4">
+
                                             </div>
-                                            <div class="col-md-3 col-lg-3 col-xl-3">
-                                                <h6 class="text-muted" th:text="${lineItem.book.isbn}"></h6>
-                                                <h6 class="mb-0" th:text="${lineItem.book.title}"></h6>
-                                            </div>
-
-                                            <div class="col-md-3 col-lg-3 col-xl-3">
-                                                <span>€ </span>
-                                                <span class="mb-0" th:text="${#numbers.formatDecimal(lineItem.book.price,1,2)}"></span>
-                                            </div>
-
-                                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                                <button class="btn btn-outline-custom btn-sm"
-                                                        th:attr="onclick='increaseQuantity(' + ${lineItem.id} + ')'">
-                                                    <i class="bi bi-plus-square"></i>
-                                                </button>
-
-                                                <span th:text="${lineItem.quantity}"></span>
-
-                                                <button class="btn btn-outline-custom btn-sm"
-                                                        th:attr="onclick='decreaseQuantity(' + ${lineItem.id} + ')'">
-                                                    <i class="bi bi-dash-square"></i>
-                                                </button>
-                                            </div>
-
-                                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex me-auto">
-                                                <span>€ </span>
-                                                <span class="line-total mb-0"
-                                                      th:text="${#numbers.formatDecimal(lineTotals[lineItem.id],1,2)}"></span>
-                                            </div>
-
-                                            <hr class="my-4">
-
                                         </div>
 
                                     </div>
@@ -182,11 +186,17 @@
                                     <h5 class="text-uppercase mb-3">Shipping</h5>
 
                                     <div class="mb-4 pb-2">
-                                        <select data-mdb-select-init id = "shippingMethod">
+                                        <select data-mdb-select-init id="shippingMethod">
                                             <option value="0">Choose your option</option>
-                                            <option value="pickup" th:selected="${shippingMethod == 'pickup'}">Pick up at a store - €0.00</option>
-                                            <option value="standard" th:selected="${shippingMethod == 'standard'}">Standard-Delivery - €5.00</option>
-                                            <option value="express" th:selected="${shippingMethod == 'express'}">Express-Delivery - €10.00</option>
+                                            <option value="pickup" th:selected="${shippingMethod == 'pickup'}">Pick up
+                                                at a store - €0.00
+                                            </option>
+                                            <option value="standard" th:selected="${shippingMethod == 'standard'}">
+                                                Standard-Delivery - €5.00
+                                            </option>
+                                            <option value="express" th:selected="${shippingMethod == 'express'}">
+                                                Express-Delivery - €10.00
+                                            </option>
                                         </select>
                                     </div>
 
@@ -195,6 +205,8 @@
                                             <h5 class="card-title">Shipping Address</h5>
                                             <p class="card-text">Please enter your shipping address.</p>
                                             <!-- Add form fields for address here -->
+<!--                                            <span th:object ="${addresses}">-->
+
 
                                         </div>
                                     </div>
@@ -211,8 +223,11 @@
 
                                     <div class="mb-5">
                                         <div class="form-group-sm">
-                                            <input type="text" id="couponCode" name="couponCode" class="form-control form-control-lg" placeholder="Enter your code" th:text="${couponCode}">
-                                            <div id="couponMsg" th:if="${couponIsValid != null}" th:classappend="${couponIsValid} ? 'text-success' : 'text-danger'">
+                                            <input type="text" id="couponCode" name="couponCode"
+                                                   class="form-control form-control-lg" placeholder="Enter your code"
+                                                   th:text="${couponCode}">
+                                            <div id="couponMsg" th:if="${couponIsValid != null}"
+                                                 th:classappend="${couponIsValid} ? 'text-success' : 'text-danger'">
                                                 <span th:text="${couponIsValid} ? 'Coupon applied successfully!' : 'Invalid coupon code.'"></span>
                                             </div>
                                         </div>
@@ -253,7 +268,6 @@
                                     </div>
 
 
-
                                     <hr class="my-4">
 
                                     <div class="d-flex justify-content-between mb-4">
@@ -263,7 +277,7 @@
 
                                         <h5 class="cart-total">
                                             <span>€ </span>
-                                            <span th:text="${#numbers.formatDecimal(orderTotal, 2,2)}"></span>
+                                            <span th:text="${#numbers.formatDecimal(orderTotal, 1,2)}"></span>
                                         </h5>
                                     </div>
 
