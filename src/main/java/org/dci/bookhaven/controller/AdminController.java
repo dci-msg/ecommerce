@@ -8,6 +8,6 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String showAdminPage(){
-        return "admin";
+        return "redirect:/manage-books";
     }
 }

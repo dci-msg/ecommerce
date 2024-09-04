@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Shop Item - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" src="/images/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<style>
+    .heart-icon {
+        font-size: 2rem; /* Adjust the size as needed */
+    }
+</style>
+<body>
+<script src="/js/cart.js"></script>
+
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="/">
+            <img src="/images/favicon.ico" height="30">
+            Book Haven
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+            </ul>
+
+            <a class="navbar-brand d-flex flex-column" href="#!">
+                <form class="d-inline-flex" th:action="@{/search}">
+                    <input
+                            class="form-control mr-sm-2"
+                            type="search"
+                            placeholder="Search"
+                            aria-label="Search">
+                    <button class="btn btn-outline-custom my-2 my-sm-0" type="submit">
+                        <i class="bi-search"></i>
+                    </button>
+                </form>
+            </a>
+
+            <form th:if="${not isLoggedIn}" class="d-flex" action="/login">
+                <button class="btn btn-outline-custom">
+                    <i class="bi bi-door-open"></i>
+                    Login
+                </button>
+            </form>
+
+            <form th:if="${isLoggedIn}" class="d-flex" action="/logout">
+                <button class="btn btn-outline-custom" href="">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </button>
+            </form>
+
+            <form th:if="${not isLoggedIn}" class="d-flex" action="/register">
+                <button class="btn btn-outline-custom">
+                    <i class="bi-person-circle"></i>
+                    Register
+                </button>
+            </form>
+
+            <form class="d-flex" action="/likes">
+                <button class="btn btn-outline-custom" id="liked">
+                    <i class="bi bi-heart me-1"></i>
+                    Likes
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="likeCount">0</span>
+                </button>
+            </form>
+
+            <form class="d-flex" action="/cart">
+                <button class="btn btn-outline-custom" id="cart">
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${cartSize}"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Product section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0"
+                     th:src="@{'/images/' + ${book.imagePath}}" alt="imagePath"/>
+            </div>
+            <div class="col-md-6">
+                <div class="small mb-1" th:text="${book.isbn}">SKU: BST-498</div>
+                <h1 class="display-5 fw-bolder" th:text="${book.title}">book title</h1>
+                <span th:text="${book.author}">author</span>
+                <div class="fs-5 mb-5">
+                    <span>EUR </span> <span th:text="${book.price}"></span>
+                </div>
+                <p class="lead" th:text="${book.description}">Lorem ipsum </p>
+                <div class="d-flex">
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button" id="addToCart"
+                            th:attr="onclick='addToCart(' + ${book.id} + ')'">
+                        <i class="bi-cart-fill me-1"></i>
+                        Add to cart
+                    </button>
+
+                    <span>&emsp;</span>
+
+                    <i class="bi bi-heart heart-icon" th:attr="onclick='addToLiked' + ${book.id} + ')'" ></i>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Related items section-->
+<section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4">Related products</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..."/>
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">Fancy Product</h5>
+                            <!-- Product price-->
+                            $40.00 - $80.00
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Sale badge-->
+                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
+                    </div>
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..."/>
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">Special Item</h5>
+                            <!-- Product reviews-->
+                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                            </div>
+                            <!-- Product price-->
+                            <span class="text-muted text-decoration-line-through">$20.00</span>
+                            $18.00
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Sale badge-->
+                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
+                    </div>
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..."/>
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">Sale Item</h5>
+                            <!-- Product price-->
+                            <span class="text-muted text-decoration-line-through">$50.00</span>
+                            $25.00
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..."/>
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">Popular Item</h5>
+                            <!-- Product reviews-->
+                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                            </div>
+                            <!-- Product price-->
+                            $40.00
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-light text-center text-lg-start mt-5">
+    <div class="container p-4 d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    let likeCount = 0; // Initial like count
+
+    function addToLiked(event, element, bookId) {
+        event.preventDefault(); // Prevent navigation to another page
+        event.stopPropagation(); // Stop the event from bubbling up
+
+        element.classList.toggle('bi-heart-fill');
+        element.classList.toggle('bi-heart');
+
+        if (element.classList.contains('bi-heart-fill')) {
+            likeCount++;
+        } else {
+            likeCount--;
+        }
+        document.getElementById('likeCount').innerText = likeCount;
+    }
+</script>
+</body>
+</html>

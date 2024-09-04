@@ -1,11 +1,11 @@
 package org.dci.bookhaven.service;
 
+import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
@@ -18,8 +18,13 @@ public class UserTypeService {
         this.userTypeRepository = userTypeRepository;
     }
 
-    // to get all the users type from the db
-    public List<UserType> getAll(){
-        return userTypeRepository.findAll();
+    @Modifying
+    @Transactional
+    public void createUserType(UserType userType) {
+        userTypeRepository.save(userType);
+    }
+
+    public UserType getUserTypeByName(String name) {
+        return userTypeRepository.findByUserTypeName(name);
     }
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Shop Item - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" src="/images/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<!-- Custom CSS -->
+<style>
+    .book-item {
+        display: flex;
+        align-items: center;
+        padding: 30px 0;
+        border-bottom: 1px solid #ddd;
+    }
+    .book-item:last-child {
+        border-bottom: none;
+    }
+    .book-image {
+        width: 120px;
+        height: auto;
+        margin-right: 20px;
+    }
+    .book-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-right: auto;
+    }
+    .book-title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    .book-price {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    .book-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .book-actions button {
+        margin-left: 120px;
+    }
+    .book-item-link {
+        text-decoration: none;
+        color: inherit; /* Ensure the link takes the color of the surrounding content */
+    }
+</style>
+<body>
+<script src="/js/cart.js"></script>
+
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="/">
+            <img src="/images/favicon.ico" height="30" alt="Book Haven Logo">
+            Book Haven
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Books</a></li>
+            </ul>
+            <form sec:authorize="!isAuthenticated()" class="d-flex" action="/login">
+                <button class="btn btn-outline-custom">
+                    <i class="bi bi-door-open"></i>
+                    Login
+                </button>
+            </form>
+
+            <form sec:authorize="isAuthenticated()" class="d-flex" action="/logout">
+                <button class="btn btn-outline-custom" href="">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </button>
+            </form>
+
+            <form sec:authorize="!isAuthenticated()" class="d-flex" action="/register">
+                <button class="btn btn-outline-custom">
+                    <i class="bi-person-circle"></i>
+                    Register
+                </button>
+            </form>
+
+            <form sec:authorize="isAuthenticated()" class="d-flex" action="/likes">
+                <button class="btn btn-outline-custom">
+                    <i class="bi bi-heart me-1"></i>
+                    Liked
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="likeCount" th:text = "${likedBooks.size()}"></span>
+                </button>
+            </form>
+
+            <form class="d-flex" action="/cart">
+                <button class="btn btn-outline-custom" id="cart">
+                    <i class="bi bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${cartSize}"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1>Liked Books</h1>
+
+    <!-- Example of a book item (repeated for each book in the list) -->
+    <div th:each="book : ${likedBooks}" class="book-item">
+
+        <!-- Make the image and title both clickable links -->
+        <a th:href="@{/book/{id}(id=${book.id})}" class="book-item-link">
+            <img th:src="@{'/images/' + ${book.imagePath}}" alt="Book Image" class="book-image">
+        </a>
+
+        <div class="book-details">
+            <!-- Make the title clickable -->
+            <a th:href="@{/book/{id}(id=${book.id})}" class="book-item-link">
+                <div class="book-title" th:text="${book.title}">Book Title</div>
+                <div class="book-author" th:text="|By ${book.author}|">Author Name</div>
+            <div class="book-price">
+                <span th:text="${book.price}">Price</span>
+            </div>
+            </a>
+        </div>
+
+        <div class="book-actions">
+            <!-- Form with a hidden input to send bookId via POST request -->
+            <form th:action="@{/likes/delete}" method="post">
+                <input type="hidden" name="bookId" th:value="${book.id}">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="bg-light text-center text-lg-start mt-5">
+    <div class="container p-4 d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

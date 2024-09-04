@@ -1,0 +1,83 @@
+.content-wrapper {
+    display: flex;
+    justify-content: center; /* Center the content */
+    margin-top: 20px;
+}
+
+.sidebar {
+    width: 250px;
+    height: fit-content;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.main-content {
+    max-width: 1200px; /* Maximum width to control the center alignment */
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 20px;
+    justify-content: center;
+}
+
+.book-item {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    padding: 10px;
+}
+
+.book-item img {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.book-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.book-author {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.book-price {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+.heart-icon {
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.likes-counter {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.heart-icon:hover {
+    color: green; /* Change the heart color to green on hover */
+}
+
+.book-item-link {
+    text-decoration: none;
+    color: inherit;
+}

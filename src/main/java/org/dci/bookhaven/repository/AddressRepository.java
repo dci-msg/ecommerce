@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> findByUserProfile(UserProfile userProfile);
+    Address findAddressById(Long id);
 }

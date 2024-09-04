@@ -1,5 +1,6 @@
 package org.dci.bookhaven.model;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -32,7 +33,7 @@ public class User {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
+    @JoinColumn(name = "user_type_id")
     private UserType userType;
 
 

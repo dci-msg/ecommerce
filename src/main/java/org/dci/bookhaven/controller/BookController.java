@@ -1,16 +1,16 @@
 package org.dci.bookhaven.controller;
 
-import org.dci.bookhaven.model.Book;
-import org.dci.bookhaven.model.Category;
-import org.dci.bookhaven.service.BookService;
-import org.dci.bookhaven.service.CategoryService;
+import org.dci.bookhaven.model.*;
+import org.dci.bookhaven.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class BookController {
@@ -19,9 +19,19 @@ public class BookController {
 
     private final CategoryService categoryService;
 
-    public BookController(BookService bookService, CategoryService categoryService) {
+    private final UserService userService;
+
+    private final CartService cartService;
+
+    private final LikedBookService likedBookService;
+
+    public BookController(BookService bookService, CategoryService categoryService,
+                          LikedBookService likedBookService, UserService userService, CartService cartService) {
+        this.likedBookService = likedBookService;
         this.bookService = bookService;
         this.categoryService = categoryService;
+        this.userService = userService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/manage-books")
@@ -39,11 +49,35 @@ public class BookController {
         return "book/manage-books";
     }
 
-    @GetMapping("/index")
+    @GetMapping("/search")
+    public String searchBooks(@RequestParam String keyword,
+                              @RequestParam(value = "categoryId", required = false) Long categoryId,
+                              @RequestParam String priceCriteria,
+                              @RequestParam String language,
+                              Model model)
+    {
+        List<Book> books = bookService.getBooks(keyword, categoryId, priceCriteria, language);
+        List<Category> categories = categoryService.getCategoriesAsc();
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("books", books);
+        return "index";
+    }
+
+    @GetMapping("/")
     public String bookhaven(Model model) {
         List<Book> books = bookService.getBooks();
+        List<Category> categories = categoryService.getCategoriesAsc();
+        Set<Book> likedBooks = new HashSet<>();
 
+        User user = userService.getLoggedInUser();
+        if (user != null) {
+            likedBooks = likedBookService.likedBooks(user.getId());
+        }
         model.addAttribute("books", books);
+        model.addAttribute("categories", categories);
+        model.addAttribute("likedBooks", likedBooks);
+        System.out.println("books    " + books.size());
         return "index";
     }
 
@@ -115,5 +149,35 @@ public class BookController {
         model.addAttribute("categories", categoryService.getCategoriesAsc());
         model.addAttribute("book", book);
         return "subpage";
+    }
+
+    @GetMapping("/book/{bookId}")
+    public String viewBookDetail(@PathVariable Long bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        if(userService.isLoggedIn()){
+            boolean isLoggedIn = true;
+            model.addAttribute("isLoggedIn", isLoggedIn);
+            Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
+            if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
+                model.addAttribute("cartSize", cartService.getCartItemNumber(cart));
+            } else{
+                model.addAttribute("cartSize", 0);
+            }
+        } else{
+            model.addAttribute("isLoggedIn", false);
+            model.addAttribute("cartSize", 0);
+        }
+        return "book-detail";
+    }
+
+    @RequestMapping(value="/add-to-cart", method = RequestMethod.POST)
+    public String addToCart(@RequestParam Long bookId, @RequestParam int quantity){
+        if(userService.isLoggedIn()){
+            Long userId = userService.getLoggedInUser().getId();
+            Cart cart = cartService.getOrCreateCart(userId);
+            cartService.addToCart(cart.getId(), bookId);
+        }
+        return "redirect:/book/"+bookId;
     }
 }
