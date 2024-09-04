@@ -174,7 +174,7 @@ public class UserProfileController {
             System.out.println("User Profile ID: " + address.getUserProfile().getId());
         }
 
-        return "redirect:/profile/addresses?id=" + address.getUserProfile().getId();
+        return "redirect:/profile/addresses/id=" + address.getUserProfile().getId();
     }
 
     @PostMapping("/addresses/delete")
