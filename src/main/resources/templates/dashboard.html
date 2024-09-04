@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet"> <!-- Corrected here -->
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -15,10 +16,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#">My Profile</a>
+                <a class="nav-link" href="/profile">My Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
+                <a  class="nav-link" href="/orders">View Orders</a>
+            </li>
+            <li class="nav-item">
+                <a  class="nav-link" href="/books">Books</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
@@ -27,49 +31,70 @@
     </div>
 </nav>
 
-<div class="container mt-5">
-    <h2>Welcome to your Dashboard</h2>
-    <p>This is your main control panel. From here, you can manage your profile, view your orders, and explore new books.</p>
+<!-- Content Wrapper -->
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Search Filters</h5>
+        <form action="/search" method="GET">
+            <label for="keyword">Search Book</label>
+            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Title, Author, ISBN">
 
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">My Profile</h5>
-                    <p class="card-text">View and update your personal information.</p>
-                    <a href="/profile" class="btn btn-primary">Go to Profile</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">My Orders</h5>
-                    <p class="card-text">Check your previous and current orders.</p>
-                    <a href="/orders" class="btn btn-primary">View Orders</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Explore Books</h5>
-                    <p class="card-text">Browse new books and categories.</p>
-                    <a href="/books" class="btn btn-primary">Explore</a>
-                </div>
+            <label for="categoryId">By Category</label>
+            <select id="categoryId" name="categoryId" class="form-control">
+                <option value="">All Categories</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+
+            <label for="priceCriteria">Select Price Criteria</label>
+            <select id="priceCriteria" name="priceCriteria" class="form-control">
+                <option value="">All Books</option>
+                <option value="Below 5">Below 5</option>
+                <option value="5 - 10">5 - 10</option>
+                <option value="Above 10">Above 10</option>
+            </select>
+
+            <label for="language">Select Book Language</label>
+            <select id="language" name="language" class="form-control">
+                <option value="">Any Language</option>
+                <option value="English">English</option>
+                <option value="German">German</option>
+                <option value="Russian">Russian</option>
+                <option value="Others">Others</option>
+            </select>
+
+            <button type="submit" class="btn btn-warning mt-3">Find Book</button>
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Book Grid -->
+        <div class="book-grid">
+            <!-- Dynamic Book Items -->
+            <div class="book-item" th:each="book : ${books}">
+                <img th:src="@{'/images/' + ${book.imagePath}}" alt="Book Image">
+                <div class="book-title" th:text="${book.title}">Book Title</div>
+                <div class="book-author" th:text="|By ${book.author}|">Author Name</div>
+                <div class="book-price" th:text="${book.price}">Price</div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Footer -->
 <footer class="bg-light text-center text-lg-start mt-5">
-    <div class="container p-4">
+    <div class="container p-4 d-flex justify-content-center align-items-center">
         <div class="text-center">
             <p>&copy; 2024 Book Haven. All Rights Reserved.</p>
         </div>
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

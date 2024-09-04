@@ -139,6 +139,4 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
     }
-
-
 }

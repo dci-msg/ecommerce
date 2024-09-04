@@ -27,6 +27,8 @@ public class SecurityConfig {
     //OPEN URLs for everyone
     private static final String[] PUBLIC_URLS = {
             "/",
+            "/search",
+            "/search/*",
             "/register",
             "/register/new",
             "/verify-email",
@@ -80,6 +82,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();  // for BCrypt algorithm
     }
-
-
 }
