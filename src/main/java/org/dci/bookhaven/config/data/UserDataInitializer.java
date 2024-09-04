@@ -45,6 +45,15 @@ public class UserDataInitializer implements CommandLineRunner {
             userRepository.save(admin);
         }
 
+        if (userRepository.findByEmail("shoghik.kachatryan@dci-student.org") == null){
+            User admin = new User();
+            admin.setEmail("shoghik.kachatryan@dci-student.org");
+            admin.setPassword(passwordEncoder.encode("1"));
+            admin.setActive(true);
+            admin.setUserType(adminType);
+            userRepository.save(admin);
+        }
+
         // Customer type
         UserType customerType = userTypeRepository.findByUserTypeName("Customer");
         if (customerType == null){

@@ -1,19 +1,16 @@
 package org.dci.bookhaven.controller;
 
-import org.dci.bookhaven.model.Book;
-import org.dci.bookhaven.model.Cart;
-import org.dci.bookhaven.model.Category;
-import org.dci.bookhaven.service.BookService;
-import org.dci.bookhaven.service.CartService;
-import org.dci.bookhaven.service.CategoryService;
-import org.dci.bookhaven.service.UserService;
+import org.dci.bookhaven.model.*;
+import org.dci.bookhaven.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class BookController {
@@ -26,7 +23,11 @@ public class BookController {
 
     private final CartService cartService;
 
-    public BookController(BookService bookService, CategoryService categoryService, UserService userService, CartService cartService) {
+    private final LikedBookService likedBookService;
+
+    public BookController(BookService bookService, CategoryService categoryService,
+                          LikedBookService likedBookService, UserService userService, CartService cartService) {
+        this.likedBookService = likedBookService;
         this.bookService = bookService;
         this.categoryService = categoryService;
         this.userService = userService;
@@ -67,9 +68,15 @@ public class BookController {
     public String bookhaven(Model model) {
         List<Book> books = bookService.getBooks();
         List<Category> categories = categoryService.getCategoriesAsc();
+        Set<Book> likedBooks = new HashSet<>();
 
+        User user = userService.getLoggedInUser();
+        if (user != null) {
+            likedBooks = likedBookService.likedBooks(user.getId());
+        }
         model.addAttribute("books", books);
         model.addAttribute("categories", categories);
+        model.addAttribute("likedBooks", likedBooks);
         System.out.println("books    " + books.size());
         return "index";
     }
