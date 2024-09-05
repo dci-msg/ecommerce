@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.dci.bookhaven.model.Book;
 import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.User;
+import org.dci.bookhaven.service.CartService;
 import org.dci.bookhaven.service.LikedBookService;
 import org.dci.bookhaven.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,12 @@ public class LikedBookController {
 
     private final LikedBookService likedBookService;
 
-    public LikedBookController(UserService userService, LikedBookService likedBookService) {
+    private final CartService cartService;
+
+    public LikedBookController(UserService userService, LikedBookService likedBookService, CartService cartService) {
         this.userService = userService;
         this.likedBookService = likedBookService;
+        this.cartService = cartService;
     }
 
     @PostMapping("/likes/add")
@@ -47,6 +51,11 @@ public class LikedBookController {
         if (user != null) {
             likedBooks = likedBookService.likedBooks(user.getId());
             model.addAttribute("likedBooks", likedBooks);
+
+            Cart cart = cartService.getOrCreateCart(user.getId());
+            int size = cartService.getCartItemNumber(cart);
+            model.addAttribute("cartSize", size);
+
         } else {
             return "redirect:/login";
         }

@@ -171,13 +171,15 @@ public class BookController {
         return "book-detail";
     }
 
-    @RequestMapping(value="/add-to-cart", method = RequestMethod.POST)
-    public String addToCart(@RequestParam Long bookId){
+    @RequestMapping(value="/book/{bookId}/add", method = RequestMethod.POST)
+    public String addToCart(@PathVariable Long bookId){
         if(userService.isLoggedIn()){
             Long userId = userService.getLoggedInUser().getId();
             Cart cart = cartService.getOrCreateCart(userId);
             cartService.addToCart(cart.getId(), bookId);
+            return "redirect:/book/"+bookId;
+        } else{
+            return "redirect:/login";
         }
-        return "redirect:/book/"+bookId;
     }
 }
