@@ -57,7 +57,13 @@ public class UserProfileController {
         String loggedInUserEmail = principal.getName();
         User user = userRepository.findByEmail(loggedInUserEmail);
         System.out.println(user);
+
+        // Fetch user profile based on the user
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+
+        // Add user and userProfile to the model
         model.addAttribute("user", user);
+        model.addAttribute("userProfile", userProfile);
 
         /*User user = (User) principal;
         System.out.println(user);*/
