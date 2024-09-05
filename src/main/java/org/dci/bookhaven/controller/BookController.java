@@ -172,7 +172,7 @@ public class BookController {
     }
 
     @RequestMapping(value="/add-to-cart", method = RequestMethod.POST)
-    public String addToCart(@RequestParam Long bookId, @RequestParam int quantity){
+    public String addToCart(@RequestParam Long bookId){
         if(userService.isLoggedIn()){
             Long userId = userService.getLoggedInUser().getId();
             Cart cart = cartService.getOrCreateCart(userId);
