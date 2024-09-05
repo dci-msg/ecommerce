@@ -95,7 +95,7 @@ public class UserService {
         logger.info("Address created with ID: {}", address.getId());
         System.out.println(user);
 
-//        sendVerificationEmail(savedUser);    // verification email send
+        sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
