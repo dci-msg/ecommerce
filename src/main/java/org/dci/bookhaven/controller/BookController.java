@@ -73,6 +73,9 @@ public class BookController {
         User user = userService.getLoggedInUser();
         if (user != null) {
             likedBooks = likedBookService.likedBooks(user.getId());
+            Cart cart = cartService.getOrCreateCart(user.getId());
+            int cartSize = cartService.getCartItemNumber(cart);
+            model.addAttribute("cartSize", cartSize);
         }
         model.addAttribute("books", books);
         model.addAttribute("categories", categories);
@@ -159,11 +162,8 @@ public class BookController {
             boolean isLoggedIn = true;
             model.addAttribute("isLoggedIn", isLoggedIn);
             Cart cart = cartService.getOrCreateCart(userService.getLoggedInUser().getId());
-            if(cart.getLineItems()!=null && !cart.getLineItems().isEmpty()){
-                model.addAttribute("cartSize", cartService.getCartItemNumber(cart));
-            } else{
-                model.addAttribute("cartSize", 0);
-            }
+            int cartSize = cartService.getCartItemNumber(cart);
+            model.addAttribute("cartSize", cartSize);
         } else{
             model.addAttribute("isLoggedIn", false);
             model.addAttribute("cartSize", 0);
@@ -171,15 +171,4 @@ public class BookController {
         return "book-detail";
     }
 
-    @RequestMapping(value="/book/{bookId}/add", method = RequestMethod.POST)
-    public String addToCart(@PathVariable Long bookId){
-        if(userService.isLoggedIn()){
-            Long userId = userService.getLoggedInUser().getId();
-            Cart cart = cartService.getOrCreateCart(userId);
-            cartService.addToCart(cart.getId(), bookId);
-            return "redirect:/book/"+bookId;
-        } else{
-            return "redirect:/login";
-        }
-    }
 }
