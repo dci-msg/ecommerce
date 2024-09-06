@@ -83,7 +83,7 @@ public class UserProfileService {
 
 
     public void addAddress(Long id, Address address) {
-        UserProfile userProfile = userProfileRepository.findUserProfileById(id);
+        UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
         address.setUserProfile(userProfile);
         System.out.println(address);
         addressRepository.save(address);

@@ -49,7 +49,7 @@
 <body>
 <div class="container mt-4">
     <h1 class="mb-4">Manage Addresses</h1>
-    <a th:href="@{/profile/addresses/add?id=${userProfile.id}}" class="btn btn-custom mb-3">Add New Address</a>
+    <a th:href="@{/profile/addresses/add(id=${userProfile.id})}" class="btn btn-custom mb-3">Add New Address</a>
 
     <div>
         <div th:each="address : ${addresses}" class="address-item">
