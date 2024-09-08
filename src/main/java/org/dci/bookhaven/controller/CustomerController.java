@@ -29,7 +29,6 @@ public class CustomerController {
 
         model.addAttribute("books", books);
         model.addAttribute("categories", categories);
-        System.out.println("books    " + books.size());
         return "dashboard";
     }
 }

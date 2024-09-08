@@ -50,18 +50,41 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public String searchBooks(@RequestParam String keyword,
+    public String searchBooks(@RequestParam(value = "keyword", required = false) String keyword,
                               @RequestParam(value = "categoryId", required = false) Long categoryId,
-                              @RequestParam String priceCriteria,
-                              @RequestParam String language,
+                              @RequestParam(value = "priceCriteria", required = false) String priceCriteria,
+                              @RequestParam(value = "language", required = false) String language,
                               Model model)
     {
-        List<Book> books = bookService.getBooks(keyword, categoryId, priceCriteria, language);
-        List<Category> categories = categoryService.getCategoriesAsc();
+        showIndexPage(bookService.getBooks(keyword, categoryId, priceCriteria, language),
+                categoryService.getCategoriesAsc(), likedBooks(), model);
 
-        model.addAttribute("categories", categories);
-        model.addAttribute("books", books);
         return "index";
+    }
+
+   @GetMapping("/searchByKey")
+    public String searchBooks(@RequestParam(value = "keyword", required = false) String keyword,
+                              Model model)
+    {
+        showIndexPage(bookService.searchBooks(keyword), categoryService.getCategoriesAsc(), likedBooks(), model);
+        return "index";
+    }
+
+    private Set<Book> likedBooks() {
+        User user = userService.getLoggedInUser();
+
+        if (user == null) {
+            return new HashSet<>();
+        }
+
+        return likedBookService.likedBooks(user.getId());
+    }
+
+    private void showIndexPage(List<Book> books, List<Category> categories, Set<Book> likedBooks, Model model) {
+
+        model.addAttribute("books", books);
+        model.addAttribute("categories", categories);
+        model.addAttribute("likedBooks", likedBooks());
     }
 
     @GetMapping("/")
@@ -77,7 +100,6 @@ public class BookController {
         model.addAttribute("books", books);
         model.addAttribute("categories", categories);
         model.addAttribute("likedBooks", likedBooks);
-        System.out.println("books    " + books.size());
         return "index";
     }
 
@@ -93,9 +115,7 @@ public class BookController {
     @PostMapping("/add-book")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addBook(@ModelAttribute Book book) {
-        System.out.println(book);
         bookService.addBook(book);
-        System.out.println(book);
         return  "redirect:/manage-books";
     }
 
@@ -138,17 +158,6 @@ public class BookController {
     public String deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return "redirect:/manage-books";
-    }
-
-    @GetMapping("/book-details/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String bookDetails(@PathVariable Long id, Model model) {
-        System.out.println("I am here!!!!");
-        Book book = bookService.getBookById(id);
-
-        model.addAttribute("categories", categoryService.getCategoriesAsc());
-        model.addAttribute("book", book);
-        return "subpage";
     }
 
     @GetMapping("/book/{bookId}")

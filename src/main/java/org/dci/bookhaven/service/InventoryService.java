@@ -1,8 +1,10 @@
 package org.dci.bookhaven.service;
 
 import jakarta.transaction.Transactional;
+import org.dci.bookhaven.model.Book;
 import org.dci.bookhaven.model.Inventory;
 import org.dci.bookhaven.repository.InventoryRepository;
+import org.dci.bookhaven.repository.LikedBookRepository;
 import org.dci.bookhaven.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +18,16 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
 
-    private final NotificationService notificationService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final LikedBookRepository likedBookRepository;
 
-    public InventoryService(EmailService emailService, InventoryRepository inventoryRepository, NotificationService notificationService) {
+    public InventoryService(EmailService emailService, InventoryRepository inventoryRepository,
+                            UserRepository userRepository,LikedBookRepository likedBookRepository) {
         this.emailService = emailService;
         this.inventoryRepository = inventoryRepository;
-        this.notificationService = notificationService;
+        this.userRepository = userRepository;
+        this.likedBookRepository = likedBookRepository;
     }
 
     public List<Inventory> getAllInventories() {
@@ -77,19 +80,47 @@ public class InventoryService {
         Inventory inventory = inventoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not found id = " + id));
         int stock = inventory.getStock();
+        Book book = inventory.getBook();
         if (stock == 0) {
-            //userRepository.findAllAdmin()
-            //notificationService.sendEmail(inventory.getBook());
             System.out.println("Notify customers for pre-order and notify admin about out of stock");
-            emailService.sendAdminNotification(inventory.getBook());
-            emailService.sendCustomerOutOfStockNotification(inventory.getBook());
-        } else if (stock < 10) {
-            System.out.println("Notify admin order more books.");
-            emailService.sendAdminNotification(inventory.getBook());
-        }
-        if (stock < 3) {
+            for (String email : userRepository.findAllAdminEmails()) {
+                System.out.println("Send email: + " + email);
+                emailService.sendEmail(email,
+                        "Book Out of Stock: " + book.getTitle(),
+                        "The book \"" + book.getTitle() + "\" is out of stock. Please restock it as soon as possible.");
+            }
+
+            for (String email : likedBookRepository.findAllCustomersEmailByLikedBookId(book.getId())) {
+                System.out.println("Send email: + " + email);
+                emailService.sendEmail(email,
+                        "Book Out of Stock: " + book.getTitle(),
+                        "The book \"" + book.getTitle() + "\" is currently out of stock. You can sign up" +
+                                " to be notified when it is back in stock.");
+            }
+        } else if (stock < 3) {
             System.out.println("Notify customers to buy the book");
-            emailService.sendCustomerNotification(inventory.getBook());
+            for (String email : likedBookRepository.findAllCustomersEmailByLikedBookId(book.getId())) {
+                System.out.println("Send email: + " + email);
+                emailService.sendEmail( email,
+                        "Limited Stock Alert: " + book.getTitle(),
+                        "Hurry! Only a few copies of \"" + book.getTitle() + "\" are left. Buy now before it’s too late!");
+            }
+
+            System.out.println("Notify admin order more books.");
+            for (String email : userRepository.findAllAdminEmails()) {
+                System.out.println("Send email: + " + email);
+                emailService.sendEmail(email,
+                        "Order more book: " + book.getTitle(),
+                        "The book \"" + book.getTitle() + "\" is few. Please restock it as soon as possible.");
+            }
+        } else if(stock < 10) {
+            System.out.println("Notify admin order more books.");
+            for (String email : userRepository.findAllAdminEmails()) {
+                System.out.println("Send email: + " + email);
+                emailService.sendEmail(email,
+                        "Order more book: " + book.getTitle(),
+                        "The book \"" + book.getTitle() + "\" is few. Please restock it as soon as possible.");
+            }
         }
     }
 }

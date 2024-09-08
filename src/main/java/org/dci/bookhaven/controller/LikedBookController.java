@@ -30,7 +30,6 @@ public class LikedBookController {
 
         if(userService.isLoggedIn()) {
             Long userId = userService.getLoggedInUser().getId();
-            System.out.println("uId = " + userId);
             likedBookService.addLikedBook(userId, bookId);
         } else{
             return "redirect:/login";
@@ -56,10 +55,8 @@ public class LikedBookController {
 
     @PostMapping("/likes/delete/{bookId}")
     public String deleteLikedBooked(@PathVariable Long bookId) {
-        System.out.println("BOO");
         if(userService.isLoggedIn()) {
             Long userId = userService.getLoggedInUser().getId();
-            System.out.println("uId = " + userId);
             likedBookService.deleteLikedBook(userId, bookId);
         } else{
             return "redirect:/login";
@@ -69,10 +66,8 @@ public class LikedBookController {
 
     @PostMapping("/likes/delete")
     public String deleteLikeRequest(@RequestParam Long bookId) {
-        System.out.println("FOO");
         if(userService.isLoggedIn()) {
             Long userId = userService.getLoggedInUser().getId();
-            System.out.println("uId = " + userId);
             likedBookService.deleteLikedBook(userId, bookId);
         } else{
             return "redirect:/login";
