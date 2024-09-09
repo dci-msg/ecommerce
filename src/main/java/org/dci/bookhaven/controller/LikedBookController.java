@@ -1,6 +1,7 @@
 package org.dci.bookhaven.controller;
 
 import org.dci.bookhaven.model.Book;
+import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.service.CartService;
 import org.dci.bookhaven.service.LikedBookService;
