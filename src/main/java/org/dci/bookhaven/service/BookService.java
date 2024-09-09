@@ -73,8 +73,6 @@ public class BookService {
     }
 
     public List<Book> getBooks(String keyword, Long categoryId, String priceCriteria, String language) {
-        System.out.println("server");
-
         if (keyword.isBlank() && categoryId == null && priceCriteria.isBlank() && language.isBlank()) {
             return bookRepository.findAll();
         }
@@ -93,10 +91,6 @@ public class BookService {
             language = null;
         }
 
-        System.out.println("keyWord:" + keyword);
-        System.out.println("categoryId:" + categoryId);
-        System.out.println("priceCriteria:" + priceCriteria);
-        System.out.println("language:" + language);
         return bookRepository.findByKeyWordAndCategoryAndPriceAndLanguage(keyword, categoryId, priceCriteria, language);
     }
 }

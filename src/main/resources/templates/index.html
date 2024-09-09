@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -137,6 +137,7 @@
                         <i class="bi"
                            th:classappend="${likedBooks.contains(book) ? 'bi-heart-fill heart-icon' : 'bi-heart heart-icon'}"
                            th:onclick="toggleHeart(event, this, [[${book.id}]])">
+
                         </i>
 
                     </div>
@@ -177,7 +178,6 @@
             }
         } else {
             // If the user is not authenticated, redirect them to the login page
-            alert("Please log in to like the book.");
             window.location.href = '/login';
         }
 

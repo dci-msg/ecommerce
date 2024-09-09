@@ -28,7 +28,11 @@ public class SecurityConfig {
     private static final String[] PUBLIC_URLS = {
             "/",
             "/search",
+            "/searching",
+            "/searching/*",
             "/search/*",
+            "/searchByKey",
+            "/searchByKey/*",
             "/register",
             "/register/new",
             "/verify-email",
