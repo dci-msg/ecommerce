@@ -4,7 +4,6 @@ import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.model.UserType;
 import org.dci.bookhaven.repository.UserRepository;
 import org.dci.bookhaven.repository.UserTypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +17,6 @@ public class UserDataInitializer implements CommandLineRunner {
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserDataInitializer(UserRepository userRepository, UserTypeRepository userTypeRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userTypeRepository = userTypeRepository;
@@ -30,13 +28,13 @@ public class UserDataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Admin type
         UserType adminType = userTypeRepository.findByUserTypeName("Admin");
-        if (adminType == null){
+        if (adminType == null) {
             adminType = new UserType();
             adminType.setUserTypeName("Admin");
             userTypeRepository.save(adminType);
         }
 
-        if (userRepository.findByEmail("admin@example.com") == null){
+        if (userRepository.findByEmail("admin@example.com") == null) {
             User admin = new User();
             admin.setEmail("admin@example.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
@@ -56,15 +54,16 @@ public class UserDataInitializer implements CommandLineRunner {
 
         // Customer type
         UserType customerType = userTypeRepository.findByUserTypeName("Customer");
-        if (customerType == null){
+        if (customerType == null) {
             customerType = new UserType();
             customerType.setUserTypeName("Customer");
             userTypeRepository.save(customerType);
         }
 
         // Adding default users
+        User customer1 = null;
         if (userRepository.findByEmail("customer1@example.com") == null) {
-            User customer1 = new User();
+            customer1 = new User();
             customer1.setEmail("customer1@example.com");
             customer1.setPassword(passwordEncoder.encode("customer123"));
             customer1.setActive(true);

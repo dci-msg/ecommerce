@@ -1,8 +1,6 @@
 package org.dci.bookhaven.controller;
 
-import lombok.Getter;
 import org.dci.bookhaven.model.Book;
-import org.dci.bookhaven.model.Cart;
 import org.dci.bookhaven.model.User;
 import org.dci.bookhaven.service.LikedBookService;
 import org.dci.bookhaven.service.UserService;

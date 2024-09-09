@@ -1,12 +1,10 @@
 package org.dci.bookhaven.service;
 
 import jakarta.transaction.Transactional;
-import org.dci.bookhaven.model.User;
-import org.dci.bookhaven.model.UserType;
-import org.dci.bookhaven.model.VerificationToken;
-import org.dci.bookhaven.repository.UserRepository;
-import org.dci.bookhaven.repository.UserTypeRepository;
-import org.dci.bookhaven.repository.VerificationTokenRepository;
+import org.dci.bookhaven.model.*;
+import org.dci.bookhaven.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,18 +29,27 @@ public class UserService {
     private final UserTypeRepository userTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final UserProfileRepository userProfileRepository;
+    private final AddressRepository addressRepository;
+
+    // Define the logger for this class
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Value("${app.domain}")
     private String DOMAIN;
+
 
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
                        JavaMailSender mailSender, UserTypeRepository userTypeRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, UserProfileRepository userProfileRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.mailSender = mailSender;
         this.userTypeRepository = userTypeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userProfileRepository = userProfileRepository;
+        this.addressRepository = addressRepository;
     }
 
     // REGISTER new user
@@ -76,8 +83,19 @@ public class UserService {
         user.setUserType(customerType);
 
         User savedUser = userRepository.save(user);
+        // changes made to sync, create userProfile with user
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUser(savedUser);
+        userProfileRepository.save(userProfile);
+        // Added logging to track UserProfile creation
+        logger.info("UserProfile created with ID: {}", userProfile.getUser().getId());
+        Address address = new Address();
+        address.setUserProfile(userProfile);
+        addressRepository.save(address);
+        logger.info("Address created with ID: {}", address.getId());
+        System.out.println(user);
 
-//        sendVerificationEmail(savedUser);    // verification email send
+        sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
