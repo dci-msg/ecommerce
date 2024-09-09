@@ -6,12 +6,18 @@ import org.dci.bookhaven.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,6 +35,10 @@ public class UserService {
     // Define the logger for this class
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    @Value("${app.domain}")
+    private String DOMAIN;
+
+
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
                        JavaMailSender mailSender, UserTypeRepository userTypeRepository,
@@ -43,6 +53,8 @@ public class UserService {
     }
 
     // REGISTER new user
+    @Modifying
+    @Transactional
     public User registerNewUserAccount(User user) {
         // existed user registration
         // check if user in db
@@ -113,11 +125,13 @@ public class UserService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "http://localhost:8080" + confirmationUrl);
+        email.setText(message + DOMAIN + confirmationUrl);
 
         mailSender.send(email); // send token
     }
 
+    @Modifying
+    @Transactional
     public void verifyUser(String token) {
         VerificationToken verificationToken = tokenRepository.findByToken(token);  // after click, search if token in the db
 
@@ -130,4 +144,17 @@ public class UserService {
     }
 
 
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            return userRepository.findByEmail(username);
+        }
+        return null;
+    }
+
+    public boolean isLoggedIn(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
+    }
 }

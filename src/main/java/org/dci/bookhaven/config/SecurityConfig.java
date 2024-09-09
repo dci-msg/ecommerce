@@ -27,6 +27,8 @@ public class SecurityConfig {
     //OPEN URLs for everyone
     private static final String[] PUBLIC_URLS = {
             "/",
+            "/search",
+            "/search/*",
             "/register",
             "/register/new",
             "/verify-email",
@@ -36,7 +38,8 @@ public class SecurityConfig {
             "/resources/**",
             "/css/**",
             "/js/**",
-            "/images/**"
+            "/images/**",
+            "/book/**"
     };
 
     @Bean
@@ -48,6 +51,7 @@ public class SecurityConfig {
             auth.requestMatchers(PUBLIC_URLS).permitAll();      // open to everyone
             auth.requestMatchers("/admin/**").hasAuthority("Admin");
             auth.requestMatchers("/dashboard/**").hasAuthority("Customer");
+            auth.requestMatchers("/cart/**").authenticated();
             auth.anyRequest().authenticated();                  // all other requests required authentication
         });
 
@@ -59,7 +63,7 @@ public class SecurityConfig {
                     .successHandler(customAuthenticationSuccessHandler))  //after success authentication conditions
                 .logout(logout -> {
                     logout.logoutUrl("/logout");                // logout URL
-                    logout.logoutSuccessUrl("/login?logout");   // after success logout direction
+                    logout.logoutSuccessUrl("/");   // after success logout direction
 
                 }).csrf(csrf -> csrf.disable());  //csrf protection disabled
 
@@ -78,6 +82,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();  // for BCrypt algorithm
     }
-
-
 }
