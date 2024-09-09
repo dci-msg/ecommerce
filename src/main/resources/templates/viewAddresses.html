@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Addresses</title>
+    <title>Addresses</title>
+    <!-- flavicon-->
+    <link rel="icon" type="image/x-icon" href="/images/logos/Black_noName.png"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -50,7 +52,9 @@
 <div class="container mt-4">
     <h1 class="mb-4">Manage Addresses</h1>
     <a th:href="@{/profile/addresses/add(id=${userProfile.id})}" class="btn btn-custom mb-3">Add New Address</a>
-
+    <div class="mb-4">
+        <a th:href="@{/profile}" class="btn btn-secondary">Return to Profile</a>
+    </div>
     <div>
         <div th:each="address : ${addresses}" class="address-item">
             <h6>Address Details:</h6>
