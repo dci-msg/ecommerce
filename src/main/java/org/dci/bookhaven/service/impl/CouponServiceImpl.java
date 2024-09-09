@@ -63,4 +63,26 @@ public class CouponServiceImpl implements CouponService {
             return true;
         }
     }
+
+    @Override
+    public Coupon create(Coupon coupon) {
+        updateCouponStatus();
+        for(Coupon c : couponRepository.findAll()){
+            if(c.getCode().equals(coupon.getCode())){
+                return null;
+            }
+        }
+        return couponRepository.save(coupon);
+    }
+
+    @Override
+    public void updateCouponStatus(){
+        List<Coupon> coupons = couponRepository.findAll();
+        for(Coupon coupon : coupons){
+            if(coupon.getEndDate().isBefore(LocalDateTime.now())){
+                coupon.setActive(false);
+                couponRepository.save(coupon);
+            }
+        }
+    }
 }

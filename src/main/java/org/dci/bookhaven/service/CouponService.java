@@ -14,4 +14,8 @@ public interface CouponService {
     String applyCouponMsg(String couponCode);
 
     boolean isValid(String couponCode);
+
+    Coupon create(Coupon coupon);
+
+    void updateCouponStatus();
 }
