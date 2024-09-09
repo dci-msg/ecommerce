@@ -83,6 +83,13 @@ public class UserProfileService {
 
 
     public void addAddress(Long id, Address address) {
+        UserProfile userProfile = userProfileRepository.findUserProfileById(id);
+        address.setUserProfile(userProfile);
+        System.out.println(address);
+        addressRepository.save(address);
+    }
+
+    public void addAddress1(Long id, Address address) {
         UserProfile userProfile = userProfileRepository.findUserProfileByUserId(id);
         address.setUserProfile(userProfile);
         System.out.println(address);

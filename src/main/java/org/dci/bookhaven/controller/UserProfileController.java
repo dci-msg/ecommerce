@@ -157,7 +157,14 @@ public class UserProfileController {
     }
 
     @GetMapping("/addresses/add")
-    public String showAddAddressForm(@RequestParam Long id, Model model) {
+    public String showAddAddressForm(@RequestParam Long id, Model model, Principal principal) {
+
+        String loggedInUserEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInUserEmail);
+
+        Address address = addressRepository.findById(id).orElse(null);
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+        model.addAttribute("userProfile", userProfile.getUser());
         model.addAttribute("address", new Address());
         model.addAttribute("userId", id);
         return "addAddress";
@@ -167,10 +174,8 @@ public class UserProfileController {
     public String addAddress(@RequestParam Long id, @ModelAttribute Address address) {
         System.out.println(id);
         System.out.println(address);
-        System.out.println("-------");
-        System.out.println("-------");
-        System.out.println("-------");
-        userProfileService.addAddress(id, address);
+
+        userProfileService.addAddress1(id, address);
         return "redirect:/profile/addresses/" + id;
     }
 
