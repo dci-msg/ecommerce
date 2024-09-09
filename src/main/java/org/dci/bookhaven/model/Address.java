@@ -95,7 +95,7 @@ public class Address {
     public String toString() {
         return "Address{" +
                 "id=" + id +
-                ", userProfile id=" + userProfile.getId()+
+//                ", userProfile id=" + userProfile.getId()+
                 ", street='" + street + '\'' +
                 ", city='" + city + '\'' +
                 ", zipCode='" + zipCode + '\'' +

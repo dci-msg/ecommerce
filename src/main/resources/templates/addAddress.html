@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <h1 class="mt-4">Add New Address</h1>
-    <form th:action="@{/profile/addresses/add(id=${id})}" th:object="${address}" method="post" class="mt-4">
+    <form th:action="@{/profile/addresses/add(id=${userId})}" th:object="${address}" method="post" class="mt-4">
         <div class="mb-3">
             <label for="street" class="form-label">Street</label>
             <input type="text" class="form-control" id="street" th:field="*{street}" placeholder="Enter Street">
@@ -26,7 +26,7 @@
             <input type="text" class="form-control" id="country" th:field="*{country}" placeholder="Enter Country">
         </div>
         <button type="submit" class="btn btn-success">Save Address</button>
-        <a th:href="@{/profile/addresses?id=${id}}" class="btn btn-secondary">Cancel</a>
+        <a th:href="@{/profile/addresses?id=${userId} }" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 </body>

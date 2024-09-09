@@ -31,7 +31,8 @@
             <input type="text" class="form-control" id="country" th:field="*{country}" placeholder="Enter Country">
         </div>
         <button type="submit" class="btn btn-success">Update Address</button>
-        <a th:href="@{/profile/addresses?id=${userProfile.id}}" class="btn btn-secondary">Cancel</a>
+        <span th:text="${userId}"></span>
+        <a th:href="@{/profile/addresses/{id}(id=${userProfile.id})}" class="btn btn-secondary">Cancel</a>
         <!--(id=${userProfile.id})-->
     </form>
 </div>

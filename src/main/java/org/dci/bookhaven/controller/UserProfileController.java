@@ -57,7 +57,13 @@ public class UserProfileController {
         String loggedInUserEmail = principal.getName();
         User user = userRepository.findByEmail(loggedInUserEmail);
         System.out.println(user);
+
+        // Fetch user profile based on the user
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+
+        // Add user and userProfile to the model
         model.addAttribute("user", user);
+        model.addAttribute("userProfile", userProfile);
 
         /*User user = (User) principal;
         System.out.println(user);*/
@@ -135,9 +141,19 @@ public class UserProfileController {
         System.out.println("User ID: " + id);
         List<Address> addresses = userProfileService.getAddresses(id);
         UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
-        model.addAttribute("userProfile", userProfile);
+        System.out.println(id);
+        System.out.println(userProfile.getUser());
+        model.addAttribute("userProfile", userProfile.getUser());
         model.addAttribute("addresses", addresses);
         return "viewAddresses";
+    }
+
+    @GetMapping("/addresses")
+    public String redirectToAddressesWithId(Principal principal, Model model) {
+        String loggedInUserEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInUserEmail);
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+        return "redirect:/profile/addresses/" + userProfile.getId();
     }
 
     @GetMapping("/addresses/add")
@@ -149,22 +165,34 @@ public class UserProfileController {
 
     @PostMapping("/addresses/add")
     public String addAddress(@RequestParam Long id, @ModelAttribute Address address) {
+        System.out.println(id);
+        System.out.println(address);
+        System.out.println("-------");
+        System.out.println("-------");
+        System.out.println("-------");
         userProfileService.addAddress(id, address);
-        return "redirect:/profile/addresses?id=" + id;
+        return "redirect:/profile/addresses/" + id;
     }
 
     @GetMapping("/addresses/edit/{id}")
-    public String showEditAddressForm(Model model, @PathVariable Long id) {
+    public String showEditAddressForm(Model model, @PathVariable Long id, Principal principal) {
+
+        String loggedInUserEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInUserEmail);
+
         Address address = addressRepository.findById(id).orElse(null);
-        UserProfile userProfile = userProfileService.getUserProfileByUserId(id);
-        model.addAttribute("userProfile", userProfile);
+        UserProfile userProfile = userProfileService.getUserProfileByUserId(user.getId());
+        model.addAttribute("userProfile", userProfile.getUser());
         model.addAttribute("address", address);
-        /*model.addAttribute("userId", address.getUserProfile().getId());*/
+//        model.addAttribute("userId", address.getUserProfile().getUser().getId());
         return "editAddress";
     }
 
     @PostMapping("/addresses/edit")
-    public String updateAddress(@RequestParam Long id, @ModelAttribute Address address) {
+    public String updateAddress(@RequestParam Long id, @ModelAttribute Address address, Principal principal) {
+        String loggedInUserEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInUserEmail);
+
         Address existingAddress = addressRepository.findById(id).orElse(null);
 
         if (existingAddress != null) {
@@ -174,13 +202,16 @@ public class UserProfileController {
             System.out.println("User Profile ID: " + address.getUserProfile().getId());
         }
 
-        return "redirect:/profile/addresses/id=" + address.getUserProfile().getId();
+        return "redirect:/profile/addresses/" + user.getId();
     }
 
-    @PostMapping("/addresses/delete")
-    public String deleteAddress(@RequestParam Long id) {
+    @GetMapping("/addresses/delete/{id}")
+    public String deleteAddress(@PathVariable Long id, Principal principal) {
+        String loggedInUserEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInUserEmail);
+
         userProfileService.deleteAddress(id);
-        return "redirect:/profile/addresses?id=" + id;
+        return "redirect:/profile/addresses/" + user.getId();
     }
 
 }
