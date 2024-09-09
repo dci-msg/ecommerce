@@ -77,7 +77,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-//        sendVerificationEmail(savedUser);    // verification email send
+        sendVerificationEmail(savedUser);    // verification email send
         return savedUser;
     }
 
