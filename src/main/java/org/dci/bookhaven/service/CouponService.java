@@ -18,4 +18,12 @@ public interface CouponService {
     Coupon create(Coupon coupon);
 
     void updateCouponStatus();
+
+    void deactivate(Long id);
+
+    void reactivate(Long id);
+
+    void delete(Long id);
+
+    Coupon getById(Long id);
 }

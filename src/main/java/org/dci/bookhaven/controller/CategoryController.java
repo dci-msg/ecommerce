@@ -31,7 +31,7 @@ public class CategoryController {
     public String addCategoryForm(Model model) {
         Category category = new Category();
         model.addAttribute("category", category);
-        return "category/add-category";  // Refers to src/main/resources/templates/categories/form.html
+        return "category/add-category";  // Refers to src/main/resources/templates/categories/form-add.html
     }
 
     // Save category (create or update)

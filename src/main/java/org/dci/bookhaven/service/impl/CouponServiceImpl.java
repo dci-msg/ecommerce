@@ -85,4 +85,29 @@ public class CouponServiceImpl implements CouponService {
             }
         }
     }
+
+    @Override
+    public void deactivate(Long id){
+        Coupon coupon = couponRepository.findById(id).get();
+        coupon.setActive(false);
+        couponRepository.save(coupon);
+    }
+
+    @Override
+    public void reactivate(Long id){
+        Coupon coupon = couponRepository.findById(id).get();
+        coupon.setActive(true);
+        couponRepository.save(coupon);
+    }
+
+    @Override
+    public void delete(Long id){
+        couponRepository.deleteById(id);
+    }
+
+    @Override
+    public Coupon getById(Long id){
+        return couponRepository.findById(id).get();
+    }
+
 }
