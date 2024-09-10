@@ -28,7 +28,9 @@ public class ShippingServiceImpl implements ShippingService {
 
     @Override
     public List<Shipping> getAllShippings() {
-        return shippingRepository.findAll();
+        List<Shipping> shippings = shippingRepository.findAll();
+        shippings.sort((s1, s2) -> s1.getId() < s2.getId() ? -1 : 1);
+        return shippings;
     }
 
     @Override

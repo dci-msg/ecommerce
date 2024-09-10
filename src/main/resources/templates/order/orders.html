@@ -36,9 +36,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="text-center mt-5">Manage coupons</h2>
+            <h2 class="text-center mt-5">View orders</h2>
             <a th:href="@{/manage-books}" class="btn btn-outline-dark">Back</a>
-            <a th:href="@{/orders/updateStatus}" class="btn btn-outline-warning">Refresh All Status</a>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -46,9 +45,9 @@
                     <th>Customer email</th>
                     <th>Total </th>
                     <th>Currency</th>
-                    <th>Billing Address</th>
                     <th>Status</th>
                     <th>Created At</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,9 +56,13 @@
                     <td th:text="${order.user.email}"></td>
                     <td th:text="${order.total}"></td>
                     <td th:text="${order.currency}"></td>
-                    <td th:text="${order.billingAddress}"></td>
                     <td th:text="${order.status}"></td>
                     <td th:text="${order.createdAt}"></td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" th:href="@{'/orders/view' + ${order.id}}">View</button>
+                        <button type="button" class="btn btn-danger btn-sm" th:if="${order.status =='Open'}" th:href="@{'/orders/close' + ${order.id}}">Close</button>
+                        <button type="button" class="btn btn-warning btn-sm" th:unless="${order.status =='Open'}" th:href="@{'/orders/open' + ${order.id}}">Open</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -71,7 +71,9 @@ public class LineItemServiceImpl implements LineItemService {
 
     @Override
     public List<LineItem> getLineItems() {
-        return lineItemRepository.findAll();
+        List<LineItem> lineItems = lineItemRepository.findAll();
+        lineItems.sort((l1, l2) -> l1.getId() < l2.getId() ? -1 : 1);
+        return lineItems;
     }
 
 

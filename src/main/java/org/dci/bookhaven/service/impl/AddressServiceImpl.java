@@ -29,7 +29,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> getAddresses() {
-        return addressRepository.findAll();
+        List<Address> addresses = addressRepository.findAll();
+        addresses.sort((a1, a2) -> a1.getId() < a2.getId() ? -1 : 1);
+        return addresses;
     }
 
 }
