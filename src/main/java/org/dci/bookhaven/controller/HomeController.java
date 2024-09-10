@@ -8,12 +8,12 @@ import org.springframework.ui.Model;
 @Controller
 public class HomeController {
 
-    public String home(Model model){
+    public String home(Model model) {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    boolean isLoggedIn = authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isLoggedIn = authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
 
-    model.addAttribute("isLoggedIn", isLoggedIn);
+        model.addAttribute("isLoggedIn", isLoggedIn);
 
 
         return "index";

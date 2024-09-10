@@ -31,13 +31,13 @@ function decreaseQuantity(lineItemId) {
         .catch(error => console.error('Error:', error));
 }
 
-function addToCart(bookId, quantity){
+function addToCart(bookId){
     fetch(`/cart/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `bookId=${bookId}&quantity=${quantity}`
+        body: `bookId=${bookId}`
     })
         .then(response => {
             if (response.ok) {

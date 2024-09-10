@@ -96,6 +96,8 @@ public class CartController {
         BigDecimal orderTotal = cartService.getTotalAfterCouponAndShipping(cart.getId());
         model.addAttribute("orderTotal", orderTotal);
 
+        cartService.sortCartByBookTitle(cart);
+
         return "cart";
     }
 
