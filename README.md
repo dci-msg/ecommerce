@@ -155,8 +155,8 @@ This module differentiates between two types of users: **Admin** and **Customer*
 
 **Admin Registration**:
 
-- **Admin** users are created by default using the `DataInitializer` class when the program is run.
-- The `DataInitializer` class is used to add new admins.
+- **Admin** users are created by default using the `UserDataInitializer` class when the program is run.
+- The `UserDataInitializer` class is used to add new admins.
 - Current admin credentials:
     - Email address: `admin@example.com`
     - Password: `admin123`
@@ -171,8 +171,7 @@ This module differentiates between two types of users: **Admin** and **Customer*
     - Password: `customer123`
     - Customer2 Email address: `customer2@example.com`
     - Password: `customer456`
-  
-    
+
        - If the user does not click on this link within 24 hours, the token will expire.
        - If the user confirms the token by clicking the link, they will be directed to the login page.
        - If a user attempts to register again with the same email address without confirming the token, the old token is invalidated, and a new token is generated and sent to the email address.
