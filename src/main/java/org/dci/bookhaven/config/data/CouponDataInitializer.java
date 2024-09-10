@@ -2,6 +2,7 @@ package org.dci.bookhaven.config.data;
 
 import org.dci.bookhaven.model.Coupon;
 import org.dci.bookhaven.service.CouponService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Component
 @Order(DataInitOrder.COUPON)
-public class CouponDataInitializer {
+public class CouponDataInitializer implements CommandLineRunner {
 
     private final CouponService couponService;
 
@@ -18,6 +19,7 @@ public class CouponDataInitializer {
         this.couponService = couponService;
     }
 
+    @Override
     public void run(String... args) throws Exception {
         Coupon coupon1 = new Coupon();
         coupon1.setCode("DISCOUNT20");

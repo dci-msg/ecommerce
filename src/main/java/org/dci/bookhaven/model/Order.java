@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,11 +32,11 @@ public class Order {
     @Column(name = "coupon_code", nullable = true)
     private String couponCode;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     private Shipping shipping;
 
     @Column(name = "total", nullable = false, precision = 2, columnDefinition = "double precision")
-    private Double total;
+    private BigDecimal total;
 
     @Column(name = "currency", nullable = false)
     private String currency;

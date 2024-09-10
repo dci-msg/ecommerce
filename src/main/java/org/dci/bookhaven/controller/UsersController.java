@@ -57,4 +57,10 @@ public class UsersController {
         userService.verifyUser(token);
         return "redirect:/login?verified=true";
     }
+
+    @GetMapping("/users")
+    public String viewAllUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "view-users";
+    }
 }

@@ -36,26 +36,30 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="text-center mt-5">Categories</h2>
-            <a th:href="@{/manage-books}" class="btn btn-primary">Back</a>
-            <a th:href="@{/add-category}" class="btn btn-primary">Add Category</a>
+            <h2 class="text-center mt-5">Manage coupons</h2>
+            <a th:href="@{/manage-books}" class="btn btn-outline-dark">Back</a>
+            <a th:href="@{/orders/updateStatus}" class="btn btn-outline-warning">Refresh All Status</a>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>id</th>
+                    <th>Customer email</th>
+                    <th>Total </th>
+                    <th>Currency</th>
+                    <th>Billing Address</th>
+                    <th>Status</th>
+                    <th>Created At</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="category : ${categories}">
-                    <td th:text="${category.id}"></td>
-                    <td th:text="${category.name}"></td>
-                    <td th:text="${category.description}"></td>
-                    <td th:if="${category.name} != 'Uncategorized'">
-                        <a th:href="@{/edit-category/{id}(id=${category.id})}" class="btn btn-primary btn-sm">Edit</a>
-                        <a th:href="@{/delete-category/{id}(id=${category.id})}" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.user.email}"></td>
+                    <td th:text="${order.total}"></td>
+                    <td th:text="${order.currency}"></td>
+                    <td th:text="${order.billingAddress}"></td>
+                    <td th:text="${order.status}"></td>
+                    <td th:text="${order.createdAt}"></td>
                 </tr>
                 </tbody>
             </table>

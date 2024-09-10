@@ -157,4 +157,10 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
     }
+
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        users.sort((u1, u2) -> u1.getId().compareTo(u2.getId()));
+        return users;
+    }
 }

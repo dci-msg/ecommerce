@@ -9,6 +9,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @Order(DataInitOrder.USER)
 public class UserDataInitializer implements CommandLineRunner {
@@ -79,5 +82,6 @@ public class UserDataInitializer implements CommandLineRunner {
             customer2.setUserType(customerType);
             userRepository.save(customer2);
         }
+
     }
 }

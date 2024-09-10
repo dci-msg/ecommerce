@@ -5,6 +5,7 @@ import org.dci.bookhaven.model.LineItem;
 import org.springframework.data.jpa.repository.Modifying;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface LineItemService {
     @Modifying
@@ -22,4 +23,10 @@ public interface LineItemService {
     @Modifying
     @Transactional
     void deleteLineItemById(Long lineItemId);
+
+    @Modifying
+    @Transactional
+    void create(LineItem lineItem);
+
+    List<LineItem> getLineItems();
 }

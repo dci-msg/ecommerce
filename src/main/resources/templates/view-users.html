@@ -20,7 +20,7 @@
                 <a  class="nav-link" href="/orders">Manage Orders</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/users">Manage Users</a>
+                <a  class="nav-link" href="/user">Manage Users</a>
             </li>
             <li class="nav-item">
                 <a  class="nav-link" href="/manage-books">Manage Books</a>
@@ -36,26 +36,24 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="text-center mt-5">Categories</h2>
-            <a th:href="@{/manage-books}" class="btn btn-primary">Back</a>
-            <a th:href="@{/add-category}" class="btn btn-primary">Add Category</a>
+            <h2 class="text-center mt-5">Manage coupons</h2>
+            <a th:href="@{/manage-books}" class="btn btn-outline-dark">Back</a>
+            <a th:href="@{/users}" class="btn btn-outline-success">Add New</a>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>id</th>
+                    <th>Email</th>
+                    <th>Registration Date</th>
+                    <th>UserType</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="category : ${categories}">
-                    <td th:text="${category.id}"></td>
-                    <td th:text="${category.name}"></td>
-                    <td th:text="${category.description}"></td>
-                    <td th:if="${category.name} != 'Uncategorized'">
-                        <a th:href="@{/edit-category/{id}(id=${category.id})}" class="btn btn-primary btn-sm">Edit</a>
-                        <a th:href="@{/delete-category/{id}(id=${category.id})}" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.registrationDate}"></td>
+                    <td th:text="${user.userType.userTypeName}"></td>
                 </tr>
                 </tbody>
             </table>
