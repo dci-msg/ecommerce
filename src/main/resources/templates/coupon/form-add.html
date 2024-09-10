@@ -41,7 +41,7 @@
 
             <h4 class="text-center mt-5" th:text="${coupon.code}"></h4>
 
-            <form th:action="@{/coupon/edit}" th:object="${coupon}" method="post">
+            <form th:action="@{/coupon/add}" th:object="${coupon}" method="post">
                 <div class="form-group mb-3">
                     <label for="discount">Discount</label>
                     <input type="number" class="form-control" id="discount" th:field="${coupon.discount}">
@@ -57,11 +57,11 @@
                 <div>
                     <p class="mb-1">Active</p>
                     <div class="form-check form-check-inline">
-                        <input class="form-check form-check-inline" type="radio" id="true" th:field="${coupon.isActive}" value="true" th:checked="${coupon.isActive}">
+                        <input class="form-check form-check-inline" type="radio" id="true" th:text="${coupon.isActive}" value="true" th:checked="${coupon.isActive}">
                         <label class="form-check form-check-inline" for="true">Yes</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check form-check-inline" type="radio" id="false" th:field="${coupon.isActive}" value="false" th:checked="${coupon.isActive}">
+                        <input class="form-check form-check-inline" type="radio" id="false" th:text="${coupon.isActive}" value="false" th:checked="${coupon.isActive}">
                         <label class="form-check form-check-inline" for="false">No</label>
                     </div>
                 </div>
