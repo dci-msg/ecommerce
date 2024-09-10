@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Controller
-@RequestMapping("/coupon")
+@RequestMapping("/coupons")
 public class CouponController {
 
     private final CouponService couponService;
@@ -96,24 +96,24 @@ public class CouponController {
         return "redirect:/coupon";
     }
 
-    @GetMapping("/deactivate/{id}")
+    @GetMapping("/coupon/{id}/deactivate")
     public String deactivateCoupon(
             @PathVariable(value = "id", required = false) Long id) {
         couponService.deactivate(id);
-        return "redirect:/coupon";
+        return "redirect:/coupons";
     }
 
-    @GetMapping("/reactivate/{id}")
+    @GetMapping("/coupon/reactivate/{id}")
     public String reactivateCoupon(
             @PathVariable(value = "id", required = false) Long id) {
         couponService.reactivate(id);
-        return "redirect:/coupon";
+        return "redirect:/coupons";
     }
 
     // Show coupon form for deleting
     @GetMapping("/delete/{id}")
     public String deleteCoupon(@RequestParam(value = "id", required = true) Long id) {
         couponService.delete(id);
-        return "redirect:/coupon";
+        return "redirect:/coupons";
     }
 }

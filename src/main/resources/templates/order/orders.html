@@ -26,7 +26,7 @@
                 <a  class="nav-link" href="/manage-books">Manage Books</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/coupon">Manage Coupons</a>
+                <a  class="nav-link" href="/coupons">Manage Coupons</a>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
             </li>
@@ -59,9 +59,9 @@
                     <td th:text="${order.status}"></td>
                     <td th:text="${order.createdAt}"></td>
                     <td>
-                        <button type="button" class="btn btn-primary btn-sm" th:href="@{'/orders/view' + ${order.id}}">View</button>
-                        <button type="button" class="btn btn-danger btn-sm" th:if="${order.status =='Open'}" th:href="@{'/orders/close' + ${order.id}}">Close</button>
-                        <button type="button" class="btn btn-warning btn-sm" th:unless="${order.status =='Open'}" th:href="@{'/orders/open' + ${order.id}}">Open</button>
+                        <a type="button" class="btn btn-primary btn-sm" th:href="@{'/orders/order/' + ${order.id}}">View</a>
+                        <a type="button" class="btn btn-danger btn-sm" th:if="${order.status =='Open'}" th:href="@{'/orders/order/' + ${order.id} + '/close'}">Close</a>
+                        <a type="button" class="btn btn-warning btn-sm" th:unless="${order.status =='Open'}" th:href="@{'/orders/order/' + ${order.id}+ '/reopen'}">Re-Open</a>
                     </td>
                 </tr>
                 </tbody>

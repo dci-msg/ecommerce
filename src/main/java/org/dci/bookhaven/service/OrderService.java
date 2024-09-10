@@ -13,4 +13,18 @@ public interface OrderService {
     @Modifying
     @Transactional
     void create(Order order);
+
+    Order getOrderById(long id);
+
+    @Modifying
+    @Transactional
+    void update(Order order);
+
+    @Modifying
+    @Transactional
+    void close(long id);
+
+    @Modifying
+    @Transactional
+    void reopen(long id);
 }

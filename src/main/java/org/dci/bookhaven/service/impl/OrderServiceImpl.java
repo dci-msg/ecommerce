@@ -35,4 +35,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public Order getOrderById(long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void update(Order order) {
+        orderRepository.save(order);
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void close(long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null) {
+            order.setStatus("Closed");
+            orderRepository.save(order);
+        }
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void reopen(long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null) {
+            order.setStatus("Open");
+            orderRepository.save(order);
+        }
+    }
 }

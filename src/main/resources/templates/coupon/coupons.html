@@ -26,7 +26,7 @@
                 <a  class="nav-link" href="/manage-books">Manage Books</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/coupon">Manage Coupons</a>
+                <a  class="nav-link" href="/coupons">Manage Coupons</a>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
             </li>
@@ -59,10 +59,10 @@
                     <td th:text="${coupon.startDate}"></td>
                     <td th:text="${coupon.endDate}"></td>
                     <td>
-                        <button type="button" class = "btn btn-primary btn-sm" th:href="@{'/coupon/edit' + ${coupon.id}}">Edit</button>
-                        <button type="button" class="btn btn-warning btn-sm" th:if="${coupon.isActive}" th:href="@{'/coupon/deactive' + ${coupon.id}}">De-activate</button>
-                        <button type="button" class="btn btn-success btn-sm" th:if="${not coupon.isActive}" th:href="@{'/coupon/active' + ${coupon.id}}">Re-activate</button>
-                        <button type="button" class="btn btn-danger btn-sm" th:href="@{'/coupon/delete' + ${coupon.id}}">DELETE</button>
+                        <a type="button" class = "btn btn-primary btn-sm" th:href="@{'/coupons/coupon/edit' + ${coupon.id}}">Edit</a>
+                        <a type="button" class="btn btn-warning btn-sm" th:if="${coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id} +'/deactivate'}">De-activate</a>
+                        <a type="button" class="btn btn-success btn-sm" th:if="${not coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id}+'/reactivate'}">Re-activate</a>
+                        <a type="button" class="btn btn-danger btn-sm" th:href="@{'/coupons/coupon/delete' + ${coupon.id}}">DELETE</a>
                     </td>
                 </tr>
                 </tbody>

@@ -110,4 +110,11 @@ public class Address {
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
     }
+
+    public String toReader(){
+        return  street
+                + ", " + city
+                + ", " + zipCode
+                + ", " + country ;
+    }
 }
