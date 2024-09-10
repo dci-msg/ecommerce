@@ -35,4 +35,5 @@ public class Coupon {
 
     @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
+
 }

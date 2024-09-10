@@ -4,11 +4,12 @@ import org.dci.bookhaven.model.Coupon;
 import org.dci.bookhaven.service.CouponService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -29,13 +30,34 @@ public class CouponController {
         return "coupon/coupons";  // Refers to src/main/resources/templates/coupons/list.html
     }
 
-    // Show coupon form for creating or editing
+    // Show coupon form for adding
     @GetMapping("/add")
     public String addCouponForm(Model model) {
-        Coupon coupon = new Coupon();
-        model.addAttribute("coupon", coupon);
-        return "coupon/form-add";  // Refers to src/main/resources/templates/coupons/form-add.html
+        model.addAttribute("coupon", new Coupon());
+        return "coupon/form-add";  // Refers to src/main/resources/templates/coupon/form-add.html
     }
+
+    @PostMapping("/add")
+    public String addCoupon(
+            @RequestParam("code") String code,
+            @RequestParam("discount") BigDecimal discount,
+            @RequestParam("isActive") boolean isActive,
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate) {
+        Coupon coupon = new Coupon();
+
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIDNIGHT);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
+
+        coupon.setCode(code);
+        coupon.setDiscount(discount);
+        coupon.setStartDate(startDateTime);
+        coupon.setEndDate(endDateTime);
+        coupon.setActive(isActive);
+        couponService.create(coupon);
+        return "redirect:/coupon";
+    }
+
 
     @GetMapping("/updateStatus")
     public String updateStatus() {
@@ -49,6 +71,29 @@ public class CouponController {
         Coupon coupon = couponService.getById(id);
         model.addAttribute("coupon", coupon);
         return "coupon/form-edit";  // Refers to src/main/resources/templates/coupon/form-add.html
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editCoupon(
+            @PathVariable(value = "id", required = true) Long id,
+            @RequestParam("code") String code,
+            @RequestParam("discount") BigDecimal discount,
+            @RequestParam("isActive") boolean isActive,
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate) {
+        Coupon coupon = new Coupon();
+
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIDNIGHT);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
+
+        coupon.setId(id);
+        coupon.setCode(code);
+        coupon.setDiscount(discount);
+        coupon.setStartDate(startDateTime);
+        coupon.setEndDate(endDateTime);
+        coupon.setActive(isActive);
+        couponService.update(coupon);
+        return "redirect:/coupon";
     }
 
     @GetMapping("/deactivate/{id}")

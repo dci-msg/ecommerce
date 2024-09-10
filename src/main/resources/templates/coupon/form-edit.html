@@ -41,7 +41,7 @@
 
             <h4 class="text-center mt-5" th:text="${coupon.code}"></h4>
 
-            <form th:action="@{/coupon/edit}" th:object="${coupon}" method="post">
+            <form th:action="@{/coupon/edit/{id}(id=${coupon.id})}" th:object="${coupon}" method="post">
                 <div class="form-group mb-3">
                     <label for="discount">Discount</label>
                     <input type="number" class="form-control" id="discount" th:field="${coupon.discount}">
