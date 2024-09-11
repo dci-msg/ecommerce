@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class LineItemServiceImpl implements LineItemService {
@@ -59,6 +60,20 @@ public class LineItemServiceImpl implements LineItemService {
     @Override
     public void deleteLineItemById(Long lineItemId) {
         lineItemRepository.deleteById(lineItemId);
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void create(LineItem lineItem) {
+        lineItemRepository.save(lineItem);
+    }
+
+    @Override
+    public List<LineItem> getLineItems() {
+        List<LineItem> lineItems = lineItemRepository.findAll();
+        lineItems.sort((l1, l2) -> l1.getId() < l2.getId() ? -1 : 1);
+        return lineItems;
     }
 
 

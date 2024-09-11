@@ -36,25 +36,33 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="text-center mt-5">Categories</h2>
-            <a th:href="@{/manage-books}" class="btn btn-primary">Back</a>
-            <a th:href="@{/add-category}" class="btn btn-primary">Add Category</a>
+            <h2 class="text-center mt-5">Manage coupons</h2>
+            <a th:href="@{/manage-books}" class="btn btn-outline-dark">Back</a>
+            <a th:href="@{/coupons/add}" class="btn btn-outline-success">Add New</a>
+            <a th:href="@{/coupons/updateStatus}" class="btn btn-outline-warning">Refresh All Status</a>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>Coupon Code</th>
+                    <th>Discount</th>
+                    <th>Active</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="category : ${categories}">
-                    <td th:text="${category.id}"></td>
-                    <td th:text="${category.name}"></td>
-                    <td th:text="${category.description}"></td>
-                    <td th:if="${category.name} != 'Uncategorized'">
-                        <a th:href="@{/edit-category/{id}(id=${category.id})}" class="btn btn-primary btn-sm">Edit</a>
-                        <a th:href="@{/delete-category/{id}(id=${category.id})}" class="btn btn-danger btn-sm">Delete</a>
+                <tr th:each="coupon : ${coupons}">
+                    <td th:text="${coupon.code}"></td>
+                    <td th:text="${coupon.discount}"></td>
+                    <td th:text="${coupon.isActive}"></td>
+                    <td th:text="${coupon.startDate}"></td>
+                    <td th:text="${coupon.endDate}"></td>
+                    <td>
+                        <a type="button" class = "btn btn-primary btn-sm" th:href="@{'/coupons/coupon/' + ${coupon.id}}">View</a>
+                        <a type="button" class="btn btn-warning btn-sm" th:if="${coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id} +'/deactivate'}">De-activate</a>
+                        <a type="button" class="btn btn-success btn-sm" th:if="${not coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id}+'/reactivate'}">Re-activate</a>
+                        <a type="button" class="btn btn-danger btn-sm" th:href="@{'/coupons/coupon/' + ${coupon.id} + '/delete'}">DELETE</a>
                     </td>
                 </tr>
                 </tbody>

@@ -1,9 +1,11 @@
 package org.dci.bookhaven.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.dci.bookhaven.model.Coupon;
 import org.dci.bookhaven.repository.CouponRepository;
 import org.dci.bookhaven.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,9 +28,13 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public List<Coupon> getAllCoupons() {
-        return couponRepository.findAll();
+        List<Coupon> coupons = couponRepository.findAll();
+        coupons.sort((c1, c2) -> c1.getStartDate().compareTo(c2.getStartDate()));
+        return coupons;
     }
 
+    @Modifying
+    @Transactional
     @Override
     public String applyCouponMsg(String couponCode) {
         String msg = "";
@@ -63,4 +69,66 @@ public class CouponServiceImpl implements CouponService {
             return true;
         }
     }
+
+    @Modifying
+    @Transactional
+    @Override
+    public Coupon create(Coupon coupon) {
+        updateCouponStatus();
+        for(Coupon c : couponRepository.findAll()){
+            if(c.getCode().equals(coupon.getCode())){
+                return null;
+            }
+        }
+        return couponRepository.save(coupon);
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void updateCouponStatus(){
+        List<Coupon> coupons = couponRepository.findAll();
+        for(Coupon coupon : coupons){
+            if(coupon.getEndDate().isBefore(LocalDateTime.now())){
+                coupon.setActive(false);
+                couponRepository.save(coupon);
+            }
+        }
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void deactivate(Long id){
+        Coupon coupon = couponRepository.findById(id).get();
+        coupon.setActive(false);
+        couponRepository.save(coupon);
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void reactivate(Long id){
+        Coupon coupon = couponRepository.findById(id).get();
+        coupon.setActive(true);
+        couponRepository.save(coupon);
+    }
+
+    @Override
+    public void delete(Long id){
+        couponRepository.deleteById(id);
+    }
+
+    @Override
+    public Coupon getById(Long id){
+        return couponRepository.findById(id).get();
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void update(Coupon coupon){
+        couponRepository.save(coupon);
+    }
+
 }

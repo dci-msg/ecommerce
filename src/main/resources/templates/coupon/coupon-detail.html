@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>Books</title>
+    <title>Coupon details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -33,34 +33,27 @@
         </ul>
     </div>
 </nav>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="text-center mt-5">Categories</h2>
-            <a th:href="@{/manage-books}" class="btn btn-primary">Back</a>
-            <a th:href="@{/add-category}" class="btn btn-primary">Add Category</a>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="category : ${categories}">
-                    <td th:text="${category.id}"></td>
-                    <td th:text="${category.name}"></td>
-                    <td th:text="${category.description}"></td>
-                    <td th:if="${category.name} != 'Uncategorized'">
-                        <a th:href="@{/edit-category/{id}(id=${category.id})}" class="btn btn-primary btn-sm">Edit</a>
-                        <a th:href="@{/delete-category/{id}(id=${category.id})}" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
+
+<div class="container mt-4">
+    <h1 class="text-center">Coupon Details</h1>
+
+    <a th:href="@{/coupons}" class="btn btn-outline-dark">Back</a>
+    <a type="button" class="btn btn-primary"  th:href="@{'/coupons/coupon/' + ${coupon.id} + '/edit'}">Edit</a>
+    <a type="button" class="btn btn-warning" th:if="${coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id} +'/deactivate'}">De-activate</a>
+    <a type="button" class="btn btn-success" th:if="${not coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id}+'/reactivate'}">Re-activate</a>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title" th:text="${coupon.code}"></h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Discount (%): <span th:text="${coupon.discount}"></span></p>
+            <p class="card-text">Start Date: <span th:text="${coupon.startDate}"></span></p>
+            <p class="card-text">End Date: <span th:text="${coupon.endDate}"></span></p>
+            <p class="card-text">Active: <span th:text="${coupon.isActive}"></span></p>
         </div>
     </div>
+
 </div>
 </body>
 </html>
