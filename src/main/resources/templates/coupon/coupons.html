@@ -38,8 +38,8 @@
         <div class="col-md-12">
             <h2 class="text-center mt-5">Manage coupons</h2>
             <a th:href="@{/manage-books}" class="btn btn-outline-dark">Back</a>
-            <a th:href="@{/coupon/add}" class="btn btn-outline-success">Add New</a>
-            <a th:href="@{/coupon/updateStatus}" class="btn btn-outline-warning">Refresh All Status</a>
+            <a th:href="@{/coupons/add}" class="btn btn-outline-success">Add New</a>
+            <a th:href="@{/coupons/updateStatus}" class="btn btn-outline-warning">Refresh All Status</a>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -59,10 +59,10 @@
                     <td th:text="${coupon.startDate}"></td>
                     <td th:text="${coupon.endDate}"></td>
                     <td>
-                        <a type="button" class = "btn btn-primary btn-sm" th:href="@{'/coupons/coupon/edit' + ${coupon.id}}">Edit</a>
+                        <a type="button" class = "btn btn-primary btn-sm" th:href="@{'/coupons/coupon/' + ${coupon.id}}">View</a>
                         <a type="button" class="btn btn-warning btn-sm" th:if="${coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id} +'/deactivate'}">De-activate</a>
                         <a type="button" class="btn btn-success btn-sm" th:if="${not coupon.isActive}" th:href="@{'/coupons/coupon/' + ${coupon.id}+'/reactivate'}">Re-activate</a>
-                        <a type="button" class="btn btn-danger btn-sm" th:href="@{'/coupons/coupon/delete' + ${coupon.id}}">DELETE</a>
+                        <a type="button" class="btn btn-danger btn-sm" th:href="@{'/coupons/coupon/' + ${coupon.id} + '/delete'}">DELETE</a>
                     </td>
                 </tr>
                 </tbody>

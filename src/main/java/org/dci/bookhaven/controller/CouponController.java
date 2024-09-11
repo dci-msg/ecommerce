@@ -30,70 +30,69 @@ public class CouponController {
         return "coupon/coupons";  // Refers to src/main/resources/templates/coupons/list.html
     }
 
-    // Show coupon form for adding
+    @GetMapping("/coupon/{id}")
+    public String viewCouponDetails(
+            @PathVariable("id") Long id,
+            Model model) {
+        Coupon coupon = couponService.getById(id);
+        model.addAttribute("coupon", coupon);
+        return "coupon/coupon-detail";  // Refers to src/main/resources/templates/coupon/coupon.html
+    }
+
     @GetMapping("/add")
-    public String addCouponForm(Model model) {
+    public String showAddForm(Model model) {
         model.addAttribute("coupon", new Coupon());
-        return "coupon/form-add";  // Refers to src/main/resources/templates/coupon/form-add.html
+        model.addAttribute("startDate", LocalDate.now());
+        model.addAttribute("endDate", LocalDate.now());
+        model.addAttribute("isActive", true);
+        return "coupon/form-add";
     }
 
     @PostMapping("/add")
-    public String addCoupon(
-            @RequestParam("code") String code,
-            @RequestParam("discount") BigDecimal discount,
-            @RequestParam("isActive") boolean isActive,
-            @RequestParam("startDate") LocalDate startDate,
-            @RequestParam("endDate") LocalDate endDate) {
-        Coupon coupon = new Coupon();
-
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIDNIGHT);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
-
-        coupon.setCode(code);
-        coupon.setDiscount(discount);
-        coupon.setStartDate(startDateTime);
-        coupon.setEndDate(endDateTime);
+    public String addCoupon(@ModelAttribute("coupon") Coupon coupon,
+                            @ModelAttribute("startDate") LocalDate startDate,
+                            @ModelAttribute("endDate") LocalDate endDate,
+                            @ModelAttribute("isActive") boolean isActive) {
         coupon.setActive(isActive);
+        coupon.setStartDate(LocalDateTime.of(startDate, LocalTime.MIDNIGHT));
+        coupon.setEndDate(LocalDateTime.of(endDate, LocalTime.MIDNIGHT));
         couponService.create(coupon);
-        return "redirect:/coupon";
+        return "redirect:/coupons";
     }
-
 
     @GetMapping("/updateStatus")
     public String updateStatus() {
         couponService.updateCouponStatus();
-        return "redirect:/coupon";
+        return "redirect:/coupons";
     }
 
-    // Show coupon form for editing
-    @GetMapping("/edit/{id}")
-    public String editCouponForm(Model model, @PathVariable(value = "id", required = true) Long id) {
+    @GetMapping("/coupon/{id}/edit")
+    public String showEditForm(Model model, @PathVariable("id") Long id) {
         Coupon coupon = couponService.getById(id);
         model.addAttribute("coupon", coupon);
-        return "coupon/form-edit";  // Refers to src/main/resources/templates/coupon/form-add.html
+        model.addAttribute("startDate", coupon.getStartDate());
+        model.addAttribute("endDate", coupon.getEndDate());
+        model.addAttribute("isActive", coupon.isActive());
+        return "coupon/form-edit";
     }
 
-    @PostMapping("/edit/{id}")
-    public String editCoupon(
-            @PathVariable(value = "id", required = true) Long id,
-            @RequestParam("code") String code,
-            @RequestParam("discount") BigDecimal discount,
-            @RequestParam("isActive") boolean isActive,
-            @RequestParam("startDate") LocalDate startDate,
-            @RequestParam("endDate") LocalDate endDate) {
-        Coupon coupon = new Coupon();
-
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIDNIGHT);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
+    @PostMapping("/coupon/{id}/edit")
+    public String editCoupon(@PathVariable("id") Long id,
+                             @ModelAttribute("coupon") Coupon coupon,
+                             @RequestParam("code") String code,
+                             @RequestParam("discount") BigDecimal discount,
+                             @RequestParam("isActive") boolean isActive,
+                             @RequestParam("startDate") LocalDateTime startDate,
+                             @RequestParam("endDate") LocalDateTime endDate) {
 
         coupon.setId(id);
         coupon.setCode(code);
         coupon.setDiscount(discount);
-        coupon.setStartDate(startDateTime);
-        coupon.setEndDate(endDateTime);
+        coupon.setStartDate(startDate);
+        coupon.setEndDate(endDate);
         coupon.setActive(isActive);
         couponService.update(coupon);
-        return "redirect:/coupon";
+        return "redirect:/coupons";
     }
 
     @GetMapping("/coupon/{id}/deactivate")
@@ -103,7 +102,7 @@ public class CouponController {
         return "redirect:/coupons";
     }
 
-    @GetMapping("/coupon/reactivate/{id}")
+    @GetMapping("/coupon/{id}/reactivate")
     public String reactivateCoupon(
             @PathVariable(value = "id", required = false) Long id) {
         couponService.reactivate(id);
@@ -111,8 +110,8 @@ public class CouponController {
     }
 
     // Show coupon form for deleting
-    @GetMapping("/delete/{id}")
-    public String deleteCoupon(@RequestParam(value = "id", required = true) Long id) {
+    @GetMapping("/coupon/{id}/delete")
+    public String deleteCoupon(@PathVariable(value = "id", required = true) Long id) {
         couponService.delete(id);
         return "redirect:/coupons";
     }

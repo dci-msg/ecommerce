@@ -17,16 +17,16 @@
                 <a class="nav-link" href="#">Admin Profile</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/orders">Manage Orders</a>
+                <a class="nav-link" href="/orders">Manage Orders</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/users">Manage Users</a>
+                <a class="nav-link" href="/users">Manage Users</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/manage-books">Manage Books</a>
+                <a class="nav-link" href="/manage-books">Manage Books</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/coupons">Manage Coupons</a>
+                <a class="nav-link" href="/coupons">Manage Coupons</a>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
             </li>
@@ -37,36 +37,31 @@
     <div class="row">
         <div class="col-md-12">
             <h2 class="text-center mt-5">Add New Coupon</h2>
-            <form th:action="@{/coupon/add}" method="post">
-
+            <form th:action="@{/coupons/add}" method="post" th:object="${coupon}">
                 <div class="mb-3">
                     <label for="code">Code</label>
-                    <input type="text" class="form-control" id="code" name="code" required>
+                    <input type="text" class="form-control" id="code" th:field="*{code}" required>
                 </div>
                 <div class="mb-3">
                     <label for="discount">Discount</label>
-                    <input type="number" class="form-control" id="discount" name="discount" required>
+                    <input type="number" class="form-control" id="discount" th:field="*{discount}" required>
                 </div>
                 <div class="mb-3">
                     <label for="startDate">Start Date</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                    <input type="datetime-local" class="form-control" id="startDate" th:field="${startDate}" required>
                 </div>
                 <div class="mb-3">
                     <label for="endDate">End Date</label>
-                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+                    <input type="datetime-local" class="form-control" id="endDate" th:field="${endDate}" required>
                 </div>
-                <div class="mb-3">
-                    <p>Active</p>
-                    <input type="radio" id="true" name="isActive"
-                           value="true">
-                    <label for="true">Yes</label>
-
-                    <input type="radio" id="false" name="isActive"
-                           value="false">
-                    <label for="false">No</label>
+                <div class="form-group mb-3">
+                    <label for="isActive">Active</label>
+                    <select class="form-control" id="isActive" th:field="${isActive}">
+                        <option value="true" th:selected="${isActive}">Yes</option>
+                        <option value="false" th:selected="${!isActive}">No</option>
+                    </select>
                 </div>
-                <a th:href="@{/coupon}" class="btn btn-outline-dark">Back</a>
-
+                <a th:href="@{/coupons}" class="btn btn-outline-dark">Back</a>
                 <button type="submit" class="btn btn-primary">Save</button>
             </form>
         </div>

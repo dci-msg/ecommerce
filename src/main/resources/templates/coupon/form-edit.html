@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>Books</title>
+    <title>Edit Coupon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -17,16 +17,16 @@
                 <a class="nav-link" href="#">Admin Profile</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/orders">Manage Orders</a>
+                <a class="nav-link" href="/orders">Manage Orders</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/users">Manage Users</a>
+                <a class="nav-link" href="/users">Manage Users</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/manage-books">Manage Books</a>
+                <a class="nav-link" href="/manage-books">Manage Books</a>
             </li>
             <li class="nav-item">
-                <a  class="nav-link" href="/coupons">Manage Coupons</a>
+                <a class="nav-link" href="/coupons">Manage Coupons</a>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger ml-2" href="/logout">Logout</a>
             </li>
@@ -36,34 +36,30 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="text-center mt-5">Edit coupon</h2>
-            <a th:href="@{/coupon}" class="btn btn-outline-dark">Back</a>
+            <h2 class="text-center mt-5">Edit Coupon</h2>
+            <a th:href="@{/coupons}" class="btn btn-outline-dark">Back</a>
 
             <h4 class="text-center mt-5" th:text="${coupon.code}"></h4>
 
-            <form th:action="@{/coupon/edit/{id}(id=${coupon.id})}" th:object="${coupon}" method="post">
+            <form th:action="@{'/coupons/coupon/'+${coupon.id}+'/edit'}" th:object="${coupon}" method="post">
                 <div class="form-group mb-3">
                     <label for="discount">Discount</label>
-                    <input type="number" class="form-control" id="discount" th:field="${coupon.discount}">
+                    <input type="number" class="form-control" id="discount" th:field="*{discount}">
                 </div>
                 <div class="form-group mb-3">
                     <label for="startDate">Start Date</label>
-                    <input type="date" class="form-control" id="startDate" th:field="${coupon.startDate}">
+                    <input type="datetime-local" class="form-control" id="startDate" th:field="${startDate}" th:value="${startDate}">
                 </div>
                 <div class="form-group mb-3">
                     <label for="endDate">End Date</label>
-                    <input type="date" class="form-control" id="endDate" th:field="${coupon.endDate}">
+                    <input type="datetime-local" class="form-control" id="endDate" th:field="${endDate}" th:value="${endDate}">
                 </div>
-                <div>
-                    <p class="mb-1">Active</p>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check form-check-inline" type="radio" id="true" th:field="${coupon.isActive}" value="true" th:checked="${coupon.isActive}">
-                        <label class="form-check form-check-inline" for="true">Yes</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check form-check-inline" type="radio" id="false" th:field="${coupon.isActive}" value="false" th:checked="${coupon.isActive}">
-                        <label class="form-check form-check-inline" for="false">No</label>
-                    </div>
+                <div class="form-group mb-3">
+                    <label for="isActive">Active</label>
+                    <select class="form-control" id="isActive" th:field="${isActive}">
+                        <option value="true" th:selected="${isActive}">Yes</option>
+                        <option value="false" th:selected="${!isActive}">No</option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save</button>
